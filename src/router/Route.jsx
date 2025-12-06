@@ -32,6 +32,9 @@ import TranskripNilai from "../components/Request/TranskripNilai";
 import Yudisium from "../components/Request/Yudisium";
 import SeminarKp from "../components/Request/SeminarKp";
 
+// Request Detail
+import RequestDetailUser from "../components/requestUser/RequestDetailUser";
+
 // Surat Keterangan
 import ListKeterangan from "../components/suratKeterangan/ListKeterangan";
 import KeteranganLulus from "../components/suratKeterangan/KeteranganLulus";
@@ -72,6 +75,10 @@ const Router = createBrowserRouter([
       {
         index: true,
         Component: DashboardHome,
+      },
+      {
+        path: ":id",
+        Component: RequestDetailUser
       },
       {
         path: "user",

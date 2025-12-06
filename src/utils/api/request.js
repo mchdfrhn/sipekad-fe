@@ -27,9 +27,10 @@ const postrequest = async (token, { type, message }) => {
   }
 };
 
-const getRequest = async (token, userId) => {
+const getRequest = async (userId, page = 1) => {
+  const token = localStorage.getItem("tokenKey")
   try {
-    const response = await Axios.get(`${BASE_URL}/request/user/${userId}`, {
+    const response = await Axios.get(`${BASE_URL}/request/user/${userId}?page=${ page }&limit=5`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -58,7 +59,7 @@ export const getRequestDetail = async (requestId, setData, setResponses) => {
     if (result.status === "success") {
       setData(result.data);
       const id = result.data.id;
-      await getResponseById(id, token, setResponses)
+      await getResponseById(id, token, setResponses);
     }
   } catch (err) {
     console.error(err);
@@ -67,16 +68,17 @@ export const getRequestDetail = async (requestId, setData, setResponses) => {
 };
 
 // admin
-const getAllRequestForAdmin = async (token) => {
+const getAllRequestForAdmin = async (pageNumber = 1) => {
+  const token = localStorage.getItem("tokenKey");
   try {
-    const result = await Axios.get(`${BASE_URL}/request`, {
+    const result = await Axios.get(`${BASE_URL}/request?page=${ pageNumber }&limit=10`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
 
-    const users = await result.data;
-    return users;
+    const requests = await result.data;
+    return requests
   } catch (err) {
     return {
       success: false,

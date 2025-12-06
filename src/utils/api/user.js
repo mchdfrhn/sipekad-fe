@@ -56,9 +56,10 @@ const updateProfile = async (
 };
 
 // admin
-const getAllUserForAdmin = async (token) => {
+const getAllUserForAdmin = async (page = 1) => {
+  const token = localStorage.getItem("tokenKey")
   try {
-    const result = await Axios.get(`${BASE_URL}/users`, {
+    const result = await Axios.get(`${BASE_URL}/users?page=${page}&limit=5`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

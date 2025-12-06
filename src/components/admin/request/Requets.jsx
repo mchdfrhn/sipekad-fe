@@ -1,24 +1,47 @@
-import { Trash, Pen } from "lucide-react";
+import { Trash, Pen, ArrowLeft, ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getAllRequestForAdmin } from "../../../utils/api/request";
 import { Link } from "react-router";
 
 const RequestAdmin = () => {
   const [requests, setRequests] = useState([]);
+  const [page, setPage] = useState(1); // curent page
+  const [totalPage, setTotalPage] = useState(1);
 
+  const handlePageChange = async(p) => {
+    await getAllRequestForAdmin(p);
+  }
   useEffect(() => {
-    const getAllRequest = async () => {
-      const token = localStorage.getItem("tokenKey");
-      const result = await getAllRequestForAdmin(token);
-      console.log(result);
-      if (result.status === "success") {
-        setRequests(result.data);
+    const getRequests = async () => {
+      const requests = await getAllRequestForAdmin();
+      if (requests.status === "success") {
+        setRequests(requests.data);
+        setPage(requests.page);
+        setTotalPage(requests.totalPage)
       }
-    };
+    }
 
-    getAllRequest();
+    getRequests();
   }, []);
-  return <TablePengajuan requests={requests} />;
+  return (
+    <>
+      <TablePengajuan requests={requests} />
+      <div className="flex gap-4 justify-end mt-4">
+        <button onClick={() => handlePageChange(page - 1)} className="size-8 rounded-full flex justify-center items-center bg-white shadow-md cursor-pointer disabled:text-gray-400" disabled={ page === 1 }><ArrowLeft /></button>
+        {
+          [...Array(totalPage)].map((_, index) => {
+            const pageNumber = index + 1;
+            return(
+              <div className="flex gap-2">
+                <button onClick={() => handlePageChange(pageNumber)} className="size-8 flex justify-center items-center rounded-full bg-white shadow-md">{ pageNumber }</button>
+              </div>
+            )
+          })
+        }
+        <button onClick={() => handlePageChange(page + 1)} className="size-8 rounded-full flex justify-center items-center bg-white shadow-md cursor-pointer disabled:text-gray-400" disabled={ page === totalPage }><ArrowRight /></button>
+      </div>
+    </>
+);
 };
 
 export const TablePengajuan = ({ requests }) => {

@@ -1,4 +1,6 @@
 import Underline from "./Underline";
+import { Link } from "react-router";
+
 
 const TableRiwayat = ({ historyRequest }) => {
 
@@ -6,7 +8,7 @@ const TableRiwayat = ({ historyRequest }) => {
     "antrian",
     "tanggal Pengajuan",
     "tipe",
-    "Permintaan",
+    "Pesan",
     "status",
   ];
   return (
@@ -45,25 +47,37 @@ const TableRiwayat = ({ historyRequest }) => {
                   className="flex flex-row items-center justify-between hover:shadow-md cursor-pointer transition-all transition-duration justify-between gap-2 md:table-row mb-4 md:mb-0 md:border-b-4 border-gray-600 md:border-none md:p-0"
                 >
                   <td className="md:px-6 hidden py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">
-                    {value.queue}
+                    <Link to={`/dashboard/${ value.id }`}>{value.queue}</Link>
                   </td>
                    <td className="md:px-6 py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">
-                    {new Date(value.created_at).toLocaleDateString("id-ID", {
-                      year: "numeric",
-                      month: "2-digit",
-                      day: "2-digit"
-                    })}
+                    <Link to={`/dashboard/${ value.id }`}>
+                      {new Date(value.created_at).toLocaleDateString("id-ID", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit"
+                      })}
+                    </Link>
                   </td>
-                  <td className="md:px-6 py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">
-                    {value.type}
+                  <td className="md:px-6 py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell"
+                  >
+                    <Link to={`/dashboard/${ value.id }`}>
+                      {value.type}
+                    </Link>
                   </td>
-                  <td className="md:px-6 hidden py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">
-                    {value.message}
+                  <td className="md:px-6 hidden py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell"
+                  >
+                    <Link to={`/dashboard/${ value.id }`}>
+                     {value.message}
+                    </Link>
                   </td>
-                  <td className="md:px-6 uppercase py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">
-                    <span className={`px-2 py-1 rounded-md ${ value.status === "completed" && "bg-green-300 text-green-800" } ${ value.status === "pending" && "bg-yellow-400 text-yellow-800" } ${ value.status === "canceled" && "bg-red-400 text-red-800" }`}>
-                      {value.status}
-                    </span>
+                  <td className="md:px-6 uppercase py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell"
+                  >
+                    <Link to={`/dashboard/${ value.id }`}>
+                      <span className={`px-2 py-1 rounded-md ${ value.status === "completed" && "bg-green-300 text-green-800" } ${ value.status === "pending" && "bg-yellow-400 text-yellow-800" } ${ value.status === "canceled" && "bg-red-400 text-red-800" }`}>
+                        {value.status}
+                      </span>
+                  
+                    </Link>
                   </td>
                 </tr>
               ))}
