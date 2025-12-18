@@ -1,8 +1,7 @@
 import BASE_URL from "./index.js";
 import Axios from "axios";
 
-export const addResponse = async (reqId, message, isComplete) => {
-  const token = localStorage.getItem("tokenKey");
+export const addResponse = async (reqId, message, isComplete, token) => {
   try {
     const response = await Axios.post(
       `${BASE_URL}/response`,

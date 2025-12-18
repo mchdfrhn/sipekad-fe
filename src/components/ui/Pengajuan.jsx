@@ -15,6 +15,7 @@ const Pengajuan = ({
   setFile
 }) => {
   const [showPreview, setShowPreview] = useState(false);
+  const [maxMessage, setMaxMessage] = useState(0);
 
   const handlerDownload = () => {
     const link = document.createElement("a");
@@ -22,6 +23,13 @@ const Pengajuan = ({
     link.download = fileName ? fileName : "";
     link.click();
   };
+
+  const handleChange = (e) => {
+    if (e.target.value.length <= 200) {
+      setMaxMessage(e.target.value.length);
+      setMessage(e.target.value)
+    }
+  }
 
   const handlerPreview = () => {
     setShowPreview((prev) => !prev);
@@ -48,14 +56,17 @@ const Pengajuan = ({
           className="flex flex-col gap-4"
           action=""
         >
-          <input
-            required
-            type="text"
-            className="input-pengajuan"
-            placeholder={placeholder ? placeholder : "message"}
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-          />
+          <div>
+            <small className="text-gray-800">{maxMessage}/200</small>
+            <input
+              required  
+              type="text"
+              className="input-pengajuan"
+              placeholder={placeholder ? placeholder : "message"}
+              value={message}
+              onChange={handleChange}
+            />
+          </div>
           {!isDisplay && <input type="file" name="file" onChange={(e) => setFile(e.target.files[0])} className="input-pengajuan" />}
           <button className="text-sm bg-yellow-500 text-slate-900 border-transparent hover:bg-transparent hover:border-slate-900 transition-colors duration-animation border-2 font-[500] px-4 cursor-pointer py-1 rounded-md">
             Submit

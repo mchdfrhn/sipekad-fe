@@ -54,7 +54,7 @@ const FormUpdateUser = () => {
       <div className="size-30 mx-auto shadow-md p-2 rounded-md overflow-hidden">
         <img
           className="w-full h-full object-top object-cover"
-          src={urlPhoto}
+          src={urlPhoto ? urlPhoto : "/avatar.png"}
           alt="foto user"
         />
       </div>

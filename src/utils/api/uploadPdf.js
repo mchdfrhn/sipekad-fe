@@ -1,18 +1,17 @@
 import axios from "axios";
 import BASE_URL from "./index.js";
 
-export const uploadPdf = async (file, id, token) => {
+export const uploadPdf = async (file, id, token, endpoint) => {
   const formData = new FormData();
   formData.append("file", file);
 
   try {
     const response = await axios.post(
-      `${BASE_URL}/upload-request/${id}`,
+      `${BASE_URL}/${ endpoint }/${id}`,
       formData,
       {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
         },
       }
     );

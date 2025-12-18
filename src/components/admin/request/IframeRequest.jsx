@@ -1,6 +1,6 @@
-const IframeRequest = ({ url }) => {
+const IframeRequest = ({ url, className }) => {
   return (
-    <div className="mt-6 border border-slate-300 rounded-lg overflow-hidden shadow-sm">
+    <div className={`mt-6 border border-slate-300 rounded-lg overflow-hidden shadow-sm ${className}`}>
       <iframe
         src={url}
         title="Preview PDF"

@@ -75,3 +75,21 @@ export const getStatusPengajuan = async (setLabel, setData) => {
     console.error(err);
   }
 };
+
+export const getSummeryDataByUserId = async (setSummery, userId) => {
+  const token = localStorage.getItem("tokenKey");
+  try {
+    const response = await axios.get(`${BASE_URL}/dashboard/summery/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const result = response.data;
+    console.log(result.data)
+    if (result.status === "success") {
+      setSummery(result.data);
+    }
+  } catch (err) {
+    console.error(err);
+  }
+}

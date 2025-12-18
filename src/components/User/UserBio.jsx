@@ -20,7 +20,7 @@ const UserBio = () => {
           ) : (
             <img
               className="w-full h-full object-center object-cover"
-              src="https://avatar.iran.liara.run/public/8"
+              src="/avatar.png"
               alt="image user"
             />
           )}

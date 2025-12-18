@@ -4,6 +4,7 @@ import SimpleBarChart from "../chart/BarChart";
 import { useEffect, useState } from "react";
 import { getSummeryData } from "../../utils/api/dashboardValue";
 import DistribusiPengajuan from "../chart/DistribusiPengajuan";
+import CardDashboardUser from "./user/CardDashboardUser";
 
 const MainAdmin = () => {
   const [summery, setSummery] = useState([]);
@@ -13,11 +14,10 @@ const MainAdmin = () => {
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4 mt-4">
-        {summery.map((data, index) => {
-          return (
-            <CardDashboard key={index} title={data.label} value={data.value} />
-          );
-        })}
+        <CardDashboardUser title={summery[0]?.label} value={summery[0]?.value} className={"shadow-md bg-total-pengajuan"} />
+        <CardDashboardUser title={summery[1]?.label} value={summery[1]?.value} className={"shadow-md bg-pengajuan-proses"} />
+        <CardDashboardUser title={summery[2]?.label} value={summery[2]?.value} className={"shadow-md bg-pengajuan-ditolak"} />
+        <CardDashboardUser title={summery[3]?.label} value={summery[3]?.value} className={"shadow-md bg-pengajuan-berhasil"} />
       </div>
       <div className="xl:max-h-[60vh] mt-8 grid grid-cols-1 xl:grid-cols-3 xl:grid-rows-2 gap-4 mb-10">
         <DistribusiPengajuan />

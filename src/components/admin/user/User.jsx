@@ -8,16 +8,16 @@ const User = () => {
   const [totalPage, setTotalPage] = useState(1);
   const [page, setPage] = useState(1);
 
-  const handlePageChange = async(p) => {
-    return getAllUserForAdmin(p)
-  }
+  const handlePageChange = async (p) => {
+    return getAllUserForAdmin(p);
+  };
   useEffect(() => {
     const getUsers = async () => {
       const result = await getAllUserForAdmin();
       if (result.status === "success") {
         setUsers(result.data);
         setTotalPage(result.totalPage);
-        setPage(result.page)
+        setPage(result.page);
       }
     };
 
@@ -35,6 +35,9 @@ const User = () => {
   ];
   return (
     <>
+      <Link to={"/admin"} className="my-8 block">
+        <ArrowLeft />
+      </Link>
       <div className="px-4 py-6 mt-8 bg-white shadow-md w-full">
         <h1 className="font-semibold md:text-xl uppercase">User</h1>
         <span className="inline-block w-8 h-1 bg-gray-800"></span>
@@ -72,7 +75,7 @@ const User = () => {
                       ) : (
                         <img
                           className="w-full h-full object-cover object-center"
-                          src="https://avatar.iran.liara.run/public/8"
+                          src="/avatar.png"
                           alt=""
                         />
                       )}
@@ -112,18 +115,33 @@ const User = () => {
         </div>
       </div>
       <div className="flex justify-end mt-6 gap-4 ">
-        <button onClick={() => handlePageChange(page - 1)} className="size-8 rounded-full flex justify-center items-center bg-white shadow-md cursor-pointer disabled:text-gray-400" disabled={ page === 1 }><ArrowLeft /></button>
-        {
-          [...Array(totalPage)].map((_, index) => {
-            const pageNumber = index + 1;
-            return(
-              <div className="flex gap-2">
-                <button onClick={() => handlePageChange(pageNumber)} className="size-8 flex justify-center items-center rounded-full bg-white shadow-md">{ pageNumber }</button>
-              </div>
-            )
-          })
-        }
-        <button onClick={() => handlePageChange(page + 1)} className="size-8 rounded-full flex justify-center items-center bg-white shadow-md cursor-pointer disabled:text-gray-400" disabled={ page === totalPage }><ArrowRight /></button>
+        <button
+          onClick={() => handlePageChange(page - 1)}
+          className="size-8 rounded-full flex justify-center items-center bg-white shadow-md cursor-pointer disabled:text-gray-400"
+          disabled={page === 1}
+        >
+          <ArrowLeft />
+        </button>
+        {[...Array(totalPage)].map((_, index) => {
+          const pageNumber = index + 1;
+          return (
+            <div className="flex gap-2">
+              <button
+                onClick={() => handlePageChange(pageNumber)}
+                className="size-8 flex justify-center items-center rounded-full bg-white shadow-md"
+              >
+                {pageNumber}
+              </button>
+            </div>
+          );
+        })}
+        <button
+          onClick={() => handlePageChange(page + 1)}
+          className="size-8 rounded-full flex justify-center items-center bg-white shadow-md cursor-pointer disabled:text-gray-400"
+          disabled={page === totalPage}
+        >
+          <ArrowRight />
+        </button>
       </div>
     </>
   );

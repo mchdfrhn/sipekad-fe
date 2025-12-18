@@ -1,54 +1,76 @@
 import { getUserDetail } from "../../../utils/api/user";
 import { getRequest } from "../../../utils/api/request";
-import { useParams } from "react-router";
+import { useParams, Link } from "react-router";
 import { useEffect, useState } from "react";
-import CardDashboard from "../../ui/CardDashboard";
 import { TablePengajuan } from "../request/Requets";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import CardDashboardUser from "./CardDashboardUser";
+import { filterStatusForUserDetail } from "../../../utils/action";
+import { getSummeryDataByUserId } from "../../../utils/api/dashboardValue";
 
 const UserDetail = () => {
   const [userDetail, setUserDetail] = useState(null);
   const [request, setRequest] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
+  const [summery, setSummery] = useState([]);
   const { id: userId } = useParams();
 
+  const getDetailUser = async (userId, p = 1) => {
+    const token = localStorage.getItem("tokenKey");
+    const result = await getUserDetail(token, userId);
+    if (result.status === "success") {
+      setUserDetail(result.data);
+    }
+
+    const requestResult = await getRequest(userId, p);
+    if (requestResult.status === "success") {
+      setRequest(requestResult.data);
+      setPage(requestResult.page);
+      setTotalPage(requestResult.totalPage);
+    }
+  };
+
   useEffect(() => {
-    const getDetailUser = async () => {
-      // ambil user detail lalu ambil request berdasarkan id
-      const token = localStorage.getItem("tokenKey");
-      const result = await getUserDetail(token, userId);
-      if (result.status === "success") {
-        setUserDetail(result.data);
-      }
-
-      const requestResult = await getRequest(token, userId);
-      if (requestResult.status === "success") {
-        setRequest(requestResult.data);
-      }
-    };
-
-    getDetailUser();
+    getDetailUser(userId);
+    getSummeryDataByUserId(setSummery, userId);
   }, [userId]);
-
-  const totalRequest = request.length;
-  const successRequests = request.filter(
-    (req) => req.status === "completed"
-  ).length;
-  const pendingRequest = request.filter(
-    (req) => req.status === "pending"
-  ).length;
-  const rejectedRequest = request.filter(
-    (req) => req.status === "rejected"
-  ).length;
-
+  const handlePageChange = async (p) => {
+    await getDetailUser(userId, p);
+  };
+  const onChangeHandler = async (e) => {
+    const status = e.target.value;
+    let getAllData = status === "default";
+    await filterStatusForUserDetail(
+      status,
+      setRequest,
+      setPage,
+      setTotalPage,
+      getAllData,
+      userId
+    );
+  };
   return (
     <>
-      <div className="mt-8 bg-white rounded-md shadow-md px-2 py-6">
+      <Link to={"/admin/user"} className="my-8 block">
+        <ArrowLeft />
+      </Link>
+      <div className="mt-8 bg-white rounded-md shadow-md flex flex-col md:flex-row gap-4 px-2 py-6">
         <div className="flex items-center gap-4">
           <div className="size-30 rounded-full overflow-hidden">
-            <img
-              src={userDetail?.url_photo}
-              alt=""
-              className="w-full h-full object-center object-cover"
-            />
+            {userDetail?.url_photo ? (
+              <img
+                src={userDetail?.url_photo}
+                alt=""
+                className="w-full h-full object-center object-cover"
+              />
+            ) : (
+              <img
+                src={"/avatar.png"}
+                alt=""
+                className="w-full h-full object-center object-cover"
+              />
+            )}
           </div>
           <div>
             <h1 className="text-xl font-semibold">{userDetail?.username}</h1>
@@ -59,15 +81,71 @@ const UserDetail = () => {
             </div>
           </div>
         </div>
-      </div>
-      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-        <CardDashboard title={"Jumlah Pengajuan"} value={totalRequest} />
-        <CardDashboard title={"Pengajuan Berhasil"} value={successRequests} />
-        <CardDashboard title={"Pengajuan Proses"} value={pendingRequest} />
-        <CardDashboard title={"Pengajuan Ditolak"} value={rejectedRequest} />
+        <div className="mt-4 flex-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+          <CardDashboardUser
+            title={summery[0]?.label}
+            value={summery[0]?.value}
+            className={
+              "bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-500"
+            }
+          />
+          <CardDashboardUser
+            title={summery[3]?.label}
+            value={summery[3]?.value}
+            className={
+              "bg-gradient-to-r from-green-600 via-green-500 to-emerald-400"
+            }
+          />
+          <CardDashboardUser
+            title={summery[1]?.label}
+            value={summery[1]?.value}
+            className={
+              "bg-gradient-to-r from-amber-500 via-amber-400 to-amber-300"
+            }
+          />
+          <CardDashboardUser
+            title={summery[2]?.label}
+            value={summery[2]?.value}
+            className={"bg-gradient-to-r from-rose-600 via-red-500 to-red-400"}
+          />
+        </div>
       </div>
       <div className="my-10">
-        <TablePengajuan requests={request} />
+        <TablePengajuan
+          requests={request}
+          dontDisplayLink={true}
+          dontDisplayUsername={true}
+          onChangeHandler={onChangeHandler}
+        />
+      </div>
+      <div className="flex gap-4 justify-end mt-4">
+        <button
+          onClick={() => handlePageChange(page - 1)}
+          className="size-8 rounded-full flex justify-center items-center bg-white shadow-md cursor-pointer disabled:text-gray-400"
+          disabled={page === 1}
+        >
+          <ArrowLeft />
+        </button>
+        {[...Array(totalPage)].map((_, index) => {
+          const pageNumber = index + 1;
+          return (
+            <div className="flex gap-2">
+              <button
+                onClick={() => handlePageChange(pageNumber)}
+                className="size-8 flex justify-center items-center rounded-full bg-white shadow-md"
+              >
+                {pageNumber}
+              </button>
+            </div>
+          );
+        })}
+        <button
+          onClick={() => handlePageChange(page + 1)}
+          className="size-8 rounded-full flex justify-center items-center bg-white shadow-md cursor-pointer disabled:text-gray-400"
+          disabled={page === totalPage}
+        >
+          <ArrowRight />
+        </button>
       </div>
     </>
   );

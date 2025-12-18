@@ -3,9 +3,9 @@ import TableRiwayat from "../ui/TableRiwayat";
 import { Link } from "react-router";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
-import CardDashboard from "../ui/CardDashboard";
 import ButtonPagination from "../ui/ButtonPagination";
 import { getRequest } from "../../utils/api/request";
+import CardDashboardUser from "../admin/user/CardDashboardUser"
 
 const DashboardHome = () => {
   const [historRequest, setHistoryRequest] = useState([]);
@@ -47,24 +47,26 @@ const DashboardHome = () => {
         <h1 className="text-2xl font-semibold text-slate-800">Dashboard</h1>
         <Link
           to={"/dashboard/request"}
-          className="p-2 font-semibold border-2 border-transparent hover:border-slate-800 hover:bg-transparent transition-colors transition-duration flex items-center bg-yellow-500 rounded-md gap-2 text-sm"
+          className="p-2 font-semibold border-2 border-transparent hover:border-slate-800 hover:bg-transparent transition-colors transition-duration flex items-center bg-yellow-500 rounded-md gap-1 md:gap-2 text-xs md:text-sm"
         >
-          {" "}
           <Plus size={20} /> Tambah Pengajuan
         </Link>
       </div>
       <Underline />
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-2 mb-8 md:gap-4">
-        <CardDashboard title={"Total pengajuan"} value={totalRequest} />
-        <CardDashboard
+        <CardDashboardUser className={"bg-total-pengajuan shadow-md"} title={"Total pengajuan"} value={totalRequest} />
+        <CardDashboardUser
           title={"Pengajuan yang diterima"}
           value={successRequest}
+          className={"bg-pengajuan-berhasil shadow-md"}
         />
-        <CardDashboard
+        <CardDashboardUser
+          className={"bg-pengajuan-proses shadow-md"}
           title={"Pengajuan yang diproses"}
           value={procesingRequest}
         />
-        <CardDashboard
+        <CardDashboardUser
+          className={"bg-pengajuan-ditolak shadow-md"}
           title={"Pengajuan yang ditolak"}
           value={rejectedRequest}
         />

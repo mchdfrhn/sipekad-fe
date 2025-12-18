@@ -1,6 +1,6 @@
 const TableResponse = ({ dataKey, response }) => {
   return (
-    <table className="w-full">
+    <table className="w-full ">
       <thead>
         <tr>
           {dataKey.map((data) => (
@@ -22,10 +22,10 @@ const TableResponse = ({ dataKey, response }) => {
             <td className="md:px-6 py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">
               {index + 1}
             </td>
-            <td className="md:px-6 py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">
+            <td className="md:px-6 py-2 md:py-4 hidden text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">
               {value.message}
             </td>
-            <td className="md:px-6 hidden py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">
+            <td className="md:px-6 py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">
               {new Date(value.created_at).toLocaleDateString("id-ID", {
                 year: "numeric",
                 month: "2-digit",
