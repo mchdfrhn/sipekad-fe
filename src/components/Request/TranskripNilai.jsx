@@ -3,6 +3,7 @@ import Pengajuan from "../ui/Pengajuan.jsx";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { requestPengajuan } from "../../utils/action";
+import BackLink from "../ui/BackLink.jsx"
 
 const TranskripNilai = () => {
   const navigate = useNavigate();
@@ -13,6 +14,8 @@ const TranskripNilai = () => {
   };
   const { syarat, title } = transkripNilai;
   return (
+    <>
+    <BackLink />
     <Pengajuan
       message={message}
       setMessage={setMessage}
@@ -21,6 +24,7 @@ const TranskripNilai = () => {
       title={title}
       isDisplay={true}
     />
+    </>
   );
 };
 

@@ -1,3 +1,5 @@
+import { X } from "lucide-react";
+
 const Syarat = ({
   children,
   syarat,
@@ -5,11 +7,12 @@ const Syarat = ({
   handlerDownload,
   handlerPreview,
   showPreview,
+  setShowPreview,
   url,
 }) => {
   return (
     <div className="card-pengajuan order-2">
-      <h2 className="font-semibold mb-8 text-slate-800 text-xl">
+      <h2 className="font-semibold mb-8 text-slate-800 md:text-xl">
         Harap dibaca dengan seksama mengenai persyaratan {title}
       </h2>
 
@@ -38,15 +41,22 @@ const Syarat = ({
           </button>
         </div>
       )}
+      {
+        showPreview && <div className="w-screen h-screen fixed inset-0 bg-gray-800/20"></div>
+      }
+      
 
       {showPreview && (
-        <div className="mt-6 border border-slate-300 rounded-lg overflow-hidden shadow-sm">
+        <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-xs md:w-lg p-4 bg-white shadow-md">
+          <button onClick={() => setShowPreview(!showPreview) } className="cursor-pointer" >
+            <X />
+          </button>
           <iframe
             src={url}
             title="Preview PDF"
             width="100%"
             height="500px"
-            className="rounded-md"
+            className="rounded-md mt-4"
           ></iframe>
         </div>
       )}

@@ -1,11 +1,20 @@
-import ListLink from "../ui/ListLink"
-import { kategoriPermintaan } from "../../utils/constant"
+import ListLink from "../ui/ListLink";
+import { kategoriPermintaan } from "../../utils/constant";
+import { ArrowLeft } from "lucide-react";
+import { Link } from "react-router";
 
 const Request = () => {
-
   return (
-    <ListLink data={kategoriPermintaan} title={'Silahkan pilih apa yang mau diminta'} />
-  )
-}
+    <>
+      <Link className="mb-4 block flex items-center" to={"/dashboard"}>
+        <ArrowLeft />{" "}
+      </Link>
+      <ListLink
+        data={kategoriPermintaan}
+        title={"Silahkan pilih apa yang mau diminta"}
+      />
+    </>
+  );
+};
 
-export default Request
+export default Request;

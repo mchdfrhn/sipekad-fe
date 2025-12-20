@@ -3,6 +3,7 @@ import { yudisium } from "../../utils/constant";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { requestPengajuan } from "../../utils/action";
+import BackLink from "../ui/BackLink";
 
 const Yudisium = () => {
   const navigate = useNavigate();
@@ -14,6 +15,8 @@ const Yudisium = () => {
   };
   const { title, syarat, url, fileName } = yudisium;
   return (
+    <>
+    <BackLink />
     <Pengajuan
       message={message}
       setMessage={setMessage}
@@ -24,6 +27,7 @@ const Yudisium = () => {
       fileName={fileName}
       setFile={setFile}
     />
+    </>
   );
 };
 

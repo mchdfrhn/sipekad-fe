@@ -1,11 +1,15 @@
-import { Outlet } from "react-router"
-
+import { Outlet } from "react-router";
+import { useLocation } from "react-router";
 const DashboardRequest = () => {
+  const { pathname } = useLocation();
   return (
-    <div className="w-full bg-slate-100 min-h-screen flex px-6 xl:px-0 flex-col justify-center items-center">
+    <div className="pt-14">
+      <p className="text-[8px] md:text-xl text-gray-400 mb-4 md:tracking-[3px] uppercase font-semibold">
+        {pathname}
+      </p>
       <Outlet />
     </div>
-  )
-}
+  );
+};
 
-export default DashboardRequest
+export default DashboardRequest;

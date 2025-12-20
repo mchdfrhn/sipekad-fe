@@ -4,6 +4,7 @@ import LinkTranskrip from "../ui/LinkTranskrip";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { requestPengajuan } from "../../utils/action";
+import BackLink from "../ui/BackLink";
 
 const ChildrenSempro = () => {
   return (
@@ -29,6 +30,8 @@ const SuratSempro = () => {
   }
   const { syarat, title, url, fileName } = sempro;
   return (
+    <>
+    <BackLink />
     <Pengajuan
       message={message}
       setMessage={setMessage}
@@ -41,6 +44,7 @@ const SuratSempro = () => {
       setFile={setFile}
       children={<ChildrenSempro />}
     />
+    </>
   );
 };
 

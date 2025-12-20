@@ -70,7 +70,7 @@ const TableRiwayat = ({ historyRequest }) => {
                       {value.type}
                     </Link>
                   </td>
-                  <td className="md:px-6 hidden py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell"
+                  <td className="md:px-6 hidden py-2 md:py-4 text-left text-xs md:text-[16px] font-medium text-wrap md:table-cell"
                   >
                     <Link to={`/dashboard/${ value.id }`}>
                      {value.message}

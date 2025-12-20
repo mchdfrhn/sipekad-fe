@@ -16,7 +16,6 @@ const Login = () => {
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     const responseLogin = await login({ email, password });
-    console.log(responseLogin)
     if (responseLogin.status === "success") {
       localStorage.setItem("tokenKey", responseLogin.accessToken);
       updateUserData(responseLogin.user);

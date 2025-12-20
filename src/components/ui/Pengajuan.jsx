@@ -36,13 +36,14 @@ const Pengajuan = ({
   };
 
   return (
-    <div className="container-pengajuan order-1 md:order-3">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <Syarat
         syarat={syarat}
         title={title}
         handlerDownload={handlerDownload}
         handlerPreview={handlerPreview}
         showPreview={showPreview}
+        setShowPreview={setShowPreview}
         url={url}
         children={children}
       />

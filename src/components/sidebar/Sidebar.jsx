@@ -1,10 +1,8 @@
-import { LayoutDashboard, LogOut, User, Send } from "lucide-react";
+import { LayoutDashboard, LogOut, User, Send, Menu, X } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router";
-import { useUser } from "../../utils/hooks/userContext";
 
 
 const Sidebar = ({ activeSidebar, setActiveSideBar }) => {
-  const { userData } = useUser();
 
   const navigate = useNavigate();
 
@@ -17,78 +15,52 @@ const Sidebar = ({ activeSidebar, setActiveSideBar }) => {
       localStorage.removeItem("user");
     }
   };
+  const links = [
+    {
+      path: "/dashboard",
+      name: "dashboard",
+      icon: LayoutDashboard
+    },
+    {
+      path: "/dashboard/request",
+      name: "Minta Permintaan",
+      icon: Send
+    },
+    {
+      path: "/dashboard/user",
+      name: "User",
+      icon: User
+    }
+  ]
   const { pathname } = useLocation();
   return (
-    <aside
-      className={`fixed w-4/6 md:w-1/3 xl:w-2/8 ${
-        activeSidebar ? "-translate-x-0" : "-translate-x-full"
-      } z-40 shadow-2xl xl:translate-x-0 transition-duration transition-transform bg-white h-screen`}
-    >
-      <div className="flex shadow-xl rounded-xl items-center pl-4 py-9 gap-4">
-        <div className="size-20 rounded-full overflow-hidden">
-          {userData?.url_photo ? (
-            <img className="w-full h-full object-cover object-center" src={ userData.url_photo } alt="user image" />
-          ) : (
-            <img
-              className="w-full h-full object-cover object-center"
-              src="/avatar.png"
-              alt=""
-            />
-          )}
-        </div>
-        <div>
-          <p className="md:text-xl font-semibold text-slate-800">
-            {userData?.username}
-          </p>
-          <p className="font-semibold text-slate-600">{userData?.nim}</p>
-        </div>
-      </div>
-      <ul className="pt-8 flex flex-col justify-center text-slate-800 items-center text-center">
-        <li className={`list-sidebar group`}>
-          <Link
-            onClick={() => setActiveSideBar(!activeSidebar)}
-            to={"/dashboard"}
-            className={`flex items-center py-2 group-hover:border-slate-800 border-b-4 gap-2 transition-colors transition-duration ${
-              pathname === "/dashboard"
-                ? "border-slate-800"
-                : "border-transparent"
-            }`}
-          >
-            <LayoutDashboard />
-            Dashboard
-          </Link>
+    <aside className={`bg-white pt-12 md:px-2 ${ activeSidebar && "w-[50%] md:w-xs" } shadow-md`}>
+      <ul className="">
+        <li className={`mb-4 flex justify-start`}>
+          <div onClick={() => setActiveSideBar(!activeSidebar)} className="p-4 cursor-pointer hover:bg-gray-800/20 transition-duration rounded-full">
+            <div className=" size-4 md:size-6">
+            { activeSidebar ? <X className="w-full h-full" /> : <Menu className="w-full h-full" /> }
+            </div>
+          </div>
         </li>
-        <li className={`list-sidebar group`}>
-          <Link
-            onClick={() => setActiveSideBar(!activeSidebar)}
-            to={"/dashboard/request"}
-            className={`flex py-2 items-center group-hover:border-slate-800 border-b-4 gap-2 transition-colors transition-duration ${
-              pathname === "/dashboard/request"
-                ? "border-slate-800"
-                : "border-transparent"
-            }`}
-          >
-            <Send />
-            Minta Permintaan
-          </Link>
-        </li>
-        <li className={`list-sidebar group`}>
-          <Link
-            onClick={() => setActiveSideBar(!activeSidebar)}
-            to={"/dashboard/user"}
-            className={`flex py-2 items-center group-hover:border-slate-800 border-b-4 transition-colors transition-duration gap-2 ${
-              pathname === "/dashboard/user"
-                ? "border-slate-800"
-                : "border-transparent"
-            }`}
-          >
-            <User /> User
-          </Link>
-        </li>
-        <li onClick={logoutHandler} className="mt-8  list-sidebar group">
-          <Link className="flex items-center pb-4 border-transparent group-hover:border-slate-800 border-b-4 transition-colors transition-duration gap-2">
-            <LogOut />
-            Log Out
+        {
+          links.map((link) => (
+            <li className="cursor-pointer mt-2 group">
+              <Link to={link.path} className={`p-4 text-xs md:text-lg rounded-md block group-hover:bg-gray-800/20 flex max-w-sm:justify-center items-center gap-4 transition-duration ${ pathname === link.path && "bg-gray-800/20" }`}>
+                <div className="size-4 md:size-6"><link.icon className="w-full h-full" /></div>
+                { activeSidebar && <p className="">{ link.name }</p> }
+              </Link>
+            </li>
+          ))
+        }
+        <li onClick={logoutHandler} className="mt-8 px-4">
+          <Link className="flex items-center pb-4 border-transparent group-hover:border-slate-800 border-b-4 transition-colors transition-duration gap-4">
+          <div className=" size-4 md:size-6 flex">
+            <LogOut className="w-full h-full" />
+          </div>
+            {
+              activeSidebar && <p className="text-xs md:text-lg">Logout</p>
+            }
           </Link>
         </li>
       </ul>

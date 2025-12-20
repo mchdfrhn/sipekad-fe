@@ -85,7 +85,6 @@ export const getSummeryDataByUserId = async (setSummery, userId) => {
       },
     });
     const result = response.data;
-    console.log(result.data)
     if (result.status === "success") {
       setSummery(result.data);
     }

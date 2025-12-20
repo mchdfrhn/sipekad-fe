@@ -4,6 +4,7 @@ import LinkTranskrip from "../ui/LinkTranskrip";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { requestPengajuan } from "../../utils/action";
+import BackLink from "../ui/BackLink";
 
 const ChildrenSempro = () => {
   return (
@@ -30,17 +31,20 @@ const SeminarKp = () => {
   };
   const { syarat, title, url, fileName } = seminarKerjaPraktik;
   return (
-    <Pengajuan
-      message={message}
-      setMessage={setMessage}
-      submitHandler={submitHandler}
-      syarat={syarat}
-      url={url}
-      fileName={fileName}
-      title={title}
-      setFile={setFile}
-      children={<ChildrenSempro />}
-    />
+    <>
+      <BackLink /> 
+      <Pengajuan
+        message={message}
+        setMessage={setMessage}
+        submitHandler={submitHandler}
+        syarat={syarat}
+        url={url}
+        fileName={fileName}
+        title={title}
+        setFile={setFile}
+        children={<ChildrenSempro />}
+      />
+    </>
   );
 };
 

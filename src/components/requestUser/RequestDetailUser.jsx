@@ -2,10 +2,12 @@ import Underline from "../ui/Underline";
 import { getResponseById } from "../../utils/api/response";
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, X } from "lucide-react";
+import IframeRequest from "../admin/request/IframeRequest";
 
 const RequestDetailUser = () => {
-  const [response, setResponse] = useState([]);
+  const [responses, setResponse] = useState([]);
+  const [showFile, setShowFile] = useState(false);
   const { id } = useParams();
   useEffect(() => {
     const getResponse = async () => {
@@ -15,8 +17,24 @@ const RequestDetailUser = () => {
 
     getResponse();
   }, [id]);
+  const response = responses[0];
   return (
-    <div className="xl:pl-[28%] py-20 px-8 bg-slate-100 min-h-screen">
+    <div className="pt-14">
+      {showFile && (
+        <div className="w-screen h-screen fixed top-0 left-0 bg-black/20"></div>
+      )}
+
+      {showFile && (
+        <div className="w-sm md:w-md xl:w-4xl p-4 bg-white rounded-md shadow-md fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+          <button
+            onClick={() => setShowFile(!showFile)}
+            className="cursor-pointer"
+          >
+            <X />
+          </button>
+          <IframeRequest url={response?.url} />
+        </div>
+      )}
       <div className="mb-4 my-2">
         <Link to={"/dashboard"} className="flex items-center gap-2">
           <ArrowLeft />{" "}
@@ -26,46 +44,59 @@ const RequestDetailUser = () => {
       <div className="bg-white w-full shadow-md rounded-md px-4 py-2">
         <h1 className="text-2xl font-bold text-gray-800">Response</h1>
         <Underline />
-        <table className="w-full">
-          <thead>
-            <tr className="">
-              <th className="px-3 md:px-6 py-2 md:py-4 text-left text-sm font-semibold uppercase tracking-wide hidden md:table-cell" >No</th>
-              <th className="px-3 md:px-6 py-2 md:py-4 text-left text-sm font-semibold uppercase tracking-wide hidden md:table-cell">Message</th>
-              <th className="px-3 md:px-6 py-2 md:py-4 text-left text-sm font-semibold uppercase tracking-wide hidden md:table-cell">Tanggal</th>
-              <th className="px-3 md:px-6 py-2 md:py-4 text-left text-sm font-semibold uppercase tracking-wide hidden md:table-cell">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {response.length !== 0
-              ? response.map((res, i) => {
-                  return (
-                    <tr>
-                      <td className="md:px-6 py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">{i + 1}</td>
-                      <td className="md:px-6 py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">{res.message}</td>
-                      <td className="md:px-6 py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">
-                        {new Date(res.updated_at).toLocaleDateString("id-ID", {
-                          year: "numeric",
-                          month: "2-digit",
-                          day: "2-digit",
-                        })}
-                      </td>
-                      <td className="md:px-6 py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">
-                        <span className={`px-2 py-2 rounded-md ${
-                      res.status === "completed" &&
-                      "bg-green-300 text-green-800"
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:grid-rows-2">
+          {responses?.length < 1 ? (
+            <h1>Belum ada response</h1>
+          ) : (
+            <>
+              <div>
+                <p className="text-xl font-bold">Status</p>
+                <span className="flex justify-start">
+                  <p
+                    className={`px-2 py-1 rounded-md mt-4 ${
+                      response?.status === "completed" &&
+                      "bg-green-600/50 text-green-800"
+                    }  ${
+                      response?.status === "canceled" &&
+                      "bg-red-600/50 text-red-800"
                     } ${
-                      res.status === "pending" &&
-                      "bg-yellow-400 text-yellow-800"
-                    } ${
-                      res.status === "canceled" && "bg-red-400 text-red-800"
-                    } `}>{ res.status }</span>
-                      </td>
-                    </tr>
-                  );
-                })
-              : ""}
-          </tbody>
-        </table>
+                      response?.status === "pending" &&
+                      "bg-yellow-600/50 text-yellow-800"
+                    }`}
+                  >
+                    {response?.status}
+                  </p>
+                </span>
+              </div>
+              <div>
+                <p className="text-xl font-bold">Message</p>
+                <p>"{response?.message}"</p>
+              </div>
+              <div>
+                <p className="text-xl font-bold">Tanggal</p>
+                <p>
+                  {new Date(response?.updated_at).toLocaleDateString("id-ID", {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                  })}
+                </p>
+              </div>
+              <div className="md:col-span-3 mt-4">
+                {response?.url ? (
+                  <button
+                    onClick={() => setShowFile(!showFile)}
+                    className="bg-yellow-500 rounded-md font-semibold cursor-pointer px-4 border-2 border-transparent hover:bg-transparent hover:border-gray-800 transition-duration py-1 hover"
+                  >
+                    Lihat Berkas
+                  </button>
+                ) : (
+                  <h1>Tidak ada file yang dilampirkan</h1>
+                )}
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

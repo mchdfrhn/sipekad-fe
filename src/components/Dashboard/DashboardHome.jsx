@@ -5,7 +5,8 @@ import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import ButtonPagination from "../ui/ButtonPagination";
 import { getRequest } from "../../utils/api/request";
-import CardDashboardUser from "../admin/user/CardDashboardUser"
+import CardDashboardUser from "../admin/user/CardDashboardUser";
+import HeaderDashboard from "../Header/HeaderDashboard";
 
 const DashboardHome = () => {
   const [historRequest, setHistoryRequest] = useState([]);
@@ -20,7 +21,6 @@ const DashboardHome = () => {
       const userId = JSON.parse(user).id;
       const result = await getRequest(userId);
       if (result.status === "success") {
-        console.log(result);
         setHistoryRequest(result.data);
         setTotalPage(result.totalPage);
         setPage(result.page);
@@ -42,19 +42,24 @@ const DashboardHome = () => {
   ).length;
 
   return (
-    <div className="xl:pl-[28%] py-20 px-8 bg-slate-100 min-h-screen">
+    <div className="py-12">
+      <HeaderDashboard />
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-slate-800">Dashboard</h1>
+        <h1 className="text-2xl font-bold">Dashboard</h1>
         <Link
           to={"/dashboard/request"}
-          className="p-2 font-semibold border-2 border-transparent hover:border-slate-800 hover:bg-transparent transition-colors transition-duration flex items-center bg-yellow-500 rounded-md gap-1 md:gap-2 text-xs md:text-sm"
+          className="block flex items-center gap-2 px-2 py-1 md:px-4 md:py-2 bg-yellow-500 rounded-md shadow-md cursor-pointer border border-transparent hover:bg-transparent hover:border-gray-800 transition-duration"
         >
-          <Plus size={20} /> Tambah Pengajuan
+          <Plus size={20} /> <p className="text-xs md:text-sm">Tambah Pengajuan</p>
         </Link>
       </div>
       <Underline />
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-2 mb-8 md:gap-4">
-        <CardDashboardUser className={"bg-total-pengajuan shadow-md"} title={"Total pengajuan"} value={totalRequest} />
+        <CardDashboardUser
+          className={"bg-total-pengajuan shadow-md"}
+          title={"Total pengajuan"}
+          value={totalRequest}
+        />
         <CardDashboardUser
           title={"Pengajuan yang diterima"}
           value={successRequest}

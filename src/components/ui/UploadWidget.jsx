@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { CLD_NAME } from "../../utils/cloudinary.config";
+import { Upload } from "lucide-react";
 
 const UploadWidget = ({ setPublicId }) => {
   const cloudinaryRef = useRef();
@@ -22,10 +23,13 @@ const UploadWidget = ({ setPublicId }) => {
 
   return (
     <button
-      className="button-yellow-home text-sm font-[500] w-full mb-4 mt-10"
+      className="bg-blue-500/50 py-1 rounded-md text-sm w-full mb-4 mt-4 cursor-pointer flex justify-center items-center gap-2"
       onClick={() => widgetRef.current.open()}
     >
-      Update foto
+      <div className="size-4">
+        <Upload className="w-full h-full" />
+      </div>
+      <p>Update foto</p>
     </button>
   );
 };

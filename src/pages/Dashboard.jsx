@@ -24,10 +24,11 @@ const Dashboard = () => {
   
   return (
     <>
-    <HeaderDashboard active={sidebarActive} setActive={setSidebarActive} />
-    <main className="relative">
+    <main className="flex gap-3 md:gap-4 bg-gray-100 h-screen">
       <Sidebar activeSidebar={sidebarActive} setActiveSideBar={setSidebarActive} />
+      <div className="flex-4 pr-4 md:pr-8 overflow-y-scroll">
         <Outlet />
+      </div>
     </main>
     </>
   )
