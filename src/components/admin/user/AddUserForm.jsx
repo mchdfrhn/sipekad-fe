@@ -27,6 +27,7 @@ const AddUserForm = ({
       password,
       full_name: fullName,
       email,
+      role,
       nim,
       phone: `0${phone}`,
     };

@@ -114,6 +114,7 @@ export const addUserForAdmin = async (
 ) => {
   const token = localStorage.getItem("tokenKey");
   const result = await addUser(token, data);
+  console.log(result)
   if (result.status === "fail") {
     const messages = Object.values(result.message).flat();
     setErrorMessage(messages[0]);

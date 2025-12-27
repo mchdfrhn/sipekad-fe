@@ -95,10 +95,10 @@ const getUserDetail = async (token, userId) => {
   }
 };
 
-export const addUser = async(token, { username, password, nim, full_name, email, phone }) => {
+export const addUser = async(token, { username, password, nim, full_name, email, phone, role }) => {
   try {
     const result = await axios.post(`${ BASE_URL }/users`, {
-      username, password, nim, full_name, email, phone
+      username, password, nim, full_name, email, phone, role
     }, {
       headers: {
         Authorization: `Bearer ${ token }`

@@ -23,9 +23,11 @@ const RequestDetail = () => {
   return (
     <>
       <div className={`bg-black/10 w-screen h-[100vh] fixed top-0 ${ !displayIframe && "hidden" }`}></div>
+      <div className="flex justify-start my-8">
+        <Link to={"/admin/pengajuan"} className="block"><ArrowLeft /></Link>
+      </div>
       <div className="mt-8">
-        <Link to={"/admin/pengajuan"} className=""><ArrowLeft /></Link>
-        <div className="mb-4 mt-8 max-h-md:max-h-[20rem] grid bg-white shadow-md grid-cols-1 md:grid-cols-3 md:grid-rows-2 gap-2 p-4 rounded-md">
+        <div className="mb-4  max-h-md:max-h-[20rem] grid bg-white shadow-md grid-cols-1 md:grid-cols-3 md:grid-rows-2 gap-2 p-4 rounded-md">
           <div className="">
             <p className="text-2xl font-bold">Nama Lengkap:</p>
             <Link to={`/admin/user/${ requestDetail?.user_id }`} className="flex items-center gap-2">
