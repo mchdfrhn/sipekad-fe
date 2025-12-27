@@ -1,5 +1,6 @@
 import Axios from "axios";
 import BASE_URL from ".";
+import axios from "axios";
 
 const getUser = async (token) => {
   try {
@@ -20,7 +21,8 @@ const updateProfile = async (
   { username, email, phone, url_photo, full_name },
   updateUserData,
   updateUser,
-  navigate
+  setShowProfile,
+  showProfile
 ) => {
   const user = JSON.parse(localStorage.getItem("user"));
   const token = localStorage.getItem("tokenKey");
@@ -44,7 +46,7 @@ const updateProfile = async (
     );
     if (response.data.status === "success") {
       updateUserData(updateUser);
-      navigate("/dashboard");
+      setShowProfile(!showProfile);
     }
   } catch (err) {
     console.error(err);
@@ -92,5 +94,51 @@ const getUserDetail = async (token, userId) => {
     };
   }
 };
+
+export const addUser = async(token, { username, password, nim, full_name, email, phone }) => {
+  try {
+    const result = await axios.post(`${ BASE_URL }/users`, {
+      username, password, nim, full_name, email, phone
+    }, {
+      headers: {
+        Authorization: `Bearer ${ token }`
+      },
+    });
+
+    return result.data
+  } catch(err) {
+    return err.response.data
+  }
+}
+
+export const deleteUser = async(token, userId) => {
+  try {
+    const result = await axios.delete(`${ BASE_URL }/users/${ userId }`, {
+      headers: {
+        Authorization: `Bearer ${ token }`
+      }
+    });
+
+    return result.data
+  } catch(err) {
+    return err.response.data
+  }
+}
+
+export const updateUserForAdmin = async(token, userId, { username, full_name, nim, email, phone }) => {
+  try {
+    const result = await axios.put(`${ BASE_URL }/users/${ userId }`, {
+      username, full_name, nim, email, phone
+    }, {
+      headers: {
+        Authorization: `Bearer ${ token }`
+      }
+    });
+
+    return result.data
+  } catch(err) {
+    return err.response.data
+  }
+} 
 
 export { getUser, updateProfile, getAllUserForAdmin, getUserDetail };

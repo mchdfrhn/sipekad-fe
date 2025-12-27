@@ -9,7 +9,6 @@ const login = async ({ email, password }) => {
     });
     return response.data;
   } catch (err) {
-    console.log(err);
     return {
       status: "error",
       message: err.response.data.message,

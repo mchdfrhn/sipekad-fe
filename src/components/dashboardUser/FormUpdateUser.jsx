@@ -2,11 +2,9 @@ import UploadWidget from "../ui/UploadWidget";
 import { useState } from "react";
 import { updateProfile } from "../../utils/api/user";
 import { useUser } from "../../utils/hooks/userContext";
-import { useNavigate } from "react-router";
-import BackLink from "../ui/BackLink";
+import { X } from "lucide-react";
 
-const FormUpdateUser = () => {
-  const navigate = useNavigate();
+const FormUpdateUser = ({ showForm, setShowForm }) => {
   const { updateUserData } = useUser();
   const { email, phone, username, id, full_name, nim, role } = JSON.parse(
     localStorage.getItem("user")
@@ -40,15 +38,18 @@ const FormUpdateUser = () => {
       },
       updateUserData,
       newUpdateUser,
-      navigate
+      setShowForm,
+      showForm
     );
   };
 
   return (
     <>
-      <BackLink />
-      <div className="flex justify-start">
-        <div className="bg-white py-4 px-2 rounded-md shadow-md md:flex xl:items-center gap-4">
+      <div className="fixed bg-white py-4 px-4 rounded-md shadow-md z-20 top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2">
+      <button onClick={() => setShowForm(!showForm)} className="cursor-pointer">
+        <X />
+      </button>
+        <div className="md:flex mt-2 xl:items-center gap-4">
           <div>
             <div className="size-30 mx-auto shadow-md p-2 rounded-md overflow-hidden">
               <img
@@ -59,9 +60,9 @@ const FormUpdateUser = () => {
             </div>
             <UploadWidget setPublicId={setUrlPhoto} />
           </div>
-          <form onSubmit={onSubmitHandler}>
+          <form className="flex flex-col gap-2" onSubmit={onSubmitHandler}>
             <input
-              className="input-pengajuan"
+              className="border px-2 rounded-md focus:outline-none"
               type="text"
               name="username"
               value={usernameInput}
@@ -69,7 +70,7 @@ const FormUpdateUser = () => {
               placeholder="Username"
             />
             <input
-              className="input-pengajuan mt-2"
+              className="border px-2 rounded-md focus:outline-none"
               type="string"
               name="phone"
               value={phoneInput}
@@ -77,7 +78,7 @@ const FormUpdateUser = () => {
               placeholder="Phone"
             />
             <input
-              className="input-pengajuan mt-2"
+              className="border px-2 rounded-md focus:outline-none"
               type="text"
               name="email"
               value={emailInput}

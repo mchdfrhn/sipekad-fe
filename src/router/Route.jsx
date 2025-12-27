@@ -88,10 +88,6 @@ const Router = createBrowserRouter([
             index: true,
             Component: UserBio,
           },
-          {
-            path: "update",
-            Component: FormUpdateUser,
-          },
         ],
       },
       {

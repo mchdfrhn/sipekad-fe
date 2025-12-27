@@ -66,7 +66,6 @@ export const getStatusPengajuan = async (setLabel, setData) => {
       },
     });
     const result = response.data;
-    console.log(result);
     if (result.status === "success") {
       setLabel(result.label);
       setData(result.data);

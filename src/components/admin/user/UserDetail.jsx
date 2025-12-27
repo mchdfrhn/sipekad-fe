@@ -3,10 +3,11 @@ import { getRequest } from "../../../utils/api/request";
 import { useParams, Link } from "react-router";
 import { useEffect, useState } from "react";
 import { TablePengajuan } from "../request/Requets";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Pen } from "lucide-react";
 import CardDashboardUser from "./CardDashboardUser";
 import { filterStatusForUserDetail } from "../../../utils/action";
 import { getSummeryDataByUserId } from "../../../utils/api/dashboardValue";
+import UpdateUserForm from "./UpdateUserForm";
 
 const UserDetail = () => {
   const [userDetail, setUserDetail] = useState(null);
@@ -15,6 +16,7 @@ const UserDetail = () => {
   const [totalPage, setTotalPage] = useState(1);
   const [summery, setSummery] = useState([]);
   const { id: userId } = useParams();
+  const [showForm, setShowForm] = useState(false);
 
   const getDetailUser = async (userId, p = 1) => {
     const token = localStorage.getItem("tokenKey");
@@ -52,9 +54,18 @@ const UserDetail = () => {
   };
   return (
     <>
-      <Link to={"/admin/user"} className="my-8 block">
-        <ArrowLeft />
-      </Link>
+      <UpdateUserForm setShowForm={setShowForm} userDetail={userDetail} shwoForm={showForm} />
+      <div className="flex justify-between items-center">
+        <Link to={"/admin/user"} className="my-8 block">
+          <ArrowLeft />
+        </Link>
+        <button onClick={() => setShowForm(!showForm)} className="flex items-center gap-2 px-2 py-1 bg-yellow-500 rounded-md shadow-md cursor-pointer border border-transparent hover:border-gray-700 hover:bg-transparent transition-duration">
+          <div className="size-4">
+            <Pen className="w-full h-full" />
+          </div>
+          <span>Update User</span>
+        </button>
+      </div>
       <div className="mt-8 bg-white rounded-md shadow-md flex flex-col md:flex-row gap-4 px-2 py-6">
         <div className="flex items-center gap-4">
           <div className="size-30 rounded-full overflow-hidden">

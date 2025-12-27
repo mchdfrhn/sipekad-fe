@@ -2,6 +2,7 @@ import { getRequest, postrequest } from "./api/request";
 import { addResponse } from "./api/response";
 import { uploadPdf } from "./api/uploadPdf.js";
 import { getAllRequestForAdmin } from "./api/request";
+import { addUser, deleteUser, getAllUserForAdmin, updateUserForAdmin } from "./api/user.js";
 
 export const requestPengajuan = async (type, message, file, navigate) => {
   const token = localStorage.getItem("tokenKey");
@@ -19,7 +20,7 @@ export const requestPengajuan = async (type, message, file, navigate) => {
         token,
         "upload-request"
       );
-      console.log(resultUpload);
+
       if (resultUpload.status === "success") {
         navigate("/dashboard");
       }
@@ -29,7 +30,11 @@ export const requestPengajuan = async (type, message, file, navigate) => {
   }
 };
 
-export const addResponseHandler = async (e,{ id, message, isComplete, file }, navigate ) => {
+export const addResponseHandler = async (
+  e,
+  { id, message, isComplete, file },
+  navigate
+) => {
   const token = localStorage.getItem("tokenKey");
   e.preventDefault();
   const result = await addResponse(id, message, isComplete, token);
@@ -42,7 +47,6 @@ export const addResponseHandler = async (e,{ id, message, isComplete, file }, na
         token,
         "upload-response"
       );
-      console.log(resultUpload)
       if (resultUpload.status === "success") {
         navigate("/dashboard");
       }
@@ -97,3 +101,63 @@ export const filterStatusForUserDetail = async (
     setTotalPage(result.totalPage);
   }
 };
+
+export const addUserForAdmin = async (
+  data,
+  setErrorMessage,
+  setShowForm,
+  showForm,
+  setUsers,
+  setPage,
+  setTotalPage,
+  page
+) => {
+  const token = localStorage.getItem("tokenKey");
+  const result = await addUser(token, data);
+  if (result.status === "fail") {
+    const messages = Object.values(result.message).flat();
+    setErrorMessage(messages[0]);
+  }
+
+  if (result.error === "23505") {
+    setErrorMessage("Data sudah terdaftar");
+  }
+
+  if (result.status === "success") {
+    setShowForm(!showForm);
+    const users = await getAllUserForAdmin(page);
+    setUsers(users.data);
+    setPage(users.page);
+    setTotalPage(users.totalPage);
+  }
+};
+
+export const deleteUserForAdmin = async (
+  userId,
+  setUsers,
+  page,
+  setPage,
+  setTotalPage
+) => {
+  const token = localStorage.getItem("tokenKey");
+  const result = await deleteUser(token, userId);
+  if (result.status === "success") {
+    const users = await getAllUserForAdmin(page);
+    setUsers(users.data);
+    setPage(users.page);
+    setTotalPage(users.totalPage);
+  }
+};
+
+export const updateUserForAdminAction = async (userId, data, navigate, setErrorMessage) => {
+  const token = localStorage.getItem("tokenKey");
+  const result = await updateUserForAdmin(token, userId, data);
+  console.log(result);
+  if (result.status === "fail") {
+    const messages = Object.values(result.message).flat();
+    setErrorMessage(messages[0]);
+  }
+  if (result.status === "success") {
+    navigate("/admin/user")
+  }
+}

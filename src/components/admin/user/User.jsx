@@ -1,15 +1,27 @@
-import { Trash, Pen, ArrowLeft, ArrowRight } from "lucide-react";
+import {
+  Trash,
+  ArrowLeft,
+  ArrowRight,
+  X,
+  User as UserIcon,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { getAllUserForAdmin } from "../../../utils/api/user";
 import { Link } from "react-router";
+import AddUserForm from "./AddUserForm";
+import { deleteUserForAdmin } from "../../../utils/action";
 
 const User = () => {
+  const [showForm, setShowForm] = useState(false);
   const [users, setUsers] = useState([]);
   const [totalPage, setTotalPage] = useState(1);
   const [page, setPage] = useState(1);
 
   const handlePageChange = async (p) => {
-    return getAllUserForAdmin(p);
+    const users = await getAllUserForAdmin(p);
+    setUsers(users.data);
+    setPage(users.page);
+    setTotalPage(users.totalPage);
   };
   useEffect(() => {
     const getUsers = async () => {
@@ -35,9 +47,35 @@ const User = () => {
   ];
   return (
     <>
-      <Link to={"/admin"} className="my-8 block">
-        <ArrowLeft />
-      </Link>
+      {showForm && (
+        <div className="fixed inset-0 w-screen h-screen bg-black/20"></div>
+      )}
+      {showForm && (
+        <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white shadow-md rounded-md p-4 md:w-sm">
+          <button
+            onClick={() => setShowForm(!showForm)}
+            className="cursor-pointer"
+          >
+            <X />
+          </button>
+            <AddUserForm showForm={showForm} setShowForm={setShowForm} setPage={setPage} setTotalPage={setTotalPage} setUsers={setUsers} page={page} />
+        </div>
+      )}
+
+      <div className="flex justify-between items-center my-8">
+        <Link to={"/admin"} className="block">
+          <ArrowLeft />
+        </Link>
+        <button
+          onClick={() => setShowForm(!showForm)}
+          className="bg-blue-500 block px-4 py-2 rounded-md text-white flex items-center gap-2 cursor-pointer border border-transparent hover:bg-transparent hover:text-gray-800 hover:border-gray-800 transition-duration"
+        >
+          <div className="size-5">
+            <UserIcon className="w-full h-full" />
+          </div>
+          <p className="font-semibold">Tambah User</p>
+        </button>
+      </div>
       <div className="px-4 py-6 mt-8 bg-white shadow-md w-full">
         <h1 className="font-semibold md:text-xl uppercase">User</h1>
         <span className="inline-block w-8 h-1 bg-gray-800"></span>
@@ -100,11 +138,8 @@ const User = () => {
                   </td>
                   <td className="md:px-6 py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">
                     <div className="flex block gap-2">
-                      <button className="cursor-pointer hover:bg-red-400 group p-1 bg-red-200 transition-color transition-duration rounded-md">
+                      <button onClick={() => deleteUserForAdmin(value.id, setUsers, page, setPage, setTotalPage)} className="cursor-pointer hover:bg-red-400 group p-1 bg-red-200 transition-color transition-duration rounded-md">
                         <Trash className="text-red-500 transition-color transition-duration group-hover:text-red-800" />
-                      </button>
-                      <button className="cursor-pointer transition-color transition-duration hover:bg-yellow-400 group p-1 rounded-md bg-yellow-300">
-                        <Pen className="text-yellow-600 transition-color transition-duration group-hover:text-yellow-800" />
                       </button>
                     </div>
                   </td>
