@@ -21,7 +21,7 @@ const UserBio = () => {
          <FormUpdateUser showForm={showForm} setShowForm={setShowForm} />
       )}
      
-      <div className="relative bg-white shadow-md rounded-md p-8">
+      <div className="relative bg-white shadow-md rounded-md p-4">
         <div className="bg-gradient-to-r from-purple-300 via-blue-200 to-blue-500 rounded-md relative h-40">
        
           <div className="size-40 flex items-center gap-4 absolute -bottom-20 left-1/2 -translate-x-1/2 rounded-full p-2 bg-white">

@@ -2,10 +2,11 @@ import { Outlet, useNavigate } from "react-router"
 import Sidebar from "../components/sidebar/Sidebar"
 import HeaderDashboard from "../components/Header/HeaderDashboard"
 import { useState, useEffect } from "react"
+import { LayoutDashboard, User, Send} from "lucide-react";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [sidebarActive, setSidebarActive] = useState(false);
+  const [sidebarActive, setSidebarActive] = useState(true);
   const [isLogin, setIsLogin] = useState(false);
 
   useEffect(() => {
@@ -21,12 +22,28 @@ const Dashboard = () => {
   if (!isLogin) {
     return null
   }
-  
+  const links = [
+    {
+      path: "/dashboard",
+      name: "dashboard",
+      icon: LayoutDashboard
+    },
+    {
+      path: "/dashboard/request",
+      name: "Minta Permintaan",
+      icon: Send
+    },
+    {
+      path: "/dashboard/user",
+      name: "User",
+      icon: User
+    }
+  ];
   return (
     <>
-    <main className="flex gap-3 md:gap-4 bg-gray-100 h-screen">
-      <Sidebar activeSidebar={sidebarActive} setActiveSideBar={setSidebarActive} />
-      <div className="flex-4 pr-4 md:pr-8 overflow-y-scroll">
+    <main className="bg-gray-100 h-screen">
+      <Sidebar links={links} activeSidebar={sidebarActive} setActiveSideBar={setSidebarActive} />
+      <div className="overflow-y-scroll px-4">
         <Outlet />
       </div>
     </main>

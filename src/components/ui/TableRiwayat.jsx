@@ -1,5 +1,6 @@
 import Underline from "./Underline";
 import { Link } from "react-router";
+import { motion } from "motion/react";
 
 
 const TableRiwayat = ({ historyRequest }) => {
@@ -31,7 +32,7 @@ const TableRiwayat = ({ historyRequest }) => {
           <p>: diproses</p>
         </div>
       </div>
-      <div className="rounded-lg bg-white overflow-hidden shadow-xl ">
+      <motion.div initial={{ opacity: 0, translateY: 20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ duration: 0.5, ease: ["easeInOut"] }} className="rounded-lg bg-white overflow-hidden shadow-xl ">
         <div className="px-2 md:py-4 overflow-x-auto">
           <table className="w-full">
             <thead>
@@ -91,7 +92,7 @@ const TableRiwayat = ({ historyRequest }) => {
           </table>
 
         </div>
-      </div>
+      </motion.div>
     </>
   );
 };

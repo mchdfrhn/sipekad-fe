@@ -4,7 +4,7 @@ const DashboardUser = () => {
  
   
   return (
-    <div className="flex flex-col justify-center pt-14">
+    <div className="p-layout flex flex-col justify-center pt-14">
       <Outlet />
     </div>
   )

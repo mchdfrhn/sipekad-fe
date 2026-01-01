@@ -1,4 +1,5 @@
 import { X } from "lucide-react";
+import { motion } from "motion/react"
 
 const Syarat = ({
   children,
@@ -11,7 +12,7 @@ const Syarat = ({
   url,
 }) => {
   return (
-    <div className="card-pengajuan order-2">
+    <motion.div initial={{ opacity: 0, translateY: 20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ duration: 0.6, ease: ["easeInOut"] }} className="card-pengajuan order-2">
       <h2 className="font-semibold mb-8 text-slate-800 md:text-xl">
         Harap dibaca dengan seksama mengenai persyaratan {title}
       </h2>
@@ -60,7 +61,7 @@ const Syarat = ({
           ></iframe>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 };
 

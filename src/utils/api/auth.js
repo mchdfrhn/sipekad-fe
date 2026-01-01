@@ -1,10 +1,10 @@
 import Axios from "axios";
 import BASE_URL from "./index.js";
 
-const login = async ({ email, password }) => {
+const login = async ({ username, password }) => {
   try {
     const response = await Axios.post(`${BASE_URL}/auth/login`, {
-      email,
+      username,
       password,
     });
     return response.data;

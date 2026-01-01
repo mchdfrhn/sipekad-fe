@@ -3,6 +3,7 @@ import { addResponse } from "./api/response";
 import { uploadPdf } from "./api/uploadPdf.js";
 import { getAllRequestForAdmin } from "./api/request";
 import { addUser, deleteUser, getAllUserForAdmin, updateUserForAdmin } from "./api/user.js";
+import { login } from "./api/auth.js";
 
 export const requestPengajuan = async (type, message, file, navigate) => {
   const token = localStorage.getItem("tokenKey");
@@ -161,4 +162,23 @@ export const updateUserForAdminAction = async (userId, data, navigate, setErrorM
   if (result.status === "success") {
     navigate("/admin/user")
   }
+}
+
+
+export const loginFlow = async (data, updateUserData, navigate, setErrMessage) => {
+  const result = await login(data);
+  if (result.status === "success") {
+      localStorage.setItem("tokenKey", result.accessToken);
+      updateUserData(result.user);
+      localStorage.setItem("user", JSON.stringify(result.user));
+      navigate("/dashboard");
+      if (result.user.role === "admin") {
+        navigate("/admin");
+      }
+    }
+    
+
+    if (result.status === "error") {
+      setErrMessage("Email atau password salah");
+    }
 }

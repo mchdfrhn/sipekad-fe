@@ -10,7 +10,7 @@ import {
 } from "recharts";
 import { useEffect, useState } from "react";
 import { getTopTypePengajuan } from "../../utils/api/dashboardValue";
-
+import { motion } from "motion/react";
 
 const SimpleBarChart = () => {
   const [label, setLabel] = useState("");
@@ -19,7 +19,7 @@ const SimpleBarChart = () => {
     getTopTypePengajuan(setLabel, setData);
   }, []);
   return (
-    <div className="bg-white  shadow-md rounded-md px-4 pt-2">
+    <motion.div initial={{ opcaity: 0, translateY: 20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ duration: 1.1, ease: ["easeInOut"] }}  className="bg-white  shadow-md rounded-md px-4 pt-2">
       <h2 className="mb-4 font-semibold">{ label }</h2>
       <BarChart
         style={{ width: "100%", height: "22vh", aspectRatio: 1.618 }}
@@ -42,7 +42,7 @@ const SimpleBarChart = () => {
           activeBar={<Rectangle stroke="purple" />}
         />
       </BarChart>
-    </div>
+    </motion.div>
   );
 };
 

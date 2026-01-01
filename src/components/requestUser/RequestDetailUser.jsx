@@ -19,7 +19,7 @@ const RequestDetailUser = () => {
   }, [id]);
   const response = responses[0];
   return (
-    <div className="pt-14">
+    <div className="p-layout">
       {showFile && (
         <div className="w-screen h-screen fixed top-0 left-0 bg-black/20"></div>
       )}

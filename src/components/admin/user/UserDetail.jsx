@@ -94,6 +94,7 @@ const UserDetail = () => {
         </div>
         <div className="mt-4 flex-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
           <CardDashboardUser
+            index={5}
             title={summery[0]?.label}
             value={summery[0]?.value}
             className={
@@ -101,6 +102,7 @@ const UserDetail = () => {
             }
           />
           <CardDashboardUser
+            index={6}
             title={summery[3]?.label}
             value={summery[3]?.value}
             className={
@@ -108,6 +110,7 @@ const UserDetail = () => {
             }
           />
           <CardDashboardUser
+            index={7}
             title={summery[1]?.label}
             value={summery[1]?.value}
             className={
@@ -115,6 +118,7 @@ const UserDetail = () => {
             }
           />
           <CardDashboardUser
+            index={8}
             title={summery[2]?.label}
             value={summery[2]?.value}
             className={"bg-gradient-to-r from-rose-600 via-red-500 to-red-400"}

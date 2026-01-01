@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Syarat from "./Syarat";
+import { motion } from "motion/react"
 
 const Pengajuan = ({
   url,
@@ -48,7 +49,7 @@ const Pengajuan = ({
         children={children}
       />
 
-      <div className="card-pengajuan order-3 md:order-1">
+      <motion.div initial={{ opacity: 0, translateY: 20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ duration: 0.5, ease: ['easeInOut'] }} className="card-pengajuan order-3 md:order-1">
         <h2 className="text-xl text-slate-800 font-semibold mb-8">
           Informasi Pengaju
         </h2>
@@ -73,7 +74,7 @@ const Pengajuan = ({
             Submit
           </button>
         </form>
-      </div>
+      </motion.div>
     </div>
   );
 };
