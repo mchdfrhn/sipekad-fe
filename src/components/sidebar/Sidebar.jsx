@@ -17,23 +17,7 @@ const Sidebar = ({ activeSidebar, setActiveSideBar, links }) => {
       localStorage.removeItem("user");
     }
   };
-  // const links = [
-  //   {
-  //     path: "/dashboard",
-  //     name: "dashboard",
-  //     icon: LayoutDashboard
-  //   },
-  //   {
-  //     path: "/dashboard/request",
-  //     name: "Minta Permintaan",
-  //     icon: Send
-  //   },
-  //   {
-  //     path: "/dashboard/user",
-  //     name: "User",
-  //     icon: User
-  //   }
-  // ];
+ 
   
   const { pathname } = useLocation();
   return (

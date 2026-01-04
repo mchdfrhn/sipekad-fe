@@ -42,7 +42,7 @@ const LayoutAdmin = () => {
     return null;
   } else {
     return (
-      <main className="text-gray-800 overflow-hidden bg-gray-100 pr-4 pl-4 md:pl-0">
+      <main className="text-gray-800 overflow-hidden bg-gray-100 pr-4 pl-4 md:pl-0 min-h-screen">
         <Sidebar activeSidebar={sidebarActive} setActiveSideBar={setSidebarActive} links={links} />
         <div className="p-layout">
           <div className="w-full bg-white shadow-md p-4 rounded-md flex justify-between items-center">

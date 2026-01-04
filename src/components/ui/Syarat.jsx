@@ -29,7 +29,7 @@ const Syarat = ({
         <div className="flex gap-2 mt-4">
           <button
             onClick={handlerDownload}
-            className="text-sm bg-yellow-500 text-slate-900 border-transparent hover:bg-transparent hover:border-slate-900 transition-colors duration-animation border-2 font-[500] px-4 cursor-pointer py-1 rounded-md"
+            className="text-sm bg-blue-500 text-white hover:text-slate-900 border-transparent hover:bg-transparent hover:border-slate-900 transition-colors duration-animation border-2 font-[500] px-4 cursor-pointer py-1 rounded-md"
           >
             Unduh berkas
           </button>

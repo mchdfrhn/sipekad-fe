@@ -1,11 +1,23 @@
 import { getRequest, postrequest } from "./api/request";
 import { addResponse } from "./api/response";
 import { uploadPdf } from "./api/uploadPdf.js";
-import { getAllRequestForAdmin } from "./api/request";
-import { addUser, deleteUser, getAllUserForAdmin, updateUserForAdmin } from "./api/user.js";
+import { getAllRequestForAdmin} from "./api/request";
+import {
+  addUser,
+  deleteUser,
+  getAllUserForAdmin,
+  updateUserForAdmin,
+} from "./api/user.js";
 import { login } from "./api/auth.js";
 
-export const requestPengajuan = async (type, message, file, navigate) => {
+export const requestPengajuan = async (
+  type,
+  message,
+  file,
+  setDisplayModal,
+  displayModal,
+  setLoading
+) => {
   const token = localStorage.getItem("tokenKey");
   const response = await postrequest(token, {
     type,
@@ -22,22 +34,19 @@ export const requestPengajuan = async (type, message, file, navigate) => {
         "upload-request"
       );
 
-      if (resultUpload.status === "success") {
-        navigate("/dashboard");
-      }
-    } else {
-      navigate("/dashboard");
+      console.log(resultUpload);
     }
+    
+    setDisplayModal(!displayModal);
+    setLoading(false);
   }
 };
 
 export const addResponseHandler = async (
-  e,
   { id, message, isComplete, file },
-  navigate
+  setDisplayModal, displayModal, setLoading
 ) => {
   const token = localStorage.getItem("tokenKey");
-  e.preventDefault();
   const result = await addResponse(id, message, isComplete, token);
   if (result.status === "success") {
     if (file) {
@@ -48,11 +57,10 @@ export const addResponseHandler = async (
         token,
         "upload-response"
       );
-      if (resultUpload.status === "success") {
-        navigate("/dashboard");
-      }
+      console.log(resultUpload)
     }
-    navigate("/admin/pengajuan");
+    setDisplayModal(!displayModal);
+    setLoading(false);
   }
 };
 
@@ -115,7 +123,6 @@ export const addUserForAdmin = async (
 ) => {
   const token = localStorage.getItem("tokenKey");
   const result = await addUser(token, data);
-  console.log(result)
   if (result.status === "fail") {
     const messages = Object.values(result.message).flat();
     setErrorMessage(messages[0]);
@@ -151,34 +158,41 @@ export const deleteUserForAdmin = async (
   }
 };
 
-export const updateUserForAdminAction = async (userId, data, navigate, setErrorMessage) => {
+export const updateUserForAdminAction = async (
+  userId,
+  data,
+  navigate,
+  setErrorMessage
+) => {
   const token = localStorage.getItem("tokenKey");
   const result = await updateUserForAdmin(token, userId, data);
-  console.log(result);
   if (result.status === "fail") {
     const messages = Object.values(result.message).flat();
     setErrorMessage(messages[0]);
   }
   if (result.status === "success") {
-    navigate("/admin/user")
+    navigate("/admin/user");
   }
-}
+};
 
-
-export const loginFlow = async (data, updateUserData, navigate, setErrMessage) => {
+export const loginFlow = async (
+  data,
+  updateUserData,
+  navigate,
+  setErrMessage
+) => {
   const result = await login(data);
   if (result.status === "success") {
-      localStorage.setItem("tokenKey", result.accessToken);
-      updateUserData(result.user);
-      localStorage.setItem("user", JSON.stringify(result.user));
-      navigate("/dashboard");
-      if (result.user.role === "admin") {
-        navigate("/admin");
-      }
+    localStorage.setItem("tokenKey", result.accessToken);
+    updateUserData(result.user);
+    localStorage.setItem("user", JSON.stringify(result.user));
+    navigate("/dashboard");
+    if (result.user.role === "admin") {
+      navigate("/admin");
     }
-    
+  }
 
-    if (result.status === "error") {
-      setErrMessage("Email atau password salah");
-    }
-}
+  if (result.status === "error") {
+    setErrMessage("Email atau password salah");
+  }
+};

@@ -41,7 +41,7 @@ const Dashboard = () => {
   ];
   return (
     <>
-    <main className="bg-gray-100 h-screen">
+    <main className="bg-gray-100 min-h-screen">
       <Sidebar links={links} activeSidebar={sidebarActive} setActiveSideBar={setSidebarActive} />
       <div className="overflow-y-scroll px-4">
         <Outlet />

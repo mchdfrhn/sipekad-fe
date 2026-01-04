@@ -20,7 +20,6 @@ const DashboardHome = () => {
       const user = localStorage.getItem("user");
       const userId = JSON.parse(user).id;
       const result = await getRequest(userId);
-      console.log(result)
       if (result.status === "success") {
         setHistoryRequest(result.data);
         setTotalPage(result.totalPage);
