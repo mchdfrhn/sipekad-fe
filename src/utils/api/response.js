@@ -33,7 +33,6 @@ export const getResponseById = async (reqId, token, setResponses) => {
     });
 
     const result = response.data;
-    console.log(result)
     if (result.status === "success") {
         setResponses(result.data);
     } 

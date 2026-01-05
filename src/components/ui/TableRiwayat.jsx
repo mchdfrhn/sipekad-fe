@@ -1,5 +1,6 @@
 import Underline from "./Underline";
 import { Link } from "react-router";
+import { motion } from "motion/react";
 
 
 const TableRiwayat = ({ historyRequest }) => {
@@ -31,7 +32,7 @@ const TableRiwayat = ({ historyRequest }) => {
           <p>: diproses</p>
         </div>
       </div>
-      <div className="rounded-lg bg-white overflow-hidden shadow-xl ">
+      <motion.div initial={{ opacity: 0, translateY: 20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ duration: 0.5, ease: ["easeInOut"] }} className="rounded-lg bg-white overflow-hidden shadow-xl ">
         <div className="px-2 md:py-4 overflow-x-auto">
           <table className="w-full">
             <thead>
@@ -50,7 +51,7 @@ const TableRiwayat = ({ historyRequest }) => {
               {historyRequest.map((value, index) => (
                 <tr
                   key={index}
-                  className="flex flex-row items-center justify-between hover:shadow-md cursor-pointer transition-all transition-duration justify-between gap-2 md:table-row md:mb-0 md:border-b-4 border-gray-600 md:border-none md:p-0"
+                  className={`flex flex-row ${ index % 2 === 0 && "bg-gray-500/20" } items-center justify-between hover:shadow-md cursor-pointer transition-all transition-duration justify-between gap-2 md:table-row md:mb-0 md:border-b-4 border-gray-600 md:border-none md:p-0`}
                 >
                   <td className="md:px-6 hidden py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">
                     <Link to={`/dashboard/${ value.id }`}>{value.queue}</Link>
@@ -91,7 +92,7 @@ const TableRiwayat = ({ historyRequest }) => {
           </table>
 
         </div>
-      </div>
+      </motion.div>
     </>
   );
 };

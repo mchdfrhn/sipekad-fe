@@ -37,6 +37,7 @@ const User = () => {
   }, []);
 
   const prperty = [
+    "no",
     "image",
     "username",
     "nim",
@@ -94,11 +95,14 @@ const User = () => {
               </tr>
             </thead>
             <tbody>
-              {users.map((value) => (
+              {users.map((value, index) => (
                 <tr
                   key={value.id}
-                  className="flex flex-row hover:shadow-md cursor-pointer transition-all transition-duration justify-between gap-4 items-center md:table-row mb-4 md:mb-0 md:border-b-4 border-gray-600 md:border-none md:p-0"
+                  className={` ${ index % 2 === 0 && "bg-gray-200/80" } flex flex-row hover:shadow-md cursor-pointer transition-all transition-duration justify-between gap-4 items-center md:table-row mb-4 md:mb-0 md:border-b-4 border-gray-600 md:border-none md:p-0`}
                 >
+                  <td className="md:px-6 hidden py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">
+                    <Link to={`/admin/user/${value.id}`}>{index + 1}</Link>
+                  </td>
                   <td className="md:px-6 py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">
                     <Link
                       to={`/admin/user/${value.id}`}

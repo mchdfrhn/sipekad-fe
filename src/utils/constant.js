@@ -271,45 +271,6 @@ const sidangSkripsi = {
 }
 
 
-
-const request = [
-  {
-    id: "001",
-    created: "2025-10-20",
-    user: "User 1",
-    type: "mahasiswa aktif",
-    queue: "MAH251020-002"
-  },
-  {
-    id: "002",
-    created: "2025-06-03",
-    user: "user 2",
-    type: "Transikripsi",
-    queue: "TRA251101-001"
-  },
-   {
-    id: "003",
-    created: "2025-06-03",
-    user: "user 2",
-    type: "Transikripsi",
-    queue: "TRA251101-001"
-  },
-   {
-    id: "004",
-    created: "2025-06-03",
-    user: "user 2",
-    type: "Transikripsi",
-    queue: "TRA251101-001"
-  },
-   {
-    id: "005",
-    created: "2025-06-03",
-    user: "user 2",
-    type: "Transikripsi",
-    queue: "TRA251101-001"
-  },
-]
-
 export {
   kategoriPermintaan,
   kategoriKeterangan,
@@ -327,5 +288,4 @@ export {
   sempro,
   seminarKerjaPraktik,
   sidangSkripsi,
-  request
 };

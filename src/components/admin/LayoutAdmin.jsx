@@ -1,11 +1,13 @@
-import SidebarAdmin from "../sidebar/SidebarAdmin";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { Outlet } from "react-router";
 import { Bell } from "lucide-react";
+import { LayoutDashboard, User, Send } from "lucide-react";
+import Sidebar from "../sidebar/Sidebar";
 
 const LayoutAdmin = () => {
   const [isAdmin, setIsAdmin] = useState(false);
+  const [sidebarActive, setSidebarActive] = useState(true);
   const navigate = useNavigate();
   useEffect(() => {
     const roleUser = JSON.parse(localStorage.getItem("user"))?.role;
@@ -18,13 +20,31 @@ const LayoutAdmin = () => {
     }
   }, [navigate, isAdmin]);
 
+    const links = [
+    {
+      path: "/admin",
+      name: "dashbord",
+      icon: LayoutDashboard,
+    },
+    {
+      path: "/admin/user",
+      name: "User",
+      icon: User,
+    },
+    {
+      path: "/admin/pengajuan",
+      name: "Pengajuan",
+      icon: Send,
+    },
+  ];
+
   if (!isAdmin) {
     return null;
   } else {
     return (
-      <main className="max-h-screen text-gray-800 h-screen overflow-hidden bg-gray-100 flex">
-        <SidebarAdmin />
-        <div className="content-stretch flex-4 pt-4 pl-2 pr-2 overflow-y-scroll overflow-x-hidden mb-8">
+      <main className="text-gray-800 overflow-hidden bg-gray-100 pr-4 pl-4 md:pl-0 min-h-screen">
+        <Sidebar activeSidebar={sidebarActive} setActiveSideBar={setSidebarActive} links={links} />
+        <div className="p-layout">
           <div className="w-full bg-white shadow-md p-4 rounded-md flex justify-between items-center">
             <h1 className="font-semibold md:text-xl uppercase">
               Admin Dashboard
