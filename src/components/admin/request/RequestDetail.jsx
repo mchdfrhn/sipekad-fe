@@ -17,6 +17,7 @@ const RequestDetail = () => {
   const [file, setFile] = useState(null);
   const [isDisplay, setIsDisplay] = useState(false);
   const [isLoading, setLoading] = useState(false);
+  const [errMessage, setErrorMessage] = useState("")
 
   useEffect(() => {
     getRequestDetail(id, setRequestDetail, setResponses);
@@ -32,7 +33,7 @@ const RequestDetail = () => {
   const onAddResponseHandler = async(e) => {
     e.preventDefault();
     setLoading(true);
-    addResponseHandler({ id, message, isComplete: isActive, file }, setIsDisplay, isDisplay, setLoading)
+    addResponseHandler({ id, message, isComplete: isActive, file }, setIsDisplay, isDisplay, setLoading, setErrorMessage)
   }
   return (
     <>
@@ -45,46 +46,54 @@ const RequestDetail = () => {
         </Link>
       </div>
       <div className={`mt-8 grid grid-cols-1 ${ requestDetail?.status === "pending" && "md:grid-cols-2" }  gap-4`}>
-        <div className="bg-white px-4 py-2 rounded-md shadow-md">
+        <div className="bg-white px-4 py-4 rounded-md shadow-md grid grid-cols-3 items-start gap-4">
           <div className="">
-            <p className="text-2xl font-bold">Nama Lengkap:</p>
+            <p className="text-gray-400 uppercase md:tracking-[2px] text-xs">Nama:</p>
             <Link
               to={`/admin/user/${requestDetail?.user_id}`}
               className="flex items-center gap-2"
             >
-              <p>{requestDetail?.full_name}</p> <LinkIcon size={15} />
+              <p className="text-xs md:text-sm xl:text-[16px]">{requestDetail?.full_name}</p> <LinkIcon size={15} />
             </Link>
           </div>
           <div>
-            <p className="text-2xl font-bold">Type:</p>
-            <p>{requestDetail?.type}</p>
+            <p className="text-gray-400 uppercase md:tracking-[2px] text-xs">Type:</p>
+            <p className="text-xs md:text-sm xl:text-[16px]">{requestDetail?.type}</p>
           </div>
           <div>
-            <p className="text-2xl font-bold">NIM:</p>
-            <p className="">{requestDetail?.nim}</p>
+            <p className="text-gray-400 uppercase md:tracking-[2px] text-xs">NIM:</p>
+            <p className="text-xs md:text-sm xl:text-[16px]">{requestDetail?.nim}</p>
           </div>
 
           <div className="flex justify-start flex-col items-start">
-            <p className="text-2xl font-bold">Status:</p>
+            <p className="text-gray-400 uppercase md:tracking-[2px] text-xs">Status:</p>
             <div className="flex items-center gap-2">
-              <p>{ requestDetail?.status }</p>
+              <p className="text-xs md:text-sm xl:text-[16px]">{ requestDetail?.status }</p>
               <span className={`block size-2 ${ requestDetail?.status === "pending" && "bg-yellow-500" } ${ requestDetail?.status === "canceled" && "bg-red-500" } ${ requestDetail?.status === "completed" && "bg-green-500" } rounded-full`}></span>
             </div>
           </div>
           <div className="">
-            <p className="text-2xl font-bold">Message:</p>
-            <p>"{requestDetail?.message}"</p>
+            <p className="text-gray-400 uppercase md:tracking-[2px] text-xs">prodi:</p>
+            <p className="text-xs md:text-sm xl:text-[16px]">{requestDetail?.prodi}</p>
+          </div>
+          <div className="">
+            <p className="text-gray-400 uppercase md:tracking-[2px] text-xs">nik:</p>
+            <p className="text-xs md:text-sm xl:text-[16px]">{requestDetail?.nik ? requestDetail?.nik : "nik belum ditambahkan"}</p>
           </div>
           <div>
-            <p className="text-2xl font-bold">File:</p>
+            <p className="text-gray-400 uppercase md:tracking-[2px] text-xs">File:</p>
             {requestDetail?.url && (
               <button
                 onClick={() => setDisplayIframe(!displayIframe)}
-                className="mt-4 border border-transparent w-full py-1 rounded-md bg-blue-500 text-white cursor-pointer hover:text-gray-800 hover:bg-transparent hover:border-gray-800 transition-color transition-duration"
+                className="border border-transparent w-full text-xs py-1 rounded-md bg-blue-500 text-white cursor-pointer hover:text-gray-800 hover:bg-transparent hover:border-gray-800 transition-color transition-duration"
               >
                 Tampilkan File
               </button>
             )}
+          </div>
+          <div className="">
+            <p className="text-gray-400 uppercase md:tracking-[2px] text-xs">Message:</p>
+            <p className="text-xs md:text-sm xl:text-[16px]">"{requestDetail?.message}"</p>
           </div>
         </div>
         {displayIframe && (
@@ -150,6 +159,9 @@ const RequestDetail = () => {
                 }
               </button>
             </form>
+            {
+              errMessage &&  <p className="text-xs bg-red-500/50 px-4 py-1 rounded-md text-red-800 mt-4">{ errMessage }</p>
+            }
           </div>
         )}
         <div className="bg-white rounded-md shadow-md px-4 mt-4 md:px-6 md:py-4">

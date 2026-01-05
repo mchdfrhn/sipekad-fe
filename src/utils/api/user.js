@@ -86,6 +86,7 @@ const getUserDetail = async (token, userId) => {
     });
 
     const users = await result.data;
+    console.log(users);
     return users;
   } catch (err) {
     return {

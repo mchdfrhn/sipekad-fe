@@ -44,23 +44,29 @@ export const requestPengajuan = async (
 
 export const addResponseHandler = async (
   { id, message, isComplete, file },
-  setDisplayModal, displayModal, setLoading
+  setDisplayModal, displayModal, setLoading, setErrorMessage
 ) => {
   const token = localStorage.getItem("tokenKey");
-  const result = await addResponse(id, message, isComplete, token);
-  if (result.status === "success") {
-    if (file) {
-      const responseId = result.responseId;
-      const resultUpload = await uploadPdf(
-        file,
-        responseId,
-        token,
-        "upload-response"
-      );
-      console.log(resultUpload)
+  if (!message) {
+    setErrorMessage("Pesan tidak boleh kosong");
+    setLoading(false)
+    return;
+  } else {
+    const result = await addResponse(id, message, isComplete, token);
+    if (result.status === "success") {
+      if (file) {
+        const responseId = result.responseId;
+        const resultUpload = await uploadPdf(
+          file,
+          responseId,
+          token,
+          "upload-response"
+        );
+        console.log(resultUpload)
+      }
+      setDisplayModal(!displayModal);
+      setLoading(false);
     }
-    setDisplayModal(!displayModal);
-    setLoading(false);
   }
 };
 
