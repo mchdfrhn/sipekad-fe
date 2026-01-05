@@ -54,12 +54,19 @@ const UserDetail = () => {
   };
   return (
     <>
-      <UpdateUserForm setShowForm={setShowForm} userDetail={userDetail} shwoForm={showForm} />
+      <UpdateUserForm
+        setShowForm={setShowForm}
+        userDetail={userDetail}
+        shwoForm={showForm}
+      />
       <div className="flex justify-between items-center">
         <Link to={"/admin/user"} className="my-8 block">
           <ArrowLeft />
         </Link>
-        <button onClick={() => setShowForm(!showForm)} className="flex items-center gap-2 px-2 py-1 bg-yellow-500 rounded-md shadow-md cursor-pointer border border-transparent hover:border-gray-700 hover:bg-transparent transition-duration">
+        <button
+          onClick={() => setShowForm(!showForm)}
+          className="flex items-center gap-2 px-2 py-1 bg-yellow-500 rounded-md shadow-md cursor-pointer border border-transparent hover:border-gray-700 hover:bg-transparent transition-duration"
+        >
           <div className="size-4">
             <Pen className="w-full h-full" />
           </div>
@@ -67,7 +74,7 @@ const UserDetail = () => {
         </button>
       </div>
       <div className="mt-8 bg-white rounded-md shadow-md flex flex-col md:flex-row gap-4 px-2 py-6">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2">
           <div className="size-30 rounded-full overflow-hidden">
             {userDetail?.url_photo ? (
               <img
@@ -83,47 +90,65 @@ const UserDetail = () => {
               />
             )}
           </div>
-          <div>
-            <h1 className="text-xl font-semibold">{userDetail?.username}</h1>
-            <p>{userDetail?.nim}</p>
-            <div className="mt-2 text-gray-500">
-              <p className="text-sm">{userDetail?.email}</p>
-              <p className="text-sm">{userDetail?.phone}</p>
+          <div className="grid xl:grid-cols-3 xl:grid-rows-2 gap-1 md:gap-4 items-start grid-rows-3 grid-cols-2 px-2">
+            <div>
+              <p className="text-gray-400 uppercase md:tracking-[2px] text-xs">Nama Lengkap</p>
+              <h1 className="md:text-xl font-semibold">{userDetail?.username}</h1>
+            </div>
+            <div>
+              <p className="text-gray-400 uppercase md:tracking-[2px] text-xs">Prodi</p>
+              <p className="text-xs md:text-[16px]">{ userDetail?.prodi }</p>
+            </div>
+            <div>
+              <p className="text-gray-400 uppercase md:tracking-[2px] text-xs">NIM</p>
+              <p className="text-xs md:text-[16px]">{userDetail?.nim}</p>
+            </div>
+            <div className="">
+              <p className="text-gray-400 uppercase md:tracking-[2px] text-xs">Email</p>
+              <p className="text-xs md:text-[16px]">{userDetail?.email}</p>
+            </div>
+            <div>
+              <p className="text-gray-400 uppercase md:tracking-[2px] text-xs">No telephone</p>
+              <p className="text-xs md:text-[16px]">{userDetail?.phone}</p>
+            </div>
+            <div>
+              <p className="text-gray-400 uppercase md:tracking-[2px] text-xs">Nik</p>
+              <p className="text-xs md:text-[16px]">{userDetail?.nik ? userDetail?.nik : "Nik belum dimasukan"}</p>
             </div>
           </div>
         </div>
-        <div className="mt-4 flex-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-          <CardDashboardUser
-            index={5}
-            title={summery[0]?.label}
-            value={summery[0]?.value}
-            className={
-              "bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-500"
-            }
-          />
-          <CardDashboardUser
-            index={6}
-            title={summery[3]?.label}
-            value={summery[3]?.value}
-            className={
-              "bg-gradient-to-r from-green-600 via-green-500 to-emerald-400"
-            }
-          />
-          <CardDashboardUser
-            index={7}
-            title={summery[1]?.label}
-            value={summery[1]?.value}
-            className={
-              "bg-gradient-to-r from-amber-500 via-amber-400 to-amber-300"
-            }
-          />
-          <CardDashboardUser
-            index={8}
-            title={summery[2]?.label}
-            value={summery[2]?.value}
-            className={"bg-gradient-to-r from-rose-600 via-red-500 to-red-400"}
-          />
-        </div>
+      </div>
+      <div className="mt-4 flex-4 grid grid-cols-2 xl:grid-cols-4 gap-4 bg-white p-4 shadow-md rounded-md">
+        <CardDashboardUser
+          index={5}
+          title={summery[0]?.label}
+          value={summery[0]?.value}
+          className={
+            "bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-500"
+          }
+        />
+        <CardDashboardUser
+          index={6}
+          title={summery[3]?.label}
+          value={summery[3]?.value}
+          className={
+            "bg-gradient-to-r from-green-600 via-green-500 to-emerald-400"
+          }
+        />
+        <CardDashboardUser
+          index={7}
+          title={summery[1]?.label}
+          value={summery[1]?.value}
+          className={
+            "bg-gradient-to-r from-amber-500 via-amber-400 to-amber-300"
+          }
+        />
+        <CardDashboardUser
+          index={8}
+          title={summery[2]?.label}
+          value={summery[2]?.value}
+          className={"bg-gradient-to-r from-rose-600 via-red-500 to-red-400"}
+        />
       </div>
       <div className="my-10">
         <TablePengajuan
