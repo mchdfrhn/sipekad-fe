@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, LoaderCircle } from "lucide-react";
 import { useNavigate } from "react-router";
 import { useUser } from "../../utils/hooks/userContext";
 import { loginFlow } from "../../utils/action";
@@ -12,11 +12,13 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [hiddenPassword, setHiddenPassword] = useState(false);
   const [errMessage, setErrMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     const data = { username, password };
-    await loginFlow(data, updateUserData, navigate, setErrMessage);
+    await loginFlow(data, updateUserData, navigate, setErrMessage, setIsLoading);
   };
 
   return (
@@ -57,8 +59,10 @@ const Login = () => {
                 {hiddenPassword ? <Eye /> : <EyeOff />}
               </div>
             </div>
-            <button className="py-1 bg-blue-500 text-white border-transparent border hover:border-blue-500 hover:bg-transparent hover:text-blue-500 transition-color duration-300 ease-in-out w-full cursor-pointer rounded-md">
-              Login
+            <button className={`py-1 ${ isLoading ? "bg-blue-500/50" : "bg-blue-500 " } flex justify-center text-white border-transparent border hover:border-blue-500 hover:bg-transparent hover:text-blue-500 transition-color duration-300 ease-in-out w-full cursor-pointer rounded-md`}>
+              {
+                isLoading ? <div className="animate-spin"><LoaderCircle /></div> : "login"
+              }
             </button>
             {
               errMessage && <motion.div initial={{opacity: 0}} whileInView={{ opacity: 1 }} transition={{ duration: 0.1, ease: ["easeInOut"] }} className="rounded-md p-2 text-red-600 mt-4 bg-red-500/20 text-sm">

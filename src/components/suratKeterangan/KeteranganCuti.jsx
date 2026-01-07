@@ -27,7 +27,7 @@ const KeteranganCuti = () => {
   return (
     <>
       {displayModal && (
-        <SuccessModal setDisplay={displayModal} isDisplay={displayModal} />
+        <SuccessModal onOkHandler={() => setDisplayModal(!displayModal)} />
       )}
       <Pengajuan
         submitHandler={submitHandler}

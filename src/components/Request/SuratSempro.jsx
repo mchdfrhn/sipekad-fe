@@ -42,7 +42,7 @@ const SuratSempro = () => {
   return (
     <>
       {displayModal && (
-        <SuccessModal setDisplay={setDisplayModal} isDisplay={displayModal} />
+        <SuccessModal onOkHandler={() => setDisplayModal(!displayModal)} />
       )}
       <BackLink />
       <Pengajuan

@@ -27,7 +27,7 @@ const MahasiswaAktif = () => {
   return (
     <>
       {displayModal && (
-        <SuccessModal setDisplay={setDisplayModal} isDisplay={displayModal} />
+        <SuccessModal onOkHandler={() => setDisplayModal(!displayModal)} />
       )}
       <Pengajuan
         submitHandler={submitHandler}

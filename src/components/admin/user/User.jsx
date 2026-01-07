@@ -49,18 +49,11 @@ const User = () => {
   return (
     <>
       {showForm && (
-        <div className="fixed inset-0 w-screen h-screen bg-black/20"></div>
-      )}
-      {showForm && (
-        <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white shadow-md rounded-md p-4 md:w-sm">
-          <button
-            onClick={() => setShowForm(!showForm)}
-            className="cursor-pointer"
-          >
-            <X />
-          </button>
-            <AddUserForm showForm={showForm} setShowForm={setShowForm} setPage={setPage} setTotalPage={setTotalPage} setUsers={setUsers} page={page} />
+        <>
+        <div onClick={() => setShowForm(!showForm)} className="fixed inset-0 w-screen h-screen bg-gray-500/50 flex justify-center z-40 items-center">
         </div>
+        <AddUserForm showForm={showForm} setShowForm={setShowForm} setPage={setPage} setTotalPage={setTotalPage} setUsers={setUsers} page={page} />
+        </>
       )}
 
       <div className="flex justify-between items-center my-8">
@@ -71,10 +64,10 @@ const User = () => {
           onClick={() => setShowForm(!showForm)}
           className="bg-blue-500 block px-4 py-2 rounded-md text-white flex items-center gap-2 cursor-pointer border border-transparent hover:bg-transparent hover:text-gray-800 hover:border-gray-800 transition-duration"
         >
-          <div className="size-5">
+          <div className="size-4">
             <UserIcon className="w-full h-full" />
           </div>
-          <p className="font-semibold">Tambah User</p>
+          <p className="text-sm">Tambah User</p>
         </button>
       </div>
       <div className="px-4 py-6 mt-8 bg-white shadow-md w-full">

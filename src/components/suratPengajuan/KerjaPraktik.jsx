@@ -20,7 +20,7 @@ const KerjaPraktik = () => {
   return (
     <>
     {
-      displayModal && <SuccessModal isDisplay={displayModal} setDisplay={setDisplayModal} />
+      displayModal && <SuccessModal onOkHandler={() => setDisplayModal(!displayModal)} />
     }   
     <Pengajuan
       url={url}

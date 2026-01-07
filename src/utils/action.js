@@ -185,7 +185,8 @@ export const loginFlow = async (
   data,
   updateUserData,
   navigate,
-  setErrMessage
+  setErrMessage,
+  setLoading
 ) => {
   const result = await login(data);
   if (result.status === "success") {
@@ -197,7 +198,7 @@ export const loginFlow = async (
       navigate("/admin");
     }
   }
-
+  setLoading(false)
   if (result.status === "error") {
     setErrMessage("Email atau password salah");
   }

@@ -24,7 +24,7 @@ const KeteranganLulus = () => {
   return (
     <>
       {displayModal && (
-        <SuccessModal isDisplay={displayModal} setDisplay={setDisplayModal} />
+        <SuccessModal onOkHandler={() => setDisplayModal(!displayModal)} />
       )}
       <Pengajuan
         submitHandler={submitHandler}
