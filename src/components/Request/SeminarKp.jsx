@@ -2,9 +2,9 @@ import { seminarKerjaPraktik } from "../../utils/constant";
 import Pengajuan from "../ui/Pengajuan";
 import LinkTranskrip from "../ui/LinkTranskrip";
 import { useState } from "react";
-import { useNavigate } from "react-router";
 import { requestPengajuan } from "../../utils/action";
 import BackLink from "../ui/BackLink";
+import SuccessModal from "../ui/SuccessModal";
 
 const ChildrenSempro = () => {
   return (
@@ -22,17 +22,29 @@ const ChildrenSempro = () => {
 };
 
 const SeminarKp = () => {
-  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [displayModal, setDisplayModal] = useState(false);
   const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
   const submitHandler = async (e) => {
     e.preventDefault();
-    await requestPengajuan("Seminar Kp", message, file, navigate);
+    setIsLoading(true);
+    await requestPengajuan(
+      "Seminar Kp",
+      message,
+      file,
+      setDisplayModal,
+      displayModal,
+      setIsLoading
+    );
   };
   const { syarat, title, url, fileName } = seminarKerjaPraktik;
   return (
     <>
-      <BackLink /> 
+      {displayModal && (
+        <SuccessModal setDisplay={setDisplayModal} isDisplay={displayModal} />
+      )}
+      <BackLink />
       <Pengajuan
         message={message}
         setMessage={setMessage}
@@ -43,6 +55,7 @@ const SeminarKp = () => {
         title={title}
         setFile={setFile}
         children={<ChildrenSempro />}
+        isLoading={isLoading}
       />
     </>
   );

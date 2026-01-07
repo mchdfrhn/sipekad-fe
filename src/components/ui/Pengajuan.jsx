@@ -1,5 +1,7 @@
 import { useState } from "react";
 import Syarat from "./Syarat";
+import { Loader } from "lucide-react";
+import { motion } from "motion/react"
 
 const Pengajuan = ({
   url,
@@ -12,7 +14,8 @@ const Pengajuan = ({
   message,
   setMessage,
   placeholder,
-  setFile
+  setFile,
+  isLoading
 }) => {
   const [showPreview, setShowPreview] = useState(false);
   const [maxMessage, setMaxMessage] = useState(0);
@@ -48,7 +51,7 @@ const Pengajuan = ({
         children={children}
       />
 
-      <div className="card-pengajuan order-3 md:order-1">
+      <motion.div initial={{ opacity: 0, translateY: 20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ duration: 0.5, ease: ['easeInOut'] }} className="card-pengajuan order-3 md:order-1">
         <h2 className="text-xl text-slate-800 font-semibold mb-8">
           Informasi Pengaju
         </h2>
@@ -69,11 +72,14 @@ const Pengajuan = ({
             />
           </div>
           {!isDisplay && <input type="file" name="file" onChange={(e) => setFile(e.target.files[0])} className="input-pengajuan" />}
-          <button className="text-sm bg-yellow-500 text-slate-900 border-transparent hover:bg-transparent hover:border-slate-900 transition-colors duration-animation border-2 font-[500] px-4 cursor-pointer py-1 rounded-md">
-            Submit
+          <button disabled={ isLoading } className="disabled:bg-blue-200 text-sm bg-blue-500 text-slate-900 border-transparent hover:bg-transparent hover:border-blue-500 group transition-colors flex justify-center duration-animation border-2 font-[500] px-4 cursor-pointer py-1 rounded-md">
+            {
+              isLoading ?   <div className="text-white group-hover:text-blue-500 animate-spin" ><Loader /></div> : <p className="text-white group-hover:text-blue-500">Tambahkan pengajuan</p>
+            }
+            
           </button>
         </form>
-      </div>
+      </motion.div>
     </div>
   );
 };

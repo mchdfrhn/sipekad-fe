@@ -1,4 +1,5 @@
 import { X } from "lucide-react";
+import { motion } from "motion/react"
 
 const Syarat = ({
   children,
@@ -11,7 +12,7 @@ const Syarat = ({
   url,
 }) => {
   return (
-    <div className="card-pengajuan order-2">
+    <motion.div initial={{ opacity: 0, translateY: 20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ duration: 0.6, ease: ["easeInOut"] }} className="card-pengajuan order-2">
       <h2 className="font-semibold mb-8 text-slate-800 md:text-xl">
         Harap dibaca dengan seksama mengenai persyaratan {title}
       </h2>
@@ -28,7 +29,7 @@ const Syarat = ({
         <div className="flex gap-2 mt-4">
           <button
             onClick={handlerDownload}
-            className="text-sm bg-yellow-500 text-slate-900 border-transparent hover:bg-transparent hover:border-slate-900 transition-colors duration-animation border-2 font-[500] px-4 cursor-pointer py-1 rounded-md"
+            className="text-sm bg-blue-500 text-white hover:text-slate-900 border-transparent hover:bg-transparent hover:border-slate-900 transition-colors duration-animation border-2 font-[500] px-4 cursor-pointer py-1 rounded-md"
           >
             Unduh berkas
           </button>
@@ -60,7 +61,7 @@ const Syarat = ({
           ></iframe>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 };
 

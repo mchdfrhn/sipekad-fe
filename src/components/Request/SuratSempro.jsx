@@ -2,9 +2,9 @@ import { sempro } from "../../utils/constant";
 import Pengajuan from "../ui/Pengajuan";
 import LinkTranskrip from "../ui/LinkTranskrip";
 import { useState } from "react";
-import { useNavigate } from "react-router";
 import { requestPengajuan } from "../../utils/action";
 import BackLink from "../ui/BackLink";
+import SuccessModal from "../ui/SuccessModal";
 
 const ChildrenSempro = () => {
   return (
@@ -20,30 +20,44 @@ const ChildrenSempro = () => {
     </>
   );
 };
+
 const SuratSempro = () => {
-  const navigate = useNavigate();
+  const [displayModal, setDisplayModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
-  const submitHandler = async(e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
-    await requestPengajuan("Surat Sempro", message, file, navigate)
-  }
+    setIsLoading(true);
+    await requestPengajuan(
+      "Surat Sempro",
+      message,
+      file,
+      setDisplayModal,
+      displayModal,
+      setIsLoading
+    );
+  };
   const { syarat, title, url, fileName } = sempro;
   return (
     <>
-    <BackLink />
-    <Pengajuan
-      message={message}
-      setMessage={setMessage}
-      submitHandler={submitHandler}
-      syarat={syarat}
-      url={url}
-      fileName={fileName}
-      title={title}
-      isDisplay={false}
-      setFile={setFile}
-      children={<ChildrenSempro />}
-    />
+      {displayModal && (
+        <SuccessModal setDisplay={setDisplayModal} isDisplay={displayModal} />
+      )}
+      <BackLink />
+      <Pengajuan
+        message={message}
+        setMessage={setMessage}
+        submitHandler={submitHandler}
+        syarat={syarat}
+        url={url}
+        fileName={fileName}
+        title={title}
+        isDisplay={false}
+        setFile={setFile}
+        children={<ChildrenSempro />}
+        isLoading={isLoading}
+      />
     </>
   );
 };

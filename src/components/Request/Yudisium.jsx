@@ -1,21 +1,26 @@
 import Pengajuan from "../ui/Pengajuan";
 import { yudisium } from "../../utils/constant";
 import { useState } from "react";
-import { useNavigate } from "react-router";
 import { requestPengajuan } from "../../utils/action";
 import BackLink from "../ui/BackLink";
+import SuccessModal from "../ui/SuccessModal";
 
 const Yudisium = () => {
-  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [displayModal, setDisplayModal] = useState(false);
   const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
   const submitHandler = async (e) => {
     e.preventDefault();
-    await requestPengajuan("yudisium", message, file, navigate);
+    setIsLoading(true);
+    await requestPengajuan("yudisium", message, file, setDisplayModal, displayModal, setIsLoading);
   };
   const { title, syarat, url, fileName } = yudisium;
   return (
     <>
+    {
+      displayModal && <SuccessModal setDisplay={setDisplayModal} isDisplay={displayModal} />
+    }
     <BackLink />
     <Pengajuan
       message={message}
@@ -26,6 +31,7 @@ const Yudisium = () => {
       url={url}
       fileName={fileName}
       setFile={setFile}
+      isLoading={isLoading}
     />
     </>
   );

@@ -1,85 +1,76 @@
-import loginImage from "../../assets/login.svg";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import { login } from "../../utils/api/auth";
 import { useNavigate } from "react-router";
 import { useUser } from "../../utils/hooks/userContext";
+import { loginFlow } from "../../utils/action";
+import { motion } from "motion/react"
 
 const Login = () => {
   const { updateUserData } = useUser();
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [hiddenPassword, setHiddenPassword] = useState(false);
   const [errMessage, setErrMessage] = useState("");
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
-    const responseLogin = await login({ email, password });
-    if (responseLogin.status === "success") {
-      localStorage.setItem("tokenKey", responseLogin.accessToken);
-      updateUserData(responseLogin.user);
-      localStorage.setItem("user", JSON.stringify(responseLogin.user));
-      navigate("/dashboard");
-
-      if (responseLogin.user.role === "admin") {
-        navigate("/admin");
-      }
-    }
-
-    if (responseLogin.status === "error") {
-      setErrMessage("Email atau password salah");
-    }
+    const data = { username, password };
+    await loginFlow(data, updateUserData, navigate, setErrMessage);
   };
 
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-5  bg-slate-100 h-screen">
-      <div className="flex flex-col gap-4 xl:col-span-2 justify-center items-center">
-        <div className="flex flex-col text-center mb-4">
-          <h1 className="text-4xl font-bold text-slate-800">SIPEKAD</h1>
-          <p className="font-semibold text-sm text-slate-50 bg-yellow-500 rounded-md border px-2">
-            Sistem Pengajuan Akademis
-          </p>
-        </div>
-        <form
-          onSubmit={onSubmitHandler}
-          className="shadow-xl bg-slate-50 text-gray-800 rounded-xl px-6 md:w-100 py-8"
-        >
-          <div className="flex flex-col mb-4 gap-2 font-semibold">
-            <input
-              onChange={(e) => setEmail(e.target.value)}
-              value={email}
-              type="text"
-              className="input"
-              placeholder="Email"
-            />
+    <div className="flex justify-center items-center bg-slate-100 h-screen md:px-8">
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1}} transition={{ duration: 0.5, ease: ["easeInOut"] }} className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white shadow-md rounded-md">
+        <div className="flex justify-center items-center flex-col pb-10 xl:py-20">
+          <div className="flex flex-col text-center mb-4">
+            <h1 className="text-4xl font-bold text-slate-800 mt-8 md:m-0">SIPEKAD</h1>
+            <p className="font-semibold text-sm text-slate-50 bg-blue-500 rounded-md border px-2">
+              Sistem Pengajuan Akademis
+            </p>
           </div>
-          <div className="mb-4 gap-2 relative font-semibold">
-            <input
-              onChange={(e) => setPassword(e.target.value)}
-              value={password}
-              type={hiddenPassword ? "text" : "password"}
-              className="input w-full"
-              placeholder="Password"
-            />
-            <div
-              onClick={() => setHiddenPassword(!hiddenPassword)}
-              className="absolute right-4 text-slate-500 cursor-pointer bottom-2"
-            >
-              {hiddenPassword ? <Eye /> : <EyeOff />}
+          <form
+            onSubmit={onSubmitHandler}
+            className="bg-slate-50 text-gray-800 rounded-xl px-6 w-full "
+          >
+            <div className="flex flex-col mb-4 gap-2">
+              <input
+                onChange={(e) => setUsername(e.target.value)}
+                value={username}
+                type="text"
+                className="input"
+                placeholder="Username"
+              />
             </div>
-          </div>
-          <button className="button-yellow-home w-full cursor-pointer rounded-md">
-            Login
-          </button>
-          <p className="mt-4 text-sm font-semibold text-red-500 text-center">
-            {errMessage}
-          </p>
-        </form>
-      </div>
-      <div className="bg-slate-50 h-screen hidden xl:col-span-3 xl:block shadow-xl md:p-20">
-        <img src={loginImage} alt="" className="w-full h-full" />
-      </div>
+            <div className="mb-4 gap-2 relative">
+              <input
+                onChange={(e) => setPassword(e.target.value)}
+                value={password}
+                type={hiddenPassword ? "text" : "password"}
+                className="input w-full"
+                placeholder="Password"
+              />
+              <div
+                onClick={() => setHiddenPassword(!hiddenPassword)}
+                className="absolute right-4 text-slate-500 cursor-pointer bottom-2"
+              >
+                {hiddenPassword ? <Eye /> : <EyeOff />}
+              </div>
+            </div>
+            <button className="py-1 bg-blue-500 text-white border-transparent border hover:border-blue-500 hover:bg-transparent hover:text-blue-500 transition-color duration-300 ease-in-out w-full cursor-pointer rounded-md">
+              Login
+            </button>
+            {
+              errMessage && <motion.div initial={{opacity: 0}} whileInView={{ opacity: 1 }} transition={{ duration: 0.1, ease: ["easeInOut"] }} className="rounded-md p-2 text-red-600 mt-4 bg-red-500/20 text-sm">
+              <p className="">{errMessage}</p>
+            </motion.div>
+            }
+          </form>
+        </div>
+        <div className="bg-blue-400 hidden md:block shadow-[-4px_0_3px_0px_rgba(0,0,0,0.2)]">
+          <img src={"/login.svg"} alt="" className="w-full h-full" />
+        </div>
+      </motion.div>
     </div>
   );
 };

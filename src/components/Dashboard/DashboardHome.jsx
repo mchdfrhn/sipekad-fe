@@ -42,38 +42,42 @@ const DashboardHome = () => {
   ).length;
 
   return (
-    <div className="py-12">
+    <div className="p-layout">
       <HeaderDashboard />
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Dashboard</h1>
         <Link
           to={"/dashboard/request"}
-          className="block flex items-center gap-2 px-2 py-1 md:px-4 md:py-2 bg-yellow-500 rounded-md shadow-md cursor-pointer border border-transparent hover:bg-transparent hover:border-gray-800 transition-duration"
+          className="block flex items-center md:gap-2 text-sm bg-blue-500 text-white px-4 py-2 border rounded-md font-semibold hover:bg-transparent hover:border-blue-500 hover:text-blue-500 transition-color duration-300 ease-in-out"
         >
           <Plus size={20} /> <p className="text-xs md:text-sm">Tambah Pengajuan</p>
         </Link>
       </div>
       <Underline />
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-2 mb-8 md:gap-4">
+      <div className="grid grid-cols-1 grid-cols-2 xl:grid-cols-4 gap-2 mb-8 md:gap-4">
         <CardDashboardUser
           className={"bg-total-pengajuan shadow-md"}
           title={"Total pengajuan"}
           value={totalRequest}
+          index={4}
         />
         <CardDashboardUser
           title={"Pengajuan yang diterima"}
           value={successRequest}
           className={"bg-pengajuan-berhasil shadow-md"}
+          index={5}
         />
         <CardDashboardUser
           className={"bg-pengajuan-proses shadow-md"}
           title={"Pengajuan yang diproses"}
           value={procesingRequest}
+          index={6}
         />
         <CardDashboardUser
           className={"bg-pengajuan-ditolak shadow-md"}
           title={"Pengajuan yang ditolak"}
           value={rejectedRequest}
+          index={7}
         />
       </div>
       <TableRiwayat historyRequest={historRequest} />

@@ -18,7 +18,6 @@ const postrequest = async (token, { type, message }) => {
       }
     );
 
-    console.log(response.data)
     return response.data;
   } catch (err) {
     console.log(err);
@@ -66,6 +65,7 @@ export const getRequestDetail = async (requestId, setData, setResponses) => {
       setData(result.data);
       const id = result.data.id;
       await getResponseById(id, token, setResponses);
+
     }
   } catch (err) {
     console.error(err);
