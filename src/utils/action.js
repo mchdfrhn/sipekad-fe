@@ -178,6 +178,9 @@ export const updateUserForAdminAction = async (
     const messages = Object.values(result.message).flat();
     setErrorMessage(messages[0]);
   }
+  console.log(result);
+  console.log(data.prodi);
+
   if (result.status === "success") {
     navigate("/admin/user");
   }

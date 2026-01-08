@@ -126,10 +126,10 @@ export const deleteUser = async(token, userId) => {
   }
 }
 
-export const updateUserForAdmin = async(token, userId, { username, full_name, nim, email, phone }) => {
+export const updateUserForAdmin = async(token, userId, { username, full_name, nim, email, phone, nik, prodi }) => {
   try {
     const result = await axios.put(`${ BASE_URL }/users/${ userId }`, {
-      username, full_name, nim, email, phone
+      username, full_name, nim, email, phone, nik, prodi
     }, {
       headers: {
         Authorization: `Bearer ${ token }`
