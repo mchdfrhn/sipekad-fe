@@ -134,6 +134,8 @@ export const addUserForAdmin = async (
     setErrorMessage(messages[0]);
   }
 
+  console.log(result);
+
   if (result.error === "23505") {
     setErrorMessage("Data sudah terdaftar");
   }

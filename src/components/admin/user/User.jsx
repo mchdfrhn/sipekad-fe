@@ -10,12 +10,13 @@ import { getAllUserForAdmin } from "../../../utils/api/user";
 import { Link } from "react-router";
 import AddUserForm from "./AddUserForm";
 import { deleteUserForAdmin } from "../../../utils/action";
-
+import Alert from "../../ui/Alert"
 const User = () => {
   const [showForm, setShowForm] = useState(false);
   const [users, setUsers] = useState([]);
   const [totalPage, setTotalPage] = useState(1);
   const [page, setPage] = useState(1);
+  const [alertDelete, setAlertDelete] = useState(false)
 
   const handlePageChange = async (p) => {
     const users = await getAllUserForAdmin(p);
@@ -55,7 +56,6 @@ const User = () => {
         <AddUserForm showForm={showForm} setShowForm={setShowForm} setPage={setPage} setTotalPage={setTotalPage} setUsers={setUsers} page={page} />
         </>
       )}
-
       <div className="flex justify-between items-center my-8">
         <Link to={"/admin"} className="block">
           <ArrowLeft />
@@ -135,10 +135,13 @@ const User = () => {
                   </td>
                   <td className="md:px-6 py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">
                     <div className="flex block gap-2">
-                      <button onClick={() => deleteUserForAdmin(value.id, setUsers, page, setPage, setTotalPage)} className="cursor-pointer hover:bg-red-400 group p-1 bg-red-200 transition-color transition-duration rounded-md">
+                      <button onClick={() => setAlertDelete(!alertDelete) } className="cursor-pointer hover:bg-red-400 group p-1 bg-red-200 transition-color transition-duration rounded-md">
                         <Trash className="text-red-500 transition-color transition-duration group-hover:text-red-800" />
                       </button>
                     </div>
+                     {
+                        alertDelete &&  <Alert onYesHundler={() => deleteUserForAdmin(value.id, setUsers, page, setPage, setTotalPage)} setDisplay={setAlertDelete} isDisplay={alertDelete} />
+                     }
                   </td>
                 </tr>
               ))}
