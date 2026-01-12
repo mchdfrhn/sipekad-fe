@@ -1,5 +1,5 @@
-const BASE_URL = "http://localhost:4000"
+const BASE_URL = "https://sipekad-be-production.up.railway.app";
 
 // "https://sipekad-be-production.up.railway.app";
 
-export default BASE_URL
+export default BASE_URL;
