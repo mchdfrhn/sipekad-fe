@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { addUserForAdmin } from "../../../utils/action";
-import { Eye, EyeClosed } from "lucide-react";
+import { Eye, EyeClosed, X } from "lucide-react";
+import { STUDENT_PRODI } from "../../../utils/constant";
 
 const AddUserForm = ({
   showForm,
@@ -15,6 +16,8 @@ const AddUserForm = ({
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [nim, setNim] = useState("");
+  const [nik, setNik] = useState("");
+  const [prodi, setProdi] = useState("")
   const [phone, setPhone] = useState("");
   const [errMessage, setErrMessage] = useState("");
   const [hiddenPassword, setHiddenPassword] = useState(false);
@@ -30,6 +33,8 @@ const AddUserForm = ({
       role,
       nim,
       phone: `0${phone}`,
+      nik,
+      prodi
     };
 
     await addUserForAdmin(
@@ -48,7 +53,11 @@ const AddUserForm = ({
     setValue(e.target.value);
   };
   return (
-    <form onSubmit={submitHandler} className="flex flex-col gap-4 mt-4">
+    <>
+    <form onSubmit={submitHandler} className="flex flex-col gap-4 mt-4 bg-white shadow-md p-4 h-[88vh] md:h-[64vh] xl:h-[88vh] overflow-y-scroll rounded-md fixed inset-0 w-[20rem] md:w-[30rem] fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-99">
+      <div onClick={() => setShowForm(!showForm)} className="cursor-pointer">
+        <X />
+      </div>
       <div className="flex flex-col gap-2">
         <label
           className="text-sm tracking-[3px] font-semibold uppercase"
@@ -106,6 +115,21 @@ const AddUserForm = ({
           placeholder="NIM"
         />
       </div>
+       <div className="flex flex-col gap-2">
+        <label
+          className="text-sm tracking-[3px] font-semibold uppercase"
+          htmlFor=""
+        >
+          Nik
+        </label>
+        <input
+          value={nik}
+          onChange={(e) => onChangeHandler(e, setNik)}
+          className="px-4 py-2 bg-gray-100 focus:outline-none rounded-md shadow-md"
+          type="text"
+          placeholder="NIK"
+        />
+      </div>
       <div className="flex flex-col gap-2">
         <label
           className="text-sm tracking-[3px] font-semibold uppercase"
@@ -137,6 +161,23 @@ const AddUserForm = ({
           </option>
           <option value="user">User</option>
           <option value="admin">Admin</option>
+        </select>
+      </div>
+      <div className="flex flex-col gap-2">
+        <label className="text-sm tracking-[3px] font-semibold uppercase">
+          prodi
+        </label>
+        <select
+          value={prodi}
+          onChange={(e) => setProdi(e.target.value)}
+          className="px-4 py-2 bg-gray-100 focus:outline-none rounded-md shadow-md"
+        >
+          <option disabled value="">
+            --Pilih Prodi--
+          </option>
+          <option value={ STUDENT_PRODI.TEKNIK_INFORMATIKA }>Teknik Informatika</option>
+          <option value={ STUDENT_PRODI.TEKNIK_SIPIL }>Teknik Sipil</option>
+          <option value={ STUDENT_PRODI.TEKNIK_LINGKUNGAN }>Teknik Lingkungan</option>
         </select>
       </div>
       <div className="flex flex-col gap-2">
@@ -182,6 +223,7 @@ const AddUserForm = ({
       </button>
       <p className="text-red-500 font-semibold text-sm">{errMessage}</p>
     </form>
+    </>
   );
 };
 

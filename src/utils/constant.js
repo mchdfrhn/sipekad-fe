@@ -42,6 +42,17 @@ const kategoriPermintaan = [
   },
 ];
 
+export const STUDENT_PRODI = {
+    TEKNIK_INFORMATIKA: "teknik informatika",
+    TEKNIK_LINGKUNGAN: "teknik lingkungan",
+    TEKNIK_SIPIL: "teknik sipil"
+}
+
+export const USER_ROLE = {
+    USER_REGULAR: "user",
+    USER_ADMIN: "admin"
+}
+
 const kategoriKeterangan = [
   {
     content: "Keterangan Mahasiswa Aktif",

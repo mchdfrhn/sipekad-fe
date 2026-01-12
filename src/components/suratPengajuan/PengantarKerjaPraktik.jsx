@@ -27,7 +27,7 @@ const PengantarKerjaPraktik = () => {
   return (
     <>
       {displayModal && (
-        <SuccessModal isDisplay={displayModal} setDisplay={setIsDisplayModal} />
+        <SuccessModal onOkHandler={() => setIsDisplayModal(!displayModal)} />
       )}
       <Pengajuan
         submitHandler={submitHandler}

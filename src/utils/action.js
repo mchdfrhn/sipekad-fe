@@ -134,6 +134,8 @@ export const addUserForAdmin = async (
     setErrorMessage(messages[0]);
   }
 
+  console.log(result);
+
   if (result.error === "23505") {
     setErrorMessage("Data sudah terdaftar");
   }
@@ -176,6 +178,9 @@ export const updateUserForAdminAction = async (
     const messages = Object.values(result.message).flat();
     setErrorMessage(messages[0]);
   }
+  console.log(result);
+  console.log(data.prodi);
+
   if (result.status === "success") {
     navigate("/admin/user");
   }
@@ -185,7 +190,8 @@ export const loginFlow = async (
   data,
   updateUserData,
   navigate,
-  setErrMessage
+  setErrMessage,
+  setLoading
 ) => {
   const result = await login(data);
   if (result.status === "success") {
@@ -197,7 +203,7 @@ export const loginFlow = async (
       navigate("/admin");
     }
   }
-
+  setLoading(false)
   if (result.status === "error") {
     setErrMessage("Email atau password salah");
   }

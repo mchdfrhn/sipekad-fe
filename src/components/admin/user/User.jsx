@@ -10,12 +10,13 @@ import { getAllUserForAdmin } from "../../../utils/api/user";
 import { Link } from "react-router";
 import AddUserForm from "./AddUserForm";
 import { deleteUserForAdmin } from "../../../utils/action";
-
+import Alert from "../../ui/Alert"
 const User = () => {
   const [showForm, setShowForm] = useState(false);
   const [users, setUsers] = useState([]);
   const [totalPage, setTotalPage] = useState(1);
   const [page, setPage] = useState(1);
+  const [alertDelete, setAlertDelete] = useState(false)
 
   const handlePageChange = async (p) => {
     const users = await getAllUserForAdmin(p);
@@ -49,20 +50,12 @@ const User = () => {
   return (
     <>
       {showForm && (
-        <div className="fixed inset-0 w-screen h-screen bg-black/20"></div>
-      )}
-      {showForm && (
-        <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white shadow-md rounded-md p-4 md:w-sm">
-          <button
-            onClick={() => setShowForm(!showForm)}
-            className="cursor-pointer"
-          >
-            <X />
-          </button>
-            <AddUserForm showForm={showForm} setShowForm={setShowForm} setPage={setPage} setTotalPage={setTotalPage} setUsers={setUsers} page={page} />
+        <>
+        <div onClick={() => setShowForm(!showForm)} className="fixed inset-0 w-screen h-screen bg-gray-500/50 flex justify-center z-40 items-center">
         </div>
+        <AddUserForm showForm={showForm} setShowForm={setShowForm} setPage={setPage} setTotalPage={setTotalPage} setUsers={setUsers} page={page} />
+        </>
       )}
-
       <div className="flex justify-between items-center my-8">
         <Link to={"/admin"} className="block">
           <ArrowLeft />
@@ -71,10 +64,10 @@ const User = () => {
           onClick={() => setShowForm(!showForm)}
           className="bg-blue-500 block px-4 py-2 rounded-md text-white flex items-center gap-2 cursor-pointer border border-transparent hover:bg-transparent hover:text-gray-800 hover:border-gray-800 transition-duration"
         >
-          <div className="size-5">
+          <div className="size-4">
             <UserIcon className="w-full h-full" />
           </div>
-          <p className="font-semibold">Tambah User</p>
+          <p className="text-sm">Tambah User</p>
         </button>
       </div>
       <div className="px-4 py-6 mt-8 bg-white shadow-md w-full">
@@ -142,10 +135,13 @@ const User = () => {
                   </td>
                   <td className="md:px-6 py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">
                     <div className="flex block gap-2">
-                      <button onClick={() => deleteUserForAdmin(value.id, setUsers, page, setPage, setTotalPage)} className="cursor-pointer hover:bg-red-400 group p-1 bg-red-200 transition-color transition-duration rounded-md">
+                      <button onClick={() => setAlertDelete(!alertDelete) } className="cursor-pointer hover:bg-red-400 group p-1 bg-red-200 transition-color transition-duration rounded-md">
                         <Trash className="text-red-500 transition-color transition-duration group-hover:text-red-800" />
                       </button>
                     </div>
+                     {
+                        alertDelete &&  <Alert onYesHundler={() => deleteUserForAdmin(value.id, setUsers, page, setPage, setTotalPage)} setDisplay={setAlertDelete} isDisplay={alertDelete} />
+                     }
                   </td>
                 </tr>
               ))}

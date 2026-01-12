@@ -19,7 +19,7 @@ const Yudisium = () => {
   return (
     <>
     {
-      displayModal && <SuccessModal setDisplay={setDisplayModal} isDisplay={displayModal} />
+      displayModal && <SuccessModal onOkHandler={() => setDisplayModal(!displayModal)} />
     }
     <BackLink />
     <Pengajuan

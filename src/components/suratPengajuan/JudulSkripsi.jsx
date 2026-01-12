@@ -30,8 +30,7 @@ const JudulSkripsi = () => {
       {displayModal && (
         <SuccessModal
           text={"Pengajuan berhasil ditambahkan"}
-          isDisplay={displayModal}
-          setDisplay={setDisplayModal}
+          onOkHandler={() => setDisplayModal(!displayModal)}
         />
       )}
       <Pengajuan

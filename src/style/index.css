@@ -136,6 +136,5 @@
 @layer components {
     .p-layout {
         @apply py-12 md:pl-58;
-         
     }
 }

@@ -26,7 +26,7 @@ const TranskripNilai = () => {
   return (
     <>
       {displayModal && (
-        <SuccessModal isDisplay={displayModal} setDisplay={setDisplayModal} />
+        <SuccessModal onOkHandler={ () => setDisplayModal(!displayModal) } />
       )}
       <BackLink />
       <Pengajuan
