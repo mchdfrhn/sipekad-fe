@@ -18,7 +18,7 @@ const getUser = async (token) => {
 };
 
 const updateProfile = async (
-  { username, email, phone, url_photo, full_name },
+  { username, email, phone, url_photo },
   updateUserData,
   updateUser,
   setShowProfile,
@@ -29,13 +29,12 @@ const updateProfile = async (
   const { id } = user;
   try {
     const response = await Axios.put(
-      `${BASE_URL}/users/${id}`,
+      `${BASE_URL}/users/user/${id}`,
       {
         username,
         email,
         phone,
         url_photo,
-        full_name,
       },
       {
         headers: {

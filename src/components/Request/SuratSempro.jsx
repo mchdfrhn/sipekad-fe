@@ -14,7 +14,7 @@ const ChildrenSempro = () => {
         content={" Link pengajuan transkrip nilai"}
       />
       <LinkTranskrip
-        path={"dashboard/request/suratpenugasan/dosentugasakhir"}
+        path={"/dashboard/request/suratpenugasan/dosentugasakhir"}
         content={"Link pengajuan surat penugasan dosen"}
       />
     </>
@@ -38,6 +38,7 @@ const SuratSempro = () => {
       setIsLoading
     );
   };
+  
   const { syarat, title, url, fileName } = sempro;
   return (
     <>
