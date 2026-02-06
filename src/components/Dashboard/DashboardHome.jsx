@@ -32,17 +32,17 @@ const DashboardHome = () => {
 
   const totalRequest = historRequest.length;
   const successRequest = historRequest.filter(
-    (req) => req.status === "completed"
+    (req) => req.status === "completed",
   ).length;
   const procesingRequest = historRequest.filter(
-    (req) => req.status === "pending"
+    (req) => req.status === "pending",
   ).length;
   const rejectedRequest = historRequest.filter(
-    (req) => req.status === "canceled"
+    (req) => req.status === "canceled",
   ).length;
 
   return (
-    <div className="p-layout">
+    <div className="w-full">
       <HeaderDashboard />
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Dashboard</h1>
@@ -50,7 +50,8 @@ const DashboardHome = () => {
           to={"/dashboard/request"}
           className="block flex items-center md:gap-2 text-sm bg-blue-500 text-white px-4 py-2 border rounded-md font-semibold hover:bg-transparent hover:border-blue-500 hover:text-blue-500 transition-color duration-300 ease-in-out"
         >
-          <Plus size={20} /> <p className="text-xs md:text-sm">Tambah Pengajuan</p>
+          <Plus size={20} />{" "}
+          <p className="text-xs md:text-sm">Tambah Pengajuan</p>
         </Link>
       </div>
       <Underline />

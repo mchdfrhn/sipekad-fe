@@ -27,7 +27,7 @@ const Sidebar = ({ activeSidebar, setActiveSideBar, links }) => {
         <Menu />
       </button>
       <aside
-        className={`bg-white pt-12 pr-8 pl-2 shadow-md h-screen z-40 fixed left-0 ${activeSidebar && "-translate-x-full"} md:translate-x-0 transition-transform duration-300 ease-in-out`}
+        className={`bg-white w-58 pt-12 shadow-md h-screen z-40 fixed left-0 ${activeSidebar && "-translate-x-full"} md:translate-x-0 transition-transform duration-300 ease-in-out`}
       >
         {isDisplay && (
           <Alert
@@ -36,7 +36,7 @@ const Sidebar = ({ activeSidebar, setActiveSideBar, links }) => {
             onYesHundler={logoutHandler}
           />
         )}
-        <div className="flex justify-center items-center mb-8">
+        <div className="flex items-center px-8 mb-8">
           <img
             src="/sttimage.png"
             alt="stt-logo"
