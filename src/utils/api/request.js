@@ -61,6 +61,7 @@ export const getRequestDetail = async (requestId, setData, setResponses) => {
     });
 
     const result = response.data;
+    console.log(result);
     if (result.status === "success") {
       setData(result.data);
       const id = result.data.id;

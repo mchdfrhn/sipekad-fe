@@ -19,6 +19,13 @@ const RequestDetailUser = () => {
     getRequestDetailForUser()
   }, []);
 
+  const handleDownload = () => {
+    const link = document.createElement("a");
+    link.href = data?.url;
+    link.download = `${ data?.full_name }-${ data?.queue }.pdf`
+    link.click();
+  }
+
   const response = responses[0];
   return (
     <div className="p-layout">
@@ -58,9 +65,14 @@ const RequestDetailUser = () => {
               </div>
               <div className="md:col-span-3 mt-4">
                 {data?.url ? (
+                  <>
                   <button onClick={() => setShowFrameRequest(!showFrameRequest)} className="bg-blue-500 px-2 text-xs md:text-[16px] py-1 rounded-md text-white cursor-pointer border hover:text-blue-500 hover:bg-transparent transition-color duration-300 ease-in-out">
                     Lihat Berkas
                   </button>
+                  <button onClick={handleDownload} className="ml-2 bg-blue-500 px-2 text-xs md:text-[16px] py-1 rounded-md text-white cursor-pointer border hover:text-blue-500 hover:bg-transparent transition-color duration-300 ease-in-out">
+                    Download Berkas
+                  </button>
+                  </>
                 ) : (
                   <h1>Tidak ada file yang dilampirkan</h1>
                 )}

@@ -30,6 +30,13 @@ const RequestDetail = () => {
     await getRequestDetail(id, setRequestDetail, setResponses);
   }
 
+  const handlerDownload = () => {
+      const link = document.createElement("a");
+      link.href = requestDetail?.url;
+      link.download = `${ requestDetail?.full_name }-${ requestDetail?.queue }.pdf`
+      link.click();
+  };
+
   const onAddResponseHandler = async(e) => {
     e.preventDefault();
     setLoading(true);
@@ -83,12 +90,16 @@ const RequestDetail = () => {
           <div>
             <p className="text-gray-400 uppercase md:tracking-[2px] text-xs">File:</p>
             {requestDetail?.url && (
-              <button
-                onClick={() => setDisplayIframe(!displayIframe)}
-                className="border border-transparent w-full text-xs py-1 rounded-md bg-blue-500 text-white cursor-pointer hover:text-gray-800 hover:bg-transparent hover:border-gray-800 transition-color transition-duration"
-              >
-                Tampilkan File
-              </button>
+              <>
+                <button
+                  onClick={() => setDisplayIframe(!displayIframe)}
+                  className="border border-transparent w-full text-xs py-1 rounded-md bg-blue-500 text-white cursor-pointer hover:text-gray-800 hover:bg-transparent hover:border-gray-800 transition-color transition-duration"
+                >
+                  Tampilkan File
+                </button>
+                <button className="border border-transparent w-full text-xs py-1 rounded-md bg-blue-500 text-white cursor-pointer hover:text-gray-800 hover:bg-transparent hover:border-gray-800 transition-color transition-duration mt-2" onClick={handlerDownload} >Download File</button>
+              </>
+              
             )}
           </div>
           <div className="">
