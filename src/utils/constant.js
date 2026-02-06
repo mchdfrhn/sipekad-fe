@@ -138,6 +138,17 @@ const pengajuanCuti = {
   fileName: "pengajuanCuti.pdf",
 };
 
+export const penugasanDosen = {
+  syarat: [
+    "Isi informasi dengan benar",
+    "Pastikan judul skripsi telah disetujui oleh dosen pembimbing, akademik dan prodi",
+    "Setelah terisi silahkan submit",
+    "Pengajuan akan di tinjau oleh admin",
+    "berkas akan dikirm melalui aplikasi ini, karena itu silahkan cek secara berkala"
+  ],
+  title: 'Penugasan Dosen Pembimbing Tugas Akhir/Skripsi'
+}
+
 const keteranganLulus = {
   syarat: [
     "Isi informasi pengaju dengan benar",
