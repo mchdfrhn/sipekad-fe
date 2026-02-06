@@ -26,6 +26,7 @@ const SuratSempro = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
+  const [err, setErr] = useState(false);
   const submitHandler = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -35,7 +36,8 @@ const SuratSempro = () => {
       file,
       setDisplayModal,
       displayModal,
-      setIsLoading
+      setIsLoading,
+      setErr
     );
   };
   
@@ -43,7 +45,7 @@ const SuratSempro = () => {
   return (
     <>
       {displayModal && (
-        <SuccessModal onOkHandler={() => setDisplayModal(!displayModal)} />
+        <SuccessModal onOkHandler={() => setDisplayModal(!displayModal)} isSuccess={err} />
       )}
       <BackLink />
       <Pengajuan

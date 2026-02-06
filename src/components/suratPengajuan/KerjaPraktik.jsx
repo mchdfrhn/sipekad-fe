@@ -11,16 +11,17 @@ const KerjaPraktik = () => {
   const { syarat, url, title, fileName } = judulKerjaPraktik;
   const [displayModal, setDisplayModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState(false);
 
   const submitHandler = async (e) => {
     e.preventDefault();
     setLoading(true)
-    await requestPengajuan("Judul Kerja Praktik", message, file, setDisplayModal, displayModal, setLoading);
+    await requestPengajuan("Judul Kerja Praktik", message, file, setDisplayModal, displayModal, setLoading, setErr);
   };
   return (
     <>
     {
-      displayModal && <SuccessModal onOkHandler={() => setDisplayModal(!displayModal)} />
+      displayModal && <SuccessModal onOkHandler={() => setDisplayModal(!displayModal)} isSuccess={err} />
     }   
     <Pengajuan
       url={url}

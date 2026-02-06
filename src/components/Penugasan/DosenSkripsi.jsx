@@ -11,6 +11,7 @@ const DosenSkripsi = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [displayModal, setDisplayModal] = useState(false);
   const { syarat, title } = penugasanDosenSkripsi;
+  const [err, setErr] = useState(false);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -22,12 +23,13 @@ const DosenSkripsi = () => {
       setDisplayModal,
       displayModal,
       setIsLoading,
+      setErr
     );
   };
   return (
     <>
       {displayModal && (
-        <SuccessModal onOkHandler={() => setDisplayModal(!displayModal)} />
+        <SuccessModal onOkHandler={() => setDisplayModal(!displayModal)} isSuccess={err} />
       )};
       <Pengajuan
         submitHandler={submitHandler}

@@ -26,6 +26,7 @@ const Skripsi = () => {
   const [displayModal, setDisplayModal] = useState(false);
   const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
+  const [err, setErr] = useState(false);
   const submitHandler = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -35,14 +36,15 @@ const Skripsi = () => {
       file,
       setDisplayModal,
       displayModal,
-      setLoading
+      setLoading,
+      setErr
     );
   };
   const { syarat, title, url, fileName } = sidangSkripsi;
   return (
     <>
       {displayModal && (
-        <SuccessModal onOkHandler={() => setDisplayModal(!displayModal)} />
+        <SuccessModal onOkHandler={() => setDisplayModal(!displayModal)} isSuccess={err} />
       )}
       <BackLink />
       <Pengajuan

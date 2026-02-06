@@ -9,6 +9,7 @@ const MahasiswaAktif = () => {
   const [file, setFile] = useState(null);
   const [isLoading, setLoading] = useState(false);
   const [displayModal, setDisplayModal] = useState(false);
+  const [err, setErr] = useState(false);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -19,7 +20,8 @@ const MahasiswaAktif = () => {
       file,
       setDisplayModal,
       displayModal,
-      setLoading
+      setLoading,
+      setErr
     );
   };
 
@@ -27,7 +29,7 @@ const MahasiswaAktif = () => {
   return (
     <>
       {displayModal && (
-        <SuccessModal onOkHandler={() => setDisplayModal(!displayModal)} />
+        <SuccessModal onOkHandler={() => setDisplayModal(!displayModal)} isSuccess={err} />
       )}
       <Pengajuan
         submitHandler={submitHandler}

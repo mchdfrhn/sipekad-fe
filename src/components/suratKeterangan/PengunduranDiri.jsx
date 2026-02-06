@@ -10,6 +10,7 @@ const PengunduranDiri = () => {
   const [message, setMessage] = useState("");
   const [file, setFIle] = useState(null);
   const { title, syarat, url, fileName } = pengunduranDiri;
+  const [err, setErr] = useState(false);
   const submitHandler = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -19,13 +20,14 @@ const PengunduranDiri = () => {
       file,
       setDisplayModal,
       displayModal,
-      setLoading
+      setLoading,
+      setErr
     );
   };
   return (
     <>
       {displayModal && (
-        <SuccessModal onOkHandler={() => setDisplayModal(!displayModal)} />
+        <SuccessModal onOkHandler={() => setDisplayModal(!displayModal)} isSuccess={err} />
       )}
       <Pengajuan
         submitHandler={submitHandler}

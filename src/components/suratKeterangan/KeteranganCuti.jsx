@@ -9,6 +9,7 @@ const KeteranganCuti = () => {
   const [file, setFIle] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [displayModal, setDisplayModal] = useState(false);
+  const [err, setErr] = useState(false);
   const { url, syarat, title, fileName } = pengajuanCuti;
 
   const submitHandler = async (e) => {
@@ -20,14 +21,15 @@ const KeteranganCuti = () => {
       file,
       setDisplayModal,
       displayModal,
-      setIsLoading
+      setIsLoading,
+      setErr
     );
   };
 
   return (
     <>
       {displayModal && (
-        <SuccessModal onOkHandler={() => setDisplayModal(!displayModal)} />
+        <SuccessModal onOkHandler={() => setDisplayModal(!displayModal)} isSuccess={err} />
       )}
       <Pengajuan
         submitHandler={submitHandler}

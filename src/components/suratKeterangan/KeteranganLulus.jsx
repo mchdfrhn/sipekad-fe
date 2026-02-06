@@ -8,7 +8,9 @@ const KeteranganLulus = () => {
   const [message, setMessage] = useState("");
   const [displayModal, setDisplayModal] = useState(false);
   const [isLoading, setLoading] = useState(false);
+  const [err, setErr] = useState(false)
   const { syarat, title } = keteranganLulus;
+  
   const submitHandler = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -18,13 +20,14 @@ const KeteranganLulus = () => {
       null,
       setDisplayModal,
       displayModal,
-      setLoading
+      setLoading,
+      setErr
     );
   };
   return (
     <>
       {displayModal && (
-        <SuccessModal onOkHandler={() => setDisplayModal(!displayModal)} />
+        <SuccessModal onOkHandler={() => setDisplayModal(!displayModal)} isSuccess={err}  />
       )}
       <Pengajuan
         submitHandler={submitHandler}

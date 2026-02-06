@@ -10,29 +10,41 @@ const Yudisium = () => {
   const [displayModal, setDisplayModal] = useState(false);
   const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
+  const [err, setErr] = useState(false);
   const submitHandler = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    await requestPengajuan("yudisium", message, file, setDisplayModal, displayModal, setIsLoading);
+    await requestPengajuan(
+      "yudisium",
+      message,
+      file,
+      setDisplayModal,
+      displayModal,
+      setIsLoading,
+      setErr,
+    );
   };
   const { title, syarat, url, fileName } = yudisium;
   return (
     <>
-    {
-      displayModal && <SuccessModal onOkHandler={() => setDisplayModal(!displayModal)} />
-    }
-    <BackLink />
-    <Pengajuan
-      message={message}
-      setMessage={setMessage}
-      submitHandler={submitHandler}
-      title={title}
-      syarat={syarat}
-      url={url}
-      fileName={fileName}
-      setFile={setFile}
-      isLoading={isLoading}
-    />
+      {displayModal && (
+        <SuccessModal
+          onOkHandler={() => setDisplayModal(!displayModal)}
+          isSuccess={err}
+        />
+      )}
+      <BackLink />
+      <Pengajuan
+        message={message}
+        setMessage={setMessage}
+        submitHandler={submitHandler}
+        title={title}
+        syarat={syarat}
+        url={url}
+        fileName={fileName}
+        setFile={setFile}
+        isLoading={isLoading}
+      />
     </>
   );
 };

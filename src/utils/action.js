@@ -16,14 +16,15 @@ export const requestPengajuan = async (
   file,
   setDisplayModal,
   displayModal,
-  setLoading
+  setLoading,
+  setErr
 ) => {
   const token = localStorage.getItem("tokenKey");
   const response = await postrequest(token, {
     type,
     message,
   });
-
+  console.log(response);
   if (response.status === "success") {
     if (file) {
       const pengajuanId = response.pengajuanId;
@@ -39,6 +40,13 @@ export const requestPengajuan = async (
     
     setDisplayModal(!displayModal);
     setLoading(false);
+  }
+  console.log(response.message);
+  const result = response.message;
+  if (result.status === 'faiil') {
+    setDisplayModal(true)
+    setLoading(false);
+    setErr(true)
   }
 };
 

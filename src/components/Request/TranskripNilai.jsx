@@ -9,6 +9,7 @@ const TranskripNilai = () => {
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [displayModal, setDisplayModal] = useState(false);
+  const [err, setErr] = useState(false);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -19,14 +20,15 @@ const TranskripNilai = () => {
       null,
       setDisplayModal,
       displayModal,
-      setIsLoading
+      setIsLoading,
+      setErr
     );
   };
   const { syarat, title } = transkripNilai;
   return (
     <>
       {displayModal && (
-        <SuccessModal onOkHandler={ () => setDisplayModal(!displayModal) } />
+        <SuccessModal onOkHandler={ () => setDisplayModal(!displayModal) } isSuccess={err} />
       )}
       <BackLink />
       <Pengajuan

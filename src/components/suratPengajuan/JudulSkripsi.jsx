@@ -11,6 +11,7 @@ const JudulSkripsi = () => {
   const [displayModal, setDisplayModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { syarat, title } = judulSkripsi;
+  const [err, setErr] = useState(false);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -21,7 +22,8 @@ const JudulSkripsi = () => {
       file,
       setDisplayModal,
       displayModal,
-      setIsLoading
+      setIsLoading,
+      setErr
     );
   };
 
@@ -31,6 +33,7 @@ const JudulSkripsi = () => {
         <SuccessModal
           text={"Pengajuan berhasil ditambahkan"}
           onOkHandler={() => setDisplayModal(!displayModal)}
+          isSuccess={err}
         />
       )}
       <Pengajuan

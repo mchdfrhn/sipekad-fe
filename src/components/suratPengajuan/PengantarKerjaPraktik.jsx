@@ -11,6 +11,7 @@ const PengantarKerjaPraktik = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [displayModal, setIsDisplayModal] = useState(false);
   const { syarat, url, fileName, title } = pengantarKp;
+  const [err, setErr] = useState(false);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -21,13 +22,14 @@ const PengantarKerjaPraktik = () => {
       file,
       setIsDisplayModal,
       displayModal,
-      setIsLoading
+      setIsLoading,
+      setErr
     );
   };
   return (
     <>
       {displayModal && (
-        <SuccessModal onOkHandler={() => setIsDisplayModal(!displayModal)} />
+        <SuccessModal onOkHandler={() => setIsDisplayModal(!displayModal)} isSuccess={err} />
       )}
       <Pengajuan
         submitHandler={submitHandler}

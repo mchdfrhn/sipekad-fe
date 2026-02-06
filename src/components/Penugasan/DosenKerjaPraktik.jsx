@@ -10,6 +10,7 @@ const DosenKerjaPraktik = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [displayModal, setDisplayModal] = useState(false);
   const { syarat, title } = penugasanDosenKerjaPraktik;
+  const [err, setErr] = useState(false);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -21,12 +22,13 @@ const DosenKerjaPraktik = () => {
       setDisplayModal,
       displayModal,
       setIsLoading,
+      setErr
     );
   };
   return (
     <>
       {displayModal && (
-        <SuccessModal onOkHandler={() => setDisplayModal(!displayModal)} />
+        <SuccessModal onOkHandler={() => setDisplayModal(!displayModal)} isSuccess={err} />
       )}
       ;
       <Pengajuan
