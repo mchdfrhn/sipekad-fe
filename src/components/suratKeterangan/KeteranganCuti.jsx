@@ -5,7 +5,7 @@ import { requestPengajuan } from "../../utils/action";
 import SuccessModal from "../ui/SuccessModal";
 
 const KeteranganCuti = () => {
-  const [message, setMessage] = useState();
+  const [message, setMessage] = useState("");
   const [file, setFIle] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [displayModal, setDisplayModal] = useState(false);

@@ -138,11 +138,24 @@ const pengajuanCuti = {
   fileName: "pengajuanCuti.pdf",
 };
 
-export const penugasanDosen = {
+export const penugasanDosenSkripsi = {
   syarat: [
-    "Isi informasi dengan benar",
+    "Ajukan surat pengajuan judul skripsi terlebih dahulu jika belum ada",
     "Pastikan judul skripsi telah disetujui oleh dosen pembimbing, akademik dan prodi",
-    "Setelah terisi silahkan submit",
+    "Setelah terisi silahkan isi informasi pengaju dengan benar",
+    "Upload berkas persyaratan dengan format pdf",
+    "Pengajuan akan di tinjau oleh admin",
+    "berkas akan dikirm melalui aplikasi ini, karena itu silahkan cek secara berkala"
+  ],
+  title: 'Penugasan Dosen Pembimbing Tugas Akhir/Skripsi'
+}
+
+export const penugasanDosenKerjaPraktik = {
+  syarat: [
+    "Ajukan surat pengajuan judul kerja praktik terlebih dahulu jika belum ada",
+    "Pastikan judul kerja praktik telah disetujui oleh dosen pembimbing, akademik dan prodi",
+    "Setelah terisi silahkan isi informasi pengaju dengan benar",
+    "Upload berkas persyaratan dengan format pdf",
     "Pengajuan akan di tinjau oleh admin",
     "berkas akan dikirm melalui aplikasi ini, karena itu silahkan cek secara berkala"
   ],
