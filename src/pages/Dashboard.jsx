@@ -25,12 +25,12 @@ const Dashboard = () => {
   const links = [
     {
       path: "/dashboard",
-      name: "dashboard",
+      name: "Dashboard",
       icon: LayoutDashboard
     },
     {
       path: "/dashboard/request",
-      name: "Minta Permintaan",
+      name: "Buat Permintaan",
       icon: Send
     },
     {
