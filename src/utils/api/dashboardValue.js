@@ -27,12 +27,12 @@ export const getDistribusiPengajuan = async (setLabel, setData) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     const result = response.data;
     if (result.status === "success") {
-      setLabel(result.label);
-      setData(result.data);
+      if (typeof setLabel === "function") setLabel(result.label);
+      if (typeof setData === "function") setData(result.data);
     }
   } catch (err) {
     console.error(err);
@@ -49,8 +49,8 @@ export const getTopTypePengajuan = async (setLabel, setData) => {
     });
     const result = response.data;
     if (result.status === "success") {
-      setLabel(result.label);
-      setData(result.data);
+      if (typeof setLabel === "function") setLabel(result.label);
+      if (typeof setData === "function") setData(result.data);
     }
   } catch (err) {
     console.error(err);
@@ -67,8 +67,8 @@ export const getStatusPengajuan = async (setLabel, setData) => {
     });
     const result = response.data;
     if (result.status === "success") {
-      setLabel(result.label);
-      setData(result.data);
+      if (typeof setLabel === "function") setLabel(result.label);
+      if (typeof setData === "function") setData(result.data);
     }
   } catch (err) {
     console.error(err);
@@ -78,11 +78,14 @@ export const getStatusPengajuan = async (setLabel, setData) => {
 export const getSummeryDataByUserId = async (setSummery, userId) => {
   const token = localStorage.getItem("tokenKey");
   try {
-    const response = await axios.get(`${BASE_URL}/dashboard/summery/${userId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const response = await axios.get(
+      `${BASE_URL}/dashboard/summery/${userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
+    );
     const result = response.data;
     if (result.status === "success") {
       setSummery(result.data);
@@ -90,4 +93,4 @@ export const getSummeryDataByUserId = async (setSummery, userId) => {
   } catch (err) {
     console.error(err);
   }
-}
+};

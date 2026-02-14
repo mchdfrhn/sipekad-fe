@@ -2,7 +2,9 @@ import { Bell, User, Settings, Info } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-const NotificationItem = ({ icon: Icon, title, time, variant = "blue" }) => {
+const NotificationItem = (props) => {
+  const Icon = props.icon;
+  const { title, time, variant = "blue" } = props;
   const bgColors = {
     blue: "bg-blue-50 text-blue-500",
     green: "bg-green-50 text-green-500",

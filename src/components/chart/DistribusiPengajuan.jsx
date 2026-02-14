@@ -26,7 +26,7 @@ const CustomTooltip = ({ active, payload, label }) => {
       }
 
       if (!isValid(dateObj)) dateObj = new Date(label);
-    } catch (e) {
+    } catch {
       dateObj = new Date();
     }
 
@@ -47,11 +47,10 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 const DistribusiPengajuan = () => {
-  const [label, setLabel] = useState("");
   const [dataPengajuan, setDataPengajuan] = useState([]);
 
   useEffect(() => {
-    getDistribusiPengajuan(setLabel, setDataPengajuan);
+    getDistribusiPengajuan(null, setDataPengajuan);
   }, []);
 
   const formatXAxis = (tickItem) => {
@@ -74,7 +73,7 @@ const DistribusiPengajuan = () => {
         return format(date, "d", { locale: id });
       }
       return tickItem;
-    } catch (e) {
+    } catch {
       return tickItem;
     }
   };

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Syarat from "./Syarat";
 import { Loader } from "lucide-react";
-import { motion } from "motion/react"
+import { motion as Motion } from "motion/react";
 
 const Pengajuan = ({
   url,
@@ -15,7 +15,7 @@ const Pengajuan = ({
   setMessage,
   placeholder,
   setFile,
-  isLoading
+  isLoading,
 }) => {
   const [showPreview, setShowPreview] = useState(false);
   const [maxMessage, setMaxMessage] = useState(0);
@@ -30,9 +30,9 @@ const Pengajuan = ({
   const handleChange = (e) => {
     if (e.target.value.length <= 200) {
       setMaxMessage(e.target.value.length);
-      setMessage(e.target.value)
+      setMessage(e.target.value);
     }
-  }
+  };
 
   const handlerPreview = () => {
     setShowPreview((prev) => !prev);
@@ -51,7 +51,12 @@ const Pengajuan = ({
         children={children}
       />
 
-      <motion.div initial={{ opacity: 0, translateY: 20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ duration: 0.5, ease: ['easeInOut'] }} className="card-pengajuan order-3 md:order-1">
+      <Motion.div
+        initial={{ opacity: 0, translateY: 20 }}
+        animate={{ opacity: 1, translateY: 0 }}
+        transition={{ duration: 0.5, ease: ["easeInOut"] }}
+        className="card-pengajuan order-3 md:order-1"
+      >
         <h2 className="text-xl text-slate-800 font-semibold mb-8">
           Informasi Pengaju
         </h2>
@@ -63,7 +68,7 @@ const Pengajuan = ({
           <div>
             <small className="text-gray-800">{maxMessage}/200</small>
             <input
-              required  
+              required
               type="text"
               className="input-pengajuan"
               placeholder={placeholder ? placeholder : "message"}
@@ -71,15 +76,30 @@ const Pengajuan = ({
               onChange={handleChange}
             />
           </div>
-          {!isDisplay && <input type="file" name="file" onChange={(e) => setFile(e.target.files[0])} className="input-pengajuan" />}
-          <button disabled={ isLoading } className="disabled:bg-blue-200 text-sm bg-blue-500 text-slate-900 border-transparent hover:bg-transparent hover:border-blue-500 group transition-colors flex justify-center duration-animation border-2 font-[500] px-4 cursor-pointer py-1 rounded-md">
-            {
-              isLoading ?   <div className="text-white group-hover:text-blue-500 animate-spin" ><Loader /></div> : <p className="text-white group-hover:text-blue-500">Tambahkan pengajuan</p>
-            }
-            
+          {!isDisplay && (
+            <input
+              type="file"
+              name="file"
+              onChange={(e) => setFile(e.target.files[0])}
+              className="input-pengajuan"
+            />
+          )}
+          <button
+            disabled={isLoading}
+            className="disabled:bg-blue-200 text-sm bg-blue-500 text-slate-900 border-transparent hover:bg-transparent hover:border-blue-500 group transition-colors flex justify-center duration-animation border-2 font-medium px-4 cursor-pointer py-1 rounded-md"
+          >
+            {isLoading ? (
+              <div className="text-white group-hover:text-blue-500 animate-spin">
+                <Loader />
+              </div>
+            ) : (
+              <p className="text-white group-hover:text-blue-500">
+                Tambahkan pengajuan
+              </p>
+            )}
           </button>
         </form>
-      </motion.div>
+      </Motion.div>
     </div>
   );
 };

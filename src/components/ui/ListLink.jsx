@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import Underline from "./Underline";
-import { motion } from "motion/react"
+import { motion as Motion } from "motion/react";
 
 const ListLink = ({ data, title }) => {
   return (
@@ -9,7 +9,11 @@ const ListLink = ({ data, title }) => {
       <Underline />
       <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 mt-4 gap-4 md:gap-8">
         {data.map((data, index) => (
-          <motion.div initial={{ opacity: 0, translateY: 20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ duration: `0.${ index + 4 }`, ease: ["easeInOut"] }} >
+          <Motion.div
+            initial={{ opacity: 0, translateY: 20 }}
+            animate={{ opacity: 1, translateY: 0 }}
+            transition={{ duration: `0.${index + 4}`, ease: ["easeInOut"] }}
+          >
             <Link
               key={index}
               to={data.path}
@@ -17,8 +21,7 @@ const ListLink = ({ data, title }) => {
             >
               {data.content}
             </Link>
-
-          </motion.div>
+          </Motion.div>
         ))}
       </div>
     </>

@@ -4,7 +4,7 @@ import { Pen } from "lucide-react";
 import { Link } from "react-router";
 import FormUpdateUser from "../dashboardUser/FormUpdateUser";
 import { ArrowLeft } from "lucide-react";
-import { motion } from "motion/react"
+import { motion as Motion } from "motion/react";
 import { useState } from "react";
 
 const UserBio = () => {
@@ -19,12 +19,16 @@ const UserBio = () => {
         <div className="bg-black/20 z-20 fixed inset-0 w-screen h-screen"></div>
       )}
       {showForm && (
-         <FormUpdateUser showForm={showForm} setShowForm={setShowForm} />
+        <FormUpdateUser showForm={showForm} setShowForm={setShowForm} />
       )}
-     
-      <motion.div initial={{ translateY: 20, opacity: 0 }} animate={{ translateY: 0, opacity: 1 }} transition={{ duration: 0.5, ease: ["easeInOut"] }} className="relative bg-white shadow-md rounded-md p-4">
-        <div className="bg-gradient-to-r from-purple-300 via-blue-200 to-blue-500 rounded-md relative h-40">
-       
+
+      <Motion.div
+        initial={{ translateY: 20, opacity: 0 }}
+        animate={{ translateY: 0, opacity: 1 }}
+        transition={{ duration: 0.5, ease: ["easeInOut"] }}
+        className="relative bg-white shadow-md rounded-md p-4"
+      >
+        <div className="bg-linear-to-r from-purple-300 via-blue-200 to-blue-500 rounded-md relative h-40">
           <div className="size-40 flex items-center gap-4 absolute -bottom-20 left-1/2 -translate-x-1/2 rounded-full p-2 bg-white">
             {user?.url_photo ? (
               <img
@@ -70,7 +74,7 @@ const UserBio = () => {
             <p className="text-sm md:text-xl">{user.email}</p>
           </div>
         </div>
-      </motion.div>
+      </Motion.div>
     </>
   );
 };

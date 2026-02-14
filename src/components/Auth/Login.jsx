@@ -7,7 +7,7 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
-import { motion } from "motion/react";
+import { motion as Motion } from "motion/react";
 
 const Login = () => {
   const { updateUserData } = useUser();
@@ -132,14 +132,14 @@ const Login = () => {
 
             {/* Error Message */}
             {errMessage && (
-              <motion.div
+              <Motion.div
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 transition={{ duration: 0.1, ease: ["easeInOut"] }}
                 className="mt-4 rounded-md bg-red-50 p-3 text-sm text-red-600 border border-red-200"
               >
                 <p>{errMessage}</p>
-              </motion.div>
+              </Motion.div>
             )}
           </form>
         </div>

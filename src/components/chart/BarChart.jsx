@@ -25,11 +25,10 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 const SimpleBarChart = () => {
-  const [label, setLabel] = useState("");
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    getTopTypePengajuan(setLabel, setData);
+    getTopTypePengajuan(null, setData);
   }, []);
 
   return (

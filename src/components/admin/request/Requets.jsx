@@ -1,5 +1,5 @@
 import { ArrowLeft, ArrowRight, Send, Eye, Filter } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { getAllRequestForAdmin } from "../../../utils/api/request";
 import { Link } from "react-router";
 import { Card, CardContent } from "@/components/ui/card";
@@ -21,18 +21,17 @@ const RequestAdmin = () => {
   const [filterStatus, setFilterStatus] = useState("default");
   const [filterType, setFilterType] = useState("default");
 
-  const getRequests = async (
-    p = 1,
-    status = filterStatus,
-    type = filterType,
-  ) => {
-    const requests = await getAllRequestForAdmin(p, status, type);
-    if (requests.status === "success") {
-      setRequests(requests.data);
-      setPage(requests.page);
-      setTotalPage(requests.totalPage);
-    }
-  };
+  const getRequests = useCallback(
+    async (p = 1, status = filterStatus, type = filterType) => {
+      const requests = await getAllRequestForAdmin(p, status, type);
+      if (requests.status === "success") {
+        setRequests(requests.data);
+        setPage(requests.page);
+        setTotalPage(requests.totalPage);
+      }
+    },
+    [filterStatus, filterType],
+  );
 
   const handlePageChange = async (p) => {
     setPage(p);
@@ -53,7 +52,7 @@ const RequestAdmin = () => {
 
   useEffect(() => {
     getRequests(1);
-  }, []);
+  }, [getRequests]);
 
   return (
     <Card className="border-0 shadow-lg rounded-[20px] bg-white h-full flex flex-col">
@@ -62,7 +61,6 @@ const RequestAdmin = () => {
           requests={requests}
           page={page}
           limit={limit}
-          dontDisplayLink={false}
           dontDisplayUsername={false}
           onStatusFilter={handleStatusChange}
           onTypeFilter={handleTypeChange}
@@ -121,7 +119,6 @@ export const TablePengajuan = ({
   requests,
   page,
   limit,
-  dontDisplayLink,
   dontDisplayUsername,
   onStatusFilter,
   onTypeFilter,
@@ -369,8 +366,7 @@ export const TablePengajuan = ({
   );
 };
 
-export const columns = [
-  // ... existing code ...
-];
+// Move non-component exports if necessary to resolve Fast Refresh warnings
+// Currently, RequestAdmin is the main export.
 
 export default RequestAdmin;

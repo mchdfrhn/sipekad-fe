@@ -19,11 +19,10 @@ const SimpleTooltip = ({ active, payload }) => {
 };
 
 export default function StraightAnglePieChart() {
-  const [label, setLabel] = useState("");
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    getStatusPengajuan(setLabel, setData);
+    getStatusPengajuan(null, setData);
   }, []);
 
   // Semantic Color Mapping

@@ -68,7 +68,7 @@ const User = () => {
 
     getUsers();
     setDomReady(true);
-  }, []); // Initial load only. Dependency on filterProdi is handled by handleFilterProdi
+  }, [filterProdi]);
 
   const handleDeleteClick = (id) => {
     setSelectedUserId(id);
