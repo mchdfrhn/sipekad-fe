@@ -2,7 +2,7 @@ import { getUserDetail } from "../../../utils/api/user";
 import { getRequest } from "../../../utils/api/request";
 import { useParams, Link } from "react-router";
 import { useEffect, useState } from "react";
-import { TablePengajuan } from "../request/Requets";
+import { TablePengajuan } from "../request/Requests";
 import {
   ArrowLeft,
   ArrowRight,

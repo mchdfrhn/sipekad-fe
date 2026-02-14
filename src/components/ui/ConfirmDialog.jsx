@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import { AlertCircle, X } from "lucide-react";
 import { Button } from "./button";
 
@@ -42,8 +42,8 @@ const ConfirmDialog = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-[#111C44]/40 backdrop-blur-xs"
           onClick={onClose}
-          className="absolute inset-0 bg-[#0b1437]/40 backdrop-blur-[4px]"
         />
 
         {/* Modal */}

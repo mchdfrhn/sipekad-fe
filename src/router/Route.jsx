@@ -18,7 +18,7 @@ import RequestLayout from "../components/admin/RequestLayout";
 import MainAdmin from "../components/admin/MainAdmin";
 import LayoutUser from "../components/admin/LayoutUser";
 import UserDetail from "../components/admin/user/UserDetail";
-import RequestAdmin from "../components/admin/request/Requets";
+import RequestAdmin from "../components/admin/request/Requests";
 import RequestDetail from "../components/admin/request/RequestDetail";
 
 // Request

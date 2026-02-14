@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { getRequestDetail } from "../../../utils/api/request";
 import { useParams, Link } from "react-router";
 import { addResponseHandler } from "../../../utils/action";
@@ -32,27 +32,29 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 
+import { LoadingOverlay } from "@/components/ui/Loading";
+import { useToast } from "@/utils/hooks/useToast";
+
 import BASE_URL from "../../../utils/api";
-// ... imports
 
 const RequestDetail = () => {
+  const { showToast } = useToast();
   const { id } = useParams();
-  const [isActive, setIsActive] = useState(true);
   const [requestDetail, setRequestDetail] = useState(null);
-  const [message, setMessage] = useState("");
   const [responses, setResponses] = useState([]);
-  const [displayIframe, setDisplayIframe] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState(null);
-  const [file, setFile] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [isDisplay, setIsDisplay] = useState(false);
-  const [isLoading, setLoading] = useState(false);
+  const [isActive, setIsActive] = useState(true);
+  const [message, setMessage] = useState("");
+  const [file, setFile] = useState(null);
   const [errMessage, setErrorMessage] = useState("");
   const [showConfirm, setShowConfirm] = useState(false);
+  const [displayIframe, setDisplayIframe] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [isLoadingAction, setIsLoadingAction] = useState(false);
 
   const fileUrl = requestDetail?.url
     ? requestDetail.url.startsWith("http")
@@ -60,15 +62,53 @@ const RequestDetail = () => {
       : `${BASE_URL}${requestDetail.url.startsWith("/") ? "" : "/"}${requestDetail.url}`
     : null;
 
-  useEffect(() => {
-    getRequestDetail(id, setRequestDetail, setResponses);
+  const getDetail = useCallback(async () => {
+    setLoading(true);
+    await getRequestDetail(id, setRequestDetail, setResponses);
+    setLoading(false);
   }, [id]);
 
-  const onOkHandler = async () => {
-    setIsDisplay(!isDisplay);
-    await getRequestDetail(id, setRequestDetail, setResponses);
+  useEffect(() => {
+    getDetail();
+  }, [getDetail]);
+
+  const onOkHandler = () => {
+    setIsDisplay(false);
+    getDetail();
     setMessage("");
     setFile(null);
+  };
+
+  const onAddResponseHandler = (e) => {
+    e.preventDefault();
+    if (!message && isActive) {
+      setErrorMessage("Pesan balasan harus diisi untuk menyetujui.");
+      return;
+    }
+    setShowConfirm(true);
+  };
+
+  const handleFinalSubmit = async () => {
+    setIsLoadingAction(true);
+    const result = await addResponseHandler(
+      { id, message, isComplete: isActive, file },
+      () => {}, // No need for setShowModal since we use local state
+      false,
+      setIsLoadingAction,
+      setErrorMessage,
+    );
+
+    if (result && result.status === "success") {
+      showToast(
+        isActive ? "Permohonan disetujui" : "Permohonan ditolak",
+        "success",
+      );
+      setIsDisplay(true);
+      setShowConfirm(false);
+    } else if (result && result.status === "fail") {
+      showToast(errMessage || "Gagal memproses permohonan", "error");
+    }
+    setIsLoadingAction(false);
   };
 
   const toTitleCase = (str) => {
@@ -96,27 +136,7 @@ const RequestDetail = () => {
     }
   };
 
-  const onAddResponseHandler = (e) => {
-    e.preventDefault();
-    if (!message && isActive) {
-      setErrorMessage("Pesan balasan harus diisi untuk menyetujui.");
-      return;
-    }
-    setShowConfirm(true);
-  };
-
-  const handleFinalSubmit = async () => {
-    setLoading(true);
-    addResponseHandler(
-      { id, message, isComplete: isActive, file },
-      setIsDisplay,
-      isDisplay,
-      setLoading,
-      setErrorMessage,
-    );
-  };
-
-  if (!requestDetail) {
+  if (loading && !requestDetail) {
     return (
       <div className="flex h-full items-center justify-center min-h-[60vh]">
         <div className="flex flex-col items-center gap-2">
@@ -129,6 +149,8 @@ const RequestDetail = () => {
     );
   }
 
+  if (!requestDetail) return null;
+
   return (
     <div className="space-y-8 pb-10">
       {isDisplay && (
@@ -138,8 +160,8 @@ const RequestDetail = () => {
         />
       )}
 
-      {/* Modern Header */}
-      {/* Modern Header - Simplified */}
+      {loading && <LoadingOverlay />}
+
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <Link to="/admin/pengajuan">
@@ -177,9 +199,7 @@ const RequestDetail = () => {
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        {/* Left Column: Details (2 spans) */}
         <div className="xl:col-span-2 space-y-6">
-          {/* Main Info Card */}
           <Card className="rounded-[20px] shadow-sm border-none">
             <CardHeader>
               <CardTitle className="text-lg font-bold text-[#2B3674] flex items-center gap-2">
@@ -220,7 +240,6 @@ const RequestDetail = () => {
             </CardContent>
           </Card>
 
-          {/* Request Content Card */}
           <Card className="rounded-[20px] shadow-sm border-none">
             <CardHeader>
               <CardTitle className="text-lg font-bold text-[#2B3674] flex items-center gap-2">
@@ -233,7 +252,7 @@ const RequestDetail = () => {
                 <Label className="text-gray-400 uppercase text-xs font-bold tracking-wider">
                   Jenis Surat
                 </Label>
-                <p className="text-lg font-bold text-[#2B3674]">
+                <p className="text-base font-bold text-[#2B3674]">
                   {requestDetail?.type}
                 </p>
               </div>
@@ -292,12 +311,10 @@ const RequestDetail = () => {
           </Card>
         </div>
 
-        {/* Right Column: Actions & Timeline (1 span) */}
         <div className="space-y-6">
-          {/* Action Card */}
           {requestDetail?.status === "pending" ? (
             <Card className="rounded-[20px] shadow-lg border-0 ring-1 ring-black/5 overflow-hidden">
-              <div className="h-2 bg-gradient-to-r from-blue-500 to-purple-500"></div>
+              <div className="h-2 bg-[#4318FF]"></div>
               <CardHeader className="pb-4">
                 <CardTitle className="text-lg font-bold text-[#2B3674]">
                   Tindak Lanjut
@@ -398,9 +415,9 @@ const RequestDetail = () => {
                   <Button
                     type="submit"
                     className="w-full rounded-xl bg-[#4318FF] hover:bg-[#3311CC] py-6 font-bold text-base shadow-lg shadow-blue-200"
-                    disabled={isLoading}
+                    disabled={isLoadingAction}
                   >
-                    {isLoading ? (
+                    {isLoadingAction ? (
                       <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                     ) : (
                       <Send className="mr-2 h-5 w-5" />
@@ -411,7 +428,7 @@ const RequestDetail = () => {
               </CardContent>
             </Card>
           ) : (
-            <Card className="rounded-[20px] shadow-sm border-0 bg-gradient-to-b from-white to-gray-50">
+            <Card className="rounded-[20px] shadow-sm border-0 bg-gray-50">
               <CardContent className="pt-6 pb-8 text-center">
                 <div
                   className={`mx-auto h-16 w-16 rounded-full flex items-center justify-center mb-4 ${requestDetail?.status === "completed" ? "bg-green-100 text-green-600" : "bg-red-100 text-red-600"}`}
@@ -432,13 +449,12 @@ const RequestDetail = () => {
                       ? "disetujui"
                       : "ditolak"}
                   </span>
-                  . Anda tidak dapat mengubah statusnya lagi.
+                  .
                 </p>
               </CardContent>
             </Card>
           )}
 
-          {/* Timeline Card */}
           <Card className="rounded-[20px] shadow-sm border-none">
             <CardHeader className="pb-2">
               <CardTitle className="text-lg font-bold text-[#2B3674]">
@@ -447,7 +463,6 @@ const RequestDetail = () => {
             </CardHeader>
             <CardContent>
               <div className="relative pl-4 border-l-2 border-gray-100 space-y-8 py-2">
-                {/* Current Request Node */}
                 <div className="relative">
                   <div className="absolute -left-[21px] top-1 h-3 w-3 rounded-full bg-blue-500 ring-4 ring-white"></div>
                   <div>
@@ -471,7 +486,6 @@ const RequestDetail = () => {
                   </div>
                 </div>
 
-                {/* Responses */}
                 {responses.map((res, idx) => {
                   const resUrl = res.url
                     ? res.url.startsWith("http")
@@ -549,7 +563,6 @@ const RequestDetail = () => {
         </div>
       </div>
 
-      {/* Iframe Modal */}
       {displayIframe && (
         <div
           onClick={() => setDisplayIframe(false)}
@@ -557,7 +570,7 @@ const RequestDetail = () => {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-5xl bg-white rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-200"
+            className="w-full max-w-5xl bg-white rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]"
           >
             <div className="p-4 border-b flex justify-between items-center bg-white z-10">
               <div className="flex items-center gap-3">
@@ -607,7 +620,6 @@ const RequestDetail = () => {
   );
 };
 
-// Helper Components
 const DetailRow = ({ icon, label, value }) => (
   <div className="flex items-start gap-3">
     <div className="mt-0.5 text-gray-400">{icon}</div>
