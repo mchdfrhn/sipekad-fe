@@ -40,3 +40,25 @@ export const formatPathToBreadcrumb = (path) => {
 
   return breadcrumbs;
 };
+
+/**
+ * Formats a date into a relative string (e.g., "Just now", "5m ago", "2h ago", "Dec 12")
+ * @param {string|Date} date - The date to format
+ * @returns {string}
+ */
+export const formatDateRelative = (date) => {
+  if (!date) return "";
+  const now = new Date();
+  const past = new Date(date);
+  const diffInSeconds = Math.floor((now - past) / 1000);
+
+  if (diffInSeconds < 60) return "Just now";
+  if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+  if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+
+  return past.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: past.getFullYear() !== now.getFullYear() ? "numeric" : undefined,
+  });
+};

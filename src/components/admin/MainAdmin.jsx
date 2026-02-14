@@ -56,7 +56,7 @@ const MainAdmin = () => {
         {[0, 1, 2, 3].map((index) => {
           const data = getData(index);
           const Icon = getIcon(index);
-          const variant = getVariant(index);
+          const variant = index === 0 ? "premium" : getVariant(index);
           return (
             <StatsCard
               key={index}

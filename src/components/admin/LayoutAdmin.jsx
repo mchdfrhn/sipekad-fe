@@ -13,7 +13,14 @@ import {
   BreadcrumbSeparator,
   BreadcrumbPage,
 } from "@/components/ui/breadcrumb";
-import { formatPathToBreadcrumb } from "../../utils/helpers";
+import {
+  formatPathToBreadcrumb,
+  formatDateRelative,
+} from "../../utils/helpers";
+import {
+  getDashboardActivities,
+  markAsRead,
+} from "../../utils/api/dashboardValue";
 import {
   Search,
   Bell,
@@ -44,9 +51,14 @@ const LayoutAdmin = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const breadcrumbs = formatPathToBreadcrumb(pathname);
-  const [user, setUser] = useState({ name: "Admin", role: "admin" });
+  const [user, setUser] = useState({
+    full_name: "Admin",
+    role: "admin",
+    url_photo: "",
+  });
   const [scrolled, setScrolled] = useState(false);
-  const [isDisplayLogout, setIsDisplayLogout] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const unreadCount = notifications.filter((n) => !n.is_read).length;
 
   // Local state for search input to ensure smooth typing
   const [searchValue, setSearchValue] = useState(searchParams.get("q") || "");
@@ -118,7 +130,30 @@ const LayoutAdmin = () => {
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
+    // Initial fetch of notifications
+    getDashboardActivities(null, setNotifications);
+
+    // Refresh notifications every minute
+    const interval = setInterval(() => {
+      getDashboardActivities(null, setNotifications);
+    }, 60000);
+
+    return () => clearInterval(interval);
   }, []);
+
+  const handleNotificationClick = async (notif) => {
+    if (!notif.is_read) {
+      try {
+        await markAsRead(notif.id);
+        setNotifications((prev) =>
+          prev.map((n) => (n.id === notif.id ? { ...n, is_read: true } : n)),
+        );
+      } catch (err) {
+        console.error("Failed to mark notification as read", err);
+      }
+    }
+    navigate(`/admin/pengajuan/${notif.id}`);
+  };
 
   const logoutHandler = async () => {
     const token = localStorage.getItem("tokenKey");
@@ -238,14 +273,85 @@ const LayoutAdmin = () => {
               </SheetContent>
             </Sheet>
 
-            {/* Notification Bell */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-full text-gray-400 hover:text-[#4318FF]"
-            >
-              <Bell className="h-5 w-5" />
-            </Button>
+            {/* Notification Bell with Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="relative rounded-full text-gray-400 hover:text-[#4318FF] transition-colors"
+                >
+                  <Bell className="h-5 w-5" />
+                  {unreadCount > 0 && (
+                    <span className="absolute top-2 right-2 flex h-2.5 w-2.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500 border-2 border-white"></span>
+                    </span>
+                  )}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                className="w-[350px] rounded-2xl shadow-xl border-none bg-white p-0 overflow-hidden z-[9999]"
+              >
+                <div className="bg-[#4318FF] px-6 py-4 flex items-center justify-between">
+                  <h3 className="text-white font-bold text-lg">
+                    Notifications
+                  </h3>
+                  {unreadCount > 0 && (
+                    <span className="bg-white/20 text-white text-[10px] px-2 py-0.5 rounded-full backdrop-blur-sm border border-white/30">
+                      {unreadCount} New
+                    </span>
+                  )}
+                </div>
+                <div className="max-h-[400px] overflow-y-auto no-scrollbar py-2">
+                  {notifications.length > 0 ? (
+                    notifications.map((notif, idx) => (
+                      <DropdownMenuItem
+                        key={idx}
+                        className={`px-6 py-4 cursor-pointer focus:bg-gray-50 flex flex-col items-start gap-1 transition-colors relative ${
+                          !notif.is_read ? "bg-blue-50/50" : ""
+                        }`}
+                        onClick={() => handleNotificationClick(notif)}
+                      >
+                        {!notif.is_read && (
+                          <div className="absolute left-2 top-1/2 -translate-y-1/2 w-1 h-8 bg-[#4318FF] rounded-full" />
+                        )}
+                        <div className="flex items-center justify-between w-full">
+                          <span className="text-xs font-bold text-[#4318FF] uppercase tracking-wider">
+                            {notif.request_type}
+                          </span>
+                          <span className="text-[10px] font-medium text-gray-400">
+                            {formatDateRelative(notif.time)}
+                          </span>
+                        </div>
+                        <p
+                          className={`text-sm ${!notif.is_read ? "font-bold text-[#2B3674]" : "font-medium text-gray-500"}`}
+                        >
+                          {notif.title}
+                        </p>
+                      </DropdownMenuItem>
+                    ))
+                  ) : (
+                    <div className="py-12 flex flex-col items-center justify-center text-gray-400">
+                      <Bell className="h-10 w-10 mb-3 opacity-20" />
+                      <p className="text-sm">No notifications yet</p>
+                    </div>
+                  )}
+                </div>
+                {notifications.length > 0 && (
+                  <div className="border-t border-gray-100 p-3 bg-gray-50/50">
+                    <Button
+                      variant="ghost"
+                      className="w-full text-[#4318FF] hover:text-[#4318FF] hover:bg-blue-50 text-xs font-bold rounded-xl"
+                      onClick={() => navigate("/admin/pengajuan")}
+                    >
+                      View All Notifications
+                    </Button>
+                  </div>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             {/* Info Icon */}
             <Button
@@ -261,14 +367,14 @@ const LayoutAdmin = () => {
               <DropdownMenuTrigger asChild>
                 <div className="flex items-center gap-3 cursor-pointer p-1 pr-4 hover:bg-gray-50 rounded-full transition-colors">
                   <Avatar className="h-10 w-10 border-2 border-white shadow-sm bg-gray-100">
-                    <AvatarImage src={user.photo} />
+                    <AvatarImage src={user.url_photo} />
                     <AvatarFallback className="bg-gray-100 flex items-center justify-center">
                       <User className="h-6 w-6 text-gray-400" />
                     </AvatarFallback>
                   </Avatar>
                   <div className="hidden md:block text-left">
                     <p className="text-sm font-bold text-[#2B3674] leading-tight">
-                      {user.name}
+                      {user.full_name}
                     </p>
                     <p className="text-[10px] font-medium text-gray-400 uppercase">
                       Admin
@@ -294,8 +400,8 @@ const LayoutAdmin = () => {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  className="cursor-pointer text-red-500 hover:text-red-600 hover:bg-red-50 font-medium"
-                  onClick={() => setIsDisplayLogout(true)}
+                  className="cursor-pointer text-red-500 hover:text-white hover:bg-red-500 focus:bg-red-500 focus:text-white font-bold transition-all mt-1 rounded-lg"
+                  onClick={logoutHandler}
                 >
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Log out</span>
@@ -307,17 +413,14 @@ const LayoutAdmin = () => {
 
         {/* Scrollable Content */}
         <main className="flex-1 p-4 lg:p-6 lg:pt-0 pb-20">
-          <Outlet />
-        </main>
-
-        {/* Alert Logout */}
-        {isDisplayLogout && (
-          <Alert
-            setDisplay={setIsDisplayLogout}
-            isDisplay={isDisplayLogout}
-            onYesHundler={logoutHandler}
+          <Outlet
+            context={{
+              notifications,
+              setNotifications,
+              handleNotificationClick,
+            }}
           />
-        )}
+        </main>
       </div>
     </div>
   );

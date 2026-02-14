@@ -94,3 +94,49 @@ export const getSummeryDataByUserId = async (setSummery, userId) => {
     console.error(err);
   }
 };
+
+export const getDashboardActivities = async (
+  setActivities,
+  setNotifications,
+) => {
+  const token = localStorage.getItem("tokenKey");
+  try {
+    const response = await axios.get(`${BASE_URL}/dashboard/activities`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const result = response.data;
+    if (result.status === "success") {
+      if (typeof setActivities === "function")
+        setActivities(result.data.activities || []);
+      if (typeof setNotifications === "function")
+        setNotifications(result.data.notifications || []);
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+export const markAsRead = async (id) => {
+  const token = localStorage.getItem("tokenKey");
+  try {
+    const response = await axios.patch(
+      `${BASE_URL}/dashboard/notifications/${id}/read`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error("markAsRead error:", error.response?.data || error.message);
+    } else {
+      console.error("markAsRead unexpected error:", error);
+    }
+    throw error;
+  }
+};

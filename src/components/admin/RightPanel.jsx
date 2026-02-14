@@ -1,104 +1,210 @@
-import { Bell, User, Settings, Info } from "lucide-react";
+import {
+  Bell,
+  User,
+  Settings,
+  Info,
+  Briefcase,
+  ExternalLink,
+} from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useEffect, useState } from "react";
+import { getDashboardActivities } from "../../utils/api/dashboardValue";
+import { formatDateRelative } from "../../utils/helpers";
+import { Link, useOutletContext } from "react-router";
 
-const NotificationItem = (props) => {
-  const Icon = props.icon;
-  const { title, time, variant = "blue" } = props;
+const NotificationItem = ({
+  title,
+  request_type,
+  time,
+  variant = "blue",
+  icon: Icon,
+  onClick,
+  is_read,
+}) => {
   const bgColors = {
     blue: "bg-blue-50 text-blue-500",
     green: "bg-green-50 text-green-500",
     red: "bg-red-50 text-red-500",
     purple: "bg-purple-50 text-purple-500",
   };
+
   return (
-    <div className="flex items-start gap-4 mb-6">
-      <div className={`p-2 rounded-xl ${bgColors[variant]}`}>
+    <div
+      onClick={onClick}
+      className={`flex items-start gap-4 mb-6 last:mb-0 group hover:bg-gray-50 p-2 -m-2 rounded-xl transition-colors cursor-pointer relative ${
+        !is_read ? "bg-blue-50/50" : ""
+      }`}
+    >
+      {!is_read && (
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-[#4318FF] rounded-full" />
+      )}
+      <div className={`p-2 rounded-xl shrink-0 ${bgColors[variant]}`}>
         <Icon className="h-5 w-5" />
       </div>
+      <div className="min-w-0 pr-4">
+        <h4
+          className={`text-sm text-[#2B3674] group-hover:text-[#4318FF] transition-colors ${!is_read ? "font-bold" : "font-medium"}`}
+        >
+          {title}{" "}
+          <span className="text-gray-500 font-medium">{request_type}</span>
+        </h4>
+        <p className="text-xs text-gray-400 mt-1">{time}</p>
+      </div>
+      <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity">
+        <ExternalLink className="h-4 w-4 text-gray-400" />
+      </div>
+    </div>
+  );
+};
+
+const ActivityItem = ({
+  admin_name,
+  requester_name,
+  request_type,
+  status,
+  time,
+  image,
+  type,
+}) => {
+  const statusColors = {
+    sukses: "text-[#4318FF]",
+    complete: "text-[#4318FF]",
+    completed: "text-[#4318FF]",
+    ditolak: "text-[#A3AED0]",
+    canceled: "text-[#A3AED0]",
+    cancel: "text-[#A3AED0]",
+    diproses: "text-orange-500",
+    proses: "text-orange-500",
+    pending: "text-gray-400",
+  };
+
+  const statusLabel = status?.toLowerCase() || "";
+  const colorClass = statusColors[statusLabel] || "text-blue-500";
+
+  return (
+    <div className="flex items-center gap-4 mb-5 last:mb-0">
+      <Avatar className="h-10 w-10">
+        <AvatarImage src={image} />
+        <AvatarFallback>{admin_name?.charAt(0) || "U"}</AvatarFallback>
+      </Avatar>
       <div>
-        <h4 className="text-sm font-bold text-[#2B3674]">{title}</h4>
+        <p className="text-sm font-medium text-[#2B3674] leading-relaxed">
+          {type === "response" ? (
+            <>
+              <span className="font-bold text-[#4318FF]">{admin_name}</span>{" "}
+              responded to <span className="font-bold">{request_type}</span> for{" "}
+              {requester_name}
+            </>
+          ) : (
+            <>
+              <span className="font-bold text-[#4318FF]">{admin_name}</span>{" "}
+              updated status of{" "}
+              <span className="font-bold">{request_type}</span> {requester_name}{" "}
+              to <span className={`font-bold ${colorClass}`}>{status}</span>
+            </>
+          )}
+        </p>
         <p className="text-xs text-gray-400 mt-1">{time}</p>
       </div>
     </div>
   );
 };
 
-const ActivityItem = ({ name, action, time, image }) => (
-  <div className="flex items-center gap-4 mb-5">
-    <Avatar className="h-10 w-10">
-      <AvatarImage src={image} />
-      <AvatarFallback>{name.charAt(0)}</AvatarFallback>
-    </Avatar>
-    <div>
-      <p className="text-sm font-medium text-[#2B3674]">
-        <span className="font-bold">{name}</span> {action}
-      </p>
-      <p className="text-xs text-gray-400 mt-1">{time}</p>
-    </div>
-  </div>
-);
-
 const RightPanel = () => {
+  const { notifications, handleNotificationClick } = useOutletContext();
+  const [activities, setActivities] = useState([]);
+
+  useEffect(() => {
+    // Only fetch activities here, notifications come from context
+    getDashboardActivities(setActivities, null);
+  }, []);
+
+  const getNotificationIcon = (type) => {
+    switch (type) {
+      case "request":
+        return Bell;
+      case "user":
+        return User;
+      default:
+        return Info;
+    }
+  };
+
+  const getNotificationVariant = (type) => {
+    switch (type) {
+      case "request":
+        return "blue";
+      case "user":
+        return "purple";
+      default:
+        return "green";
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Notifications */}
-      <Card className="rounded-[20px]">
+      <Card className="rounded-[20px] border-none shadow-sm">
         <CardHeader className="flex flex-row items-center justify-between pb-2">
-          <CardTitle>Notifications</CardTitle>
-          <div className="bg-blue-50 p-2 rounded-full cursor-pointer hover:bg-blue-100">
+          <CardTitle className="text-[#2B3674] font-bold">
+            Notifications
+          </CardTitle>
+          <div className="bg-blue-50 p-2 rounded-full cursor-pointer hover:bg-blue-100 transition-colors">
             <Settings className="h-5 w-5 text-[#4318FF]" />
           </div>
         </CardHeader>
         <CardContent>
-          <NotificationItem
-            icon={Bell}
-            title="New Request Submitted"
-            time="Just now"
-            variant="blue"
-          />
-          <NotificationItem
-            icon={User}
-            title="New User Registered"
-            time="59 minutes ago"
-            variant="purple"
-          />
-          <NotificationItem
-            icon={Info}
-            title="System Update Completed"
-            time="12 hours ago"
-            variant="green"
-          />
+          {notifications.length > 0 ? (
+            notifications
+              .slice(0, 3)
+              .map((notif, idx) => (
+                <NotificationItem
+                  key={idx}
+                  id={notif.id}
+                  icon={getNotificationIcon(notif.type)}
+                  title={notif.title}
+                  request_type={notif.request_type}
+                  time={formatDateRelative(notif.time)}
+                  variant={getNotificationVariant(notif.type)}
+                  is_read={notif.is_read}
+                  onClick={() => handleNotificationClick(notif)}
+                />
+              ))
+          ) : (
+            <p className="text-sm text-gray-400 text-center py-8">
+              No recent notifications
+            </p>
+          )}
         </CardContent>
       </Card>
 
       {/* Recent Activity */}
-      <Card className="rounded-[20px]">
+      <Card className="rounded-[20px] border-none shadow-sm">
         <CardHeader>
-          <CardTitle>Recent Activity</CardTitle>
+          <CardTitle className="text-[#2B3674] font-bold">
+            Recent Activity
+          </CardTitle>
         </CardHeader>
         <CardContent>
-          <ActivityItem
-            name="Andi Lane"
-            action="submitted a request"
-            time="Today, 11:59 AM"
-            image="https://github.com/shadcn.png"
-          />
-          <ActivityItem
-            name="Koray Okumus"
-            action="updated profile"
-            time="Today, 11:59 AM"
-          />
-          <ActivityItem
-            name="Natalie Craig"
-            action="login to system"
-            time="Today, 11:59 AM"
-          />
-          <ActivityItem
-            name="Orlando Diggs"
-            action="approved a request"
-            time="Yesterday, 9:22 AM"
-          />
+          {activities.length > 0 ? (
+            activities.map((activity, idx) => (
+              <ActivityItem
+                key={idx}
+                admin_name={activity.admin_name}
+                requester_name={activity.requester_name}
+                request_type={activity.request_type}
+                status={activity.status}
+                time={formatDateRelative(activity.time)}
+                image={activity.image}
+                type={activity.type}
+              />
+            ))
+          ) : (
+            <p className="text-sm text-gray-400 text-center py-8">
+              No recent activities
+            </p>
+          )}
         </CardContent>
       </Card>
     </div>
