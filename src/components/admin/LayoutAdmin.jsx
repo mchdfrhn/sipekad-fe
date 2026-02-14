@@ -1,4 +1,4 @@
-import { Outlet, useLocation } from "react-router";
+import { Outlet, useLocation, useNavigate } from "react-router";
 import SidebarAdmin from "../sidebar/SidebarAdmin";
 import {
   Breadcrumb,
@@ -9,7 +9,16 @@ import {
   BreadcrumbPage,
 } from "@/components/ui/breadcrumb";
 import { formatPathToBreadcrumb } from "../../utils/helpers";
-import { Search, Bell, Menu, Info, User } from "lucide-react";
+import {
+  Search,
+  Bell,
+  Menu,
+  Info,
+  User,
+  Settings,
+  HelpCircle,
+  LogOut,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,12 +31,18 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
+import Alert from "../ui/Alert";
 
 const LayoutAdmin = () => {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
   const breadcrumbs = formatPathToBreadcrumb(pathname);
   const [user, setUser] = useState({ name: "Admin", role: "admin" });
   const [scrolled, setScrolled] = useState(false);
+  const [isDisplayLogout, setIsDisplayLogout] = useState(false);
+
+  // Check if current page is Dashboard (exact match for /admin or /admin/)
+  const isDashboard = pathname === "/admin" || pathname === "/admin/";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -56,6 +71,16 @@ const LayoutAdmin = () => {
       setUser(JSON.parse(storedUser));
     }
   }, []);
+
+  const logoutHandler = async () => {
+    const token = localStorage.getItem("tokenKey");
+
+    if (token) {
+      navigate("/");
+      localStorage.removeItem("tokenKey");
+      localStorage.removeItem("user");
+    }
+  };
 
   if (user?.role !== "admin") {
     return (
@@ -126,15 +151,17 @@ const LayoutAdmin = () => {
             {/* Header Actions Portal Target */}
             <div id="header-actions"></div>
 
-            {/* Search Pill */}
-            <div className="relative hidden md:block bg-[#F4F7FE] rounded-full px-4 py-2 mr-2">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#2B3674]" />
-              <input
-                type="text"
-                placeholder="Search..."
-                className="pl-8 bg-transparent border-none outline-none text-sm text-[#2B3674] placeholder-gray-400 w-40 focus:w-60 transition-all font-medium"
-              />
-            </div>
+            {/* Search Pill - Conditionally Rendered */}
+            {!isDashboard && (
+              <div className="relative hidden md:block bg-[#F4F7FE] rounded-full px-4 py-2 mr-2">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#2B3674]" />
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  className="pl-8 bg-transparent border-none outline-none text-sm text-[#2B3674] placeholder-gray-400 w-40 focus:w-60 transition-all font-medium"
+                />
+              </div>
+            )}
 
             {/* Mobile Sidebar Toggle */}
             <Sheet>
@@ -200,14 +227,20 @@ const LayoutAdmin = () => {
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="cursor-pointer font-medium text-gray-600 focus:text-[#4318FF]">
-                  Profile Settings
+                  <Settings className="mr-2 h-4 w-4" />
+                  <span>Profile Settings</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem className="cursor-pointer font-medium text-gray-600 focus:text-[#4318FF]">
-                  Support
+                  <HelpCircle className="mr-2 h-4 w-4" />
+                  <span>Support</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="cursor-pointer text-red-500 hover:text-red-600 hover:bg-red-50 font-medium">
-                  Log out
+                <DropdownMenuItem
+                  className="cursor-pointer text-red-500 hover:text-red-600 hover:bg-red-50 font-medium"
+                  onClick={() => setIsDisplayLogout(true)}
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -218,6 +251,15 @@ const LayoutAdmin = () => {
         <main className="flex-1 p-4 lg:p-6 lg:pt-0 pb-20">
           <Outlet />
         </main>
+
+        {/* Alert Logout */}
+        {isDisplayLogout && (
+          <Alert
+            setDisplay={setIsDisplayLogout}
+            isDisplay={isDisplayLogout}
+            onYesHundler={logoutHandler}
+          />
+        )}
       </div>
     </div>
   );

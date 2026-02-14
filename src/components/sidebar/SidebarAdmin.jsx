@@ -1,31 +1,10 @@
-import {
-  LayoutDashboard,
-  LogOut,
-  User,
-  Send,
-  Settings,
-  HelpCircle,
-} from "lucide-react";
-import { Link, useLocation, useNavigate } from "react-router";
+import { LayoutDashboard, User, Send } from "lucide-react";
+import { Link, useLocation } from "react-router";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
-import Alert from "../ui/Alert";
 import { Separator } from "@/components/ui/separator";
 
 const SidebarAdmin = ({ className }) => {
-  const navigate = useNavigate();
   const { pathname } = useLocation();
-  const [isDisplay, setIsDisplay] = useState(false);
-
-  const logoutHandler = async () => {
-    const token = localStorage.getItem("tokenKey");
-
-    if (token) {
-      navigate("/");
-      localStorage.removeItem("tokenKey");
-      localStorage.removeItem("user");
-    }
-  };
 
   const links = [
     {
@@ -35,14 +14,14 @@ const SidebarAdmin = ({ className }) => {
       exact: true,
     },
     {
-      path: "/admin/user",
-      name: "User Management",
-      icon: User,
-    },
-    {
       path: "/admin/pengajuan",
       name: "Pengajuan",
       icon: Send,
+    },
+    {
+      path: "/admin/user",
+      name: "User Management",
+      icon: User,
     },
   ];
 
@@ -54,16 +33,19 @@ const SidebarAdmin = ({ className }) => {
       )}
     >
       {/* Logo Section */}
-      <div className="flex items-center justify-center gap-3 px-8 pb-8">
-        <div className="flex items-center gap-2 font-poppins">
-          <img
-            src="/sttimage.png"
-            alt="stt-logo"
-            className="w-10 h-10 object-contain"
-          />
-          <span className="text-2xl font-bold text-[#2B3674] tracking-tight">
+      <div className="flex flex-col items-center justify-center gap-2 px-8 pb-8">
+        <img
+          src="/sttimage.png"
+          alt="stt-logo"
+          className="w-16 h-16 object-contain"
+        />
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-[#2B3674] tracking-tight">
             SIPEKAD
-          </span>
+          </h1>
+          <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mt-1">
+            Sistem Pengajuan Akademik
+          </p>
         </div>
       </div>
 
@@ -71,9 +53,6 @@ const SidebarAdmin = ({ className }) => {
 
       {/* Main Menu */}
       <div className="flex-1 px-4">
-        {/* <p className="ml-4 mb-2 text-xs font-bold text-gray-400 uppercase tracking-wider">
-          Main Menu
-        </p> */}
         <div className="space-y-2">
           {links.map((link) => {
             const isActive = link.exact
@@ -110,30 +89,6 @@ const SidebarAdmin = ({ className }) => {
           })}
         </div>
       </div>
-
-      {/* Footer / Logout */}
-      <div className="px-6 mt-auto mb-4">
-        {/* Optional Upgrade Card could go here */}
-
-        <button
-          className="flex items-center gap-3 px-5 py-3 w-full text-left font-medium text-gray-500 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all duration-200 group"
-          onClick={() => setIsDisplay(true)}
-        >
-          <LogOut
-            size={20}
-            className="text-gray-400 group-hover:text-red-500 transition-colors"
-          />
-          <span className="text-sm">Log Out</span>
-        </button>
-      </div>
-
-      {isDisplay && (
-        <Alert
-          setDisplay={setIsDisplay}
-          isDisplay={isDisplay}
-          onYesHundler={logoutHandler}
-        />
-      )}
     </div>
   );
 };

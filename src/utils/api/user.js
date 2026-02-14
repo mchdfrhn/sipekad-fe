@@ -57,17 +57,20 @@ const updateProfile = async (
 };
 
 // admin
-const getAllUserForAdmin = async (page = 1, limit = 10) => {
+const getAllUserForAdmin = async (page = 1, limit = 10, prodi = "default") => {
   const token = localStorage.getItem("tokenKey");
+  let url = `${BASE_URL}/users?page=${page}&limit=${limit}`;
+
+  if (prodi && prodi !== "default") {
+    url += `&prodi=${prodi}`;
+  }
+
   try {
-    const result = await Axios.get(
-      `${BASE_URL}/users?page=${page}&limit=${limit}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+    const result = await Axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
       },
-    );
+    });
 
     const users = await result.data;
     return users;

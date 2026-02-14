@@ -5,6 +5,7 @@ import {
   User as UserIcon,
   Plus,
   Search,
+  Filter,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getAllUserForAdmin } from "../../../utils/api/user";
@@ -16,6 +17,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { createPortal } from "react-dom";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { STUDENT_PRODI } from "@/utils/constant";
 
 const User = () => {
   const [showForm, setShowForm] = useState(false);
@@ -26,9 +34,10 @@ const User = () => {
   const [selectedUserId, setSelectedUserId] = useState(null);
   const limit = 10;
   const [domReady, setDomReady] = useState(false);
+  const [filterProdi, setFilterProdi] = useState("default");
 
   const handlePageChange = async (p) => {
-    const users = await getAllUserForAdmin(p, limit);
+    const users = await getAllUserForAdmin(p, limit, filterProdi);
     if (users.status === "success") {
       setUsers(users.data);
       setPage(users.page);
@@ -36,9 +45,20 @@ const User = () => {
     }
   };
 
+  const handleFilterProdi = async (prodi) => {
+    setFilterProdi(prodi);
+    setPage(1);
+    const result = await getAllUserForAdmin(1, limit, prodi);
+    if (result.status === "success") {
+      setUsers(result.data);
+      setTotalPage(result.totalPage);
+      setPage(result.page);
+    }
+  };
+
   useEffect(() => {
     const getUsers = async () => {
-      const result = await getAllUserForAdmin(1, limit);
+      const result = await getAllUserForAdmin(1, limit, filterProdi);
       if (result.status === "success") {
         setUsers(result.data);
         setTotalPage(result.totalPage);
@@ -48,7 +68,7 @@ const User = () => {
 
     getUsers();
     setDomReady(true);
-  }, []);
+  }, []); // Initial load only. Dependency on filterProdi is handled by handleFilterProdi
 
   const handleDeleteClick = (id) => {
     setSelectedUserId(id);
@@ -71,13 +91,20 @@ const User = () => {
 
   const headers = [
     "No",
-    "Foto",
     "Nama Lengkap",
     "NIM",
     "Prodi",
     "Email",
     "No. Telepon",
     "Aksi",
+  ];
+
+  const prodiOptions = [
+    { label: "Semua Prodi", value: "default" },
+    ...Object.values(STUDENT_PRODI).map((prodi) => ({
+      label: prodi,
+      value: prodi,
+    })),
   ];
 
   return (
@@ -119,14 +146,43 @@ const User = () => {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-gray-100">
-                    {headers.map((header) => (
-                      <th
-                        key={header}
-                        className="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider whitespace-nowrap"
-                      >
-                        {header}
-                      </th>
-                    ))}
+                    {headers.map((header) => {
+                      if (header === "Prodi") {
+                        return (
+                          <th key={header} className="px-6 py-3 text-left">
+                            <DropdownMenu>
+                              <DropdownMenuTrigger className="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-wider hover:text-[#4318FF] focus:outline-none transition-colors">
+                                {header} <Filter className="h-3 w-3" />
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent
+                                align="start"
+                                className="bg-white border-none shadow-xl"
+                              >
+                                {prodiOptions.map((option) => (
+                                  <DropdownMenuItem
+                                    key={option.value}
+                                    onClick={() =>
+                                      handleFilterProdi(option.value)
+                                    }
+                                    className={`cursor-pointer capitalize ${filterProdi === option.value ? "bg-blue-50 text-[#4318FF]" : ""}`}
+                                  >
+                                    {option.label}
+                                  </DropdownMenuItem>
+                                ))}
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </th>
+                        );
+                      }
+                      return (
+                        <th
+                          key={header}
+                          className="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider whitespace-nowrap"
+                        >
+                          {header}
+                        </th>
+                      );
+                    })}
                   </tr>
                 </thead>
                 <tbody>
@@ -154,25 +210,25 @@ const User = () => {
                             </span>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <Link to={`/admin/user/${value.id}`}>
-                              <Avatar className="h-8 w-8">
-                                <AvatarImage
-                                  src={value?.url_photo}
-                                  className="object-cover"
-                                />
-                                <AvatarFallback className="bg-blue-100 text-[#4318FF] font-bold text-xs">
-                                  {value.full_name?.charAt(0) || "U"}
-                                </AvatarFallback>
-                              </Avatar>
-                            </Link>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <Link
-                              to={`/admin/user/${value.id}`}
-                              className="text-sm font-bold text-[#2B3674] hover:text-[#4318FF]"
-                            >
-                              {value.full_name}
-                            </Link>
+                            <div className="flex items-center gap-3">
+                              <Link to={`/admin/user/${value.id}`}>
+                                <Avatar className="h-8 w-8">
+                                  <AvatarImage
+                                    src={value?.url_photo}
+                                    className="object-cover"
+                                  />
+                                  <AvatarFallback className="bg-blue-100 text-[#4318FF] font-bold text-xs">
+                                    {value.full_name?.charAt(0) || "U"}
+                                  </AvatarFallback>
+                                </Avatar>
+                              </Link>
+                              <Link
+                                to={`/admin/user/${value.id}`}
+                                className="text-sm font-bold text-[#2B3674] hover:text-[#4318FF]"
+                              >
+                                {value.full_name}
+                              </Link>
+                            </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <span className="text-sm font-bold text-[#2B3674]">

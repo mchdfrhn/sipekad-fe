@@ -183,7 +183,7 @@ export const TablePengajuan = ({
                       </DropdownMenuTrigger>
                       <DropdownMenuContent
                         align="start"
-                        className="bg-white max-h-[300px] overflow-y-auto"
+                        className="bg-white max-h-[300px] overflow-y-auto border-none shadow-xl"
                       >
                         {typeOptions.map((option) => (
                           <DropdownMenuItem
@@ -209,7 +209,10 @@ export const TablePengajuan = ({
                       <DropdownMenuTrigger className="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-wider hover:text-[#4318FF] focus:outline-none transition-colors">
                         {header} <Filter className="h-3 w-3" />
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="start" className="bg-white">
+                      <DropdownMenuContent
+                        align="start"
+                        className="bg-white border-none shadow-xl"
+                      >
                         {statusOptions.map((option) => (
                           <DropdownMenuItem
                             key={option.value}
@@ -324,23 +327,18 @@ export const TablePengajuan = ({
                   <td className="px-6 py-4 whitespace-nowrap">
                     <Link to={`/admin/pengajuan/${value.id}`}>
                       <Button
-                        size="sm"
-                        className={`rounded-full px-4 font-bold shadow-none ${
+                        variant="ghost"
+                        size="icon"
+                        className={`h-8 w-8 rounded-lg ${
                           value.status === "pending"
-                            ? "bg-green-100 text-green-600 hover:bg-green-200"
-                            : "bg-blue-100 text-blue-600 hover:bg-blue-200"
+                            ? "bg-green-100 text-green-600 hover:bg-green-200 hover:text-green-700"
+                            : "bg-blue-100 text-blue-600 hover:bg-blue-200 hover:text-blue-700"
                         }`}
                       >
                         {value.status === "pending" ? (
-                          <>
-                            <Send className="mr-2 h-3.5 w-3.5" />
-                            Proses
-                          </>
+                          <Send className="h-4 w-4" />
                         ) : (
-                          <>
-                            <Eye className="mr-2 h-3.5 w-3.5" />
-                            Detail
-                          </>
+                          <Eye className="h-4 w-4" />
                         )}
                       </Button>
                     </Link>
@@ -370,5 +368,9 @@ export const TablePengajuan = ({
     </div>
   );
 };
+
+export const columns = [
+  // ... existing code ...
+];
 
 export default RequestAdmin;
