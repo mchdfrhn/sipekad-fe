@@ -1,10 +1,12 @@
-import { LayoutDashboard, LogOut, User, Send, Menu, X } from "lucide-react";
+import { LayoutDashboard, LogOut, User, Send } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router";
-import Alert from "../ui/Alert";
+import { cn } from "@/lib/utils";
 import { useState } from "react";
+import Alert from "../ui/Alert";
 
-const SidebarAdmin = ({ activeSidebar, setActiveSideBar }) => {
+const SidebarAdmin = ({ className }) => {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const [isDisplay, setIsDisplay] = useState(false);
 
   const logoutHandler = async () => {
@@ -20,7 +22,7 @@ const SidebarAdmin = ({ activeSidebar, setActiveSideBar }) => {
   const links = [
     {
       path: "/admin",
-      name: "dashbord",
+      name: "Dashboard",
       icon: LayoutDashboard,
     },
     {
@@ -35,69 +37,78 @@ const SidebarAdmin = ({ activeSidebar, setActiveSideBar }) => {
     },
   ];
 
-  const { pathname } = useLocation();
   return (
-    <>
-      <button
-        onClick={() => setActiveSideBar(!activeSidebar)}
-        className="block md:hidden fixed right-8 rounded-full shadow-md cursor-pointer bg-white p-2 top-14 z-40"
-      >
-        <Menu />
-      </button>
-      <aside
-        className={`bg-white pt-12 pr-8 pl-2 shadow-md h-screen z-40 fixed left-0 ${
-          activeSidebar && "-translate-x-full"
-        } md:translate-x-0 transition-transform duration-300 ease-in-out`}
-      >
-        {isDisplay && (
-          <Alert
-            setDisplay={setIsDisplay}
-            isDisplay={isDisplay}
-            onYesHundler={logoutHandler}
-          />
-        )}
-        <div className="flex justify-center items-center">
+    <div
+      className={cn(
+        "pb-12 min-h-screen bg-white transition-all duration-300",
+        className,
+      )}
+    >
+      <div className="space-y-4 py-4">
+        <div className="px-6 py-8 flex items-center justify-center border-b-[1px] border-gray-100 pb-8">
           <img
             src="/sttimage.png"
             alt="stt-logo"
             loading="lazy"
-            className="w-40"
+            className="w-40 transition-all hover:scale-105"
           />
         </div>
-        <ul className="">
-          {links.map((link) => (
-            <li className="cursor-pointer mt-2 group">
-              <Link
-                onClick={() => setActiveSideBar(!activeSidebar)}
-                to={link.path}
-                className={`p-4 text-xs md:text-lg rounded-md block group-hover:bg-blue-500/20 hover:text-blue-500 hover:translate-x-1 flex max-w-sm:justify-center items-center gap-2 transition-duration ${
-                  pathname === link.path &&
-                  "bg-blue-500/20 text-blue-500  translate-x-1"
-                }`}
-              >
-                <div className="size-4 md:size-6">
-                  <link.icon className="w-full h-full" />
+        <div className="px-4 py-4">
+          <div className="space-y-1 mt-4">
+            {links.map((link) => {
+              const isActive = pathname === link.path;
+              return (
+                <div key={link.path} className="relative mb-2">
+                  {isActive && (
+                    <div className="absolute right-0 top-1/2 -translate-y-1/2 h-9 w-1.5 rounded-l-lg bg-[#4318FF]" />
+                  )}
+                  <Link
+                    to={link.path}
+                    className={cn(
+                      "group flex items-center gap-4 px-5 py-4 rounded-xl font-medium transition-all duration-200 mx-2",
+                      isActive
+                        ? "bg-gray-100/50 text-[#2B3674] font-bold"
+                        : "text-[#A3AED0] hover:text-[#2B3674] hover:bg-gray-50",
+                    )}
+                  >
+                    <link.icon
+                      className={cn(
+                        "h-6 w-6 transition-colors",
+                        isActive
+                          ? "text-[#4318FF]"
+                          : "text-[#A3AED0] group-hover:text-[#4318FF]",
+                      )}
+                    />
+                    <span className={cn(isActive ? "text-[#2B3674]" : "")}>
+                      {link.name}
+                    </span>
+                  </Link>
                 </div>
-                <p className="text-sm">{link.name}</p>
-              </Link>
-            </li>
-          ))}
-          <li
-            onClick={() => setIsDisplay(!isDisplay)}
-            className="mt-8 group w-full"
-          >
+              );
+            })}
+          </div>
+        </div>
+        <div className="px-6 py-2 mt-auto">
+          <div className="relative">
             <button
-              className={`p-4 text-xs md:text-lg rounded-md cursor-pointer block group-hover:bg-blue-500/20 w-full h-full hover:text-blue-500 hover:translate-x-1 flex max-w-sm:justify-center items-center gap-2 transition-duration`}
+              className="flex items-center gap-4 px-5 py-4 w-full text-left font-medium text-[#A3AED0] hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
+              onClick={() => setIsDisplay(true)}
             >
-              <div className=" size-4 md:size-6 flex">
-                <LogOut className="w-full h-full" />
-              </div>
-              <p className="text-xs md:text-sm">Logout</p>
+              <LogOut className="h-6 w-6" />
+              Logout
             </button>
-          </li>
-        </ul>
-      </aside>
-    </>
+          </div>
+        </div>
+      </div>
+
+      {isDisplay && (
+        <Alert
+          setDisplay={setIsDisplay}
+          isDisplay={isDisplay}
+          onYesHundler={logoutHandler}
+        />
+      )}
+    </div>
   );
 };
 

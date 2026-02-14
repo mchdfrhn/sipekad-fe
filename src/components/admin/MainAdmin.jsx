@@ -1,30 +1,124 @@
-import CardDashboard from "../ui/CardDashboard";
-import StraightAnglePieChart from "../chart/PieChart";
-import SimpleBarChart from "../chart/BarChart";
 import { useEffect, useState } from "react";
 import { getSummeryData } from "../../utils/api/dashboardValue";
 import DistribusiPengajuan from "../chart/DistribusiPengajuan";
-import CardDashboardUser from "./user/CardDashboardUser";
+import StraightAnglePieChart from "../chart/PieChart";
+import SimpleBarChart from "../chart/BarChart";
+import StatsCard from "./StatsCard";
+import RightPanel from "./RightPanel"; // Import RightPanel
+import { FileText, CheckCircle, XCircle, Clock } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const MainAdmin = () => {
   const [summery, setSummery] = useState([]);
+
   useEffect(() => {
     getSummeryData(setSummery);
   }, []);
+
+  const getIcon = (index) => {
+    switch (index) {
+      case 0:
+        return FileText;
+      case 1:
+        return Clock;
+      case 2:
+        return XCircle;
+      case 3:
+        return CheckCircle;
+      default:
+        return FileText;
+    }
+  };
+
+  // Define variants for the stats cards
+  const getVariant = (index) => {
+    switch (index) {
+      case 0:
+        return "blue";
+      case 1:
+        return "orange";
+      case 2:
+        return "red";
+      case 3:
+        return "green";
+      default:
+        return "default";
+    }
+  };
+
+  const getData = (index) =>
+    summery[index] || { label: "Loading...", value: 0 };
+
   return (
-    <>
-      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 mt-4">
-        <CardDashboardUser index={6} title={summery[0]?.label} value={summery[0]?.value} className={"shadow-md bg-total-pengajuan"} />
-        <CardDashboardUser index={7} title={summery[1]?.label} value={summery[1]?.value} className={"shadow-md bg-pengajuan-proses"} />
-        <CardDashboardUser index={8} title={summery[2]?.label} value={summery[2]?.value} className={"shadow-md bg-pengajuan-ditolak"} />
-        <CardDashboardUser index={9} title={summery[3]?.label} value={summery[3]?.value} className={"shadow-md bg-pengajuan-berhasil"} />
+    <div className="space-y-6">
+      {/* Row 1: Stats Cards */}
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        {[0, 1, 2, 3].map((index) => {
+          const data = getData(index);
+          const Icon = getIcon(index);
+          const variant = getVariant(index);
+          return (
+            <StatsCard
+              key={index}
+              title={data.label}
+              value={data.value}
+              icon={Icon}
+              variant={variant}
+            />
+          );
+        })}
       </div>
-      <div className="xl:max-h-[60vh] mt-8 grid grid-cols-1 xl:grid-cols-3 xl:grid-rows-2 gap-4 mb-10">
-        <DistribusiPengajuan />
-        <StraightAnglePieChart />
-        <SimpleBarChart />
+
+      {/* Row 2: Main Chart + Right Panel (Notifications) */}
+      <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-3">
+        {/* Left Column (Charts) - Spans 2 columns on LG */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Total Distribution - Area Chart */}
+          <Card className="rounded-[20px]">
+            <CardHeader>
+              <CardTitle>Distribusi Pengajuan</CardTitle>
+            </CardHeader>
+            <CardContent className="pl-0">
+              <div className="h-[300px] w-full">
+                <DistribusiPengajuan />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Weekly Stats & Status - Grid inside Grid */}
+          <div className="grid gap-6 md:grid-cols-2">
+            {/* Weekly Bar Chart */}
+            <Card className="rounded-[20px]">
+              <CardHeader>
+                <CardTitle>Grafik Mingguan</CardTitle>
+              </CardHeader>
+              <CardContent className="pl-0">
+                <div className="h-[250px] w-full">
+                  <SimpleBarChart />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Status Donut Chart */}
+            <Card className="rounded-[20px]">
+              <CardHeader>
+                <CardTitle>Statistik Status</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="h-[250px] w-full flex items-center justify-center">
+                  <StraightAnglePieChart />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* Right Column (Notifications/Activity) - Spans 1 column on LG */}
+        <div className="lg:col-span-1">
+          <RightPanel />
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 
