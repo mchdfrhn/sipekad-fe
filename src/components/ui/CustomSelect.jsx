@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
+import { AnimatePresence } from "motion/react";
 import { cn } from "@/lib/utils";
 
 const CustomSelect = ({
@@ -34,7 +34,7 @@ const CustomSelect = ({
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "flex w-full items-center justify-between px-4 py-3 bg-[#F4F7FE] text-[#2B3674] font-semibold rounded-2xl transition-all duration-200 focus:ring-2 focus:ring-[#4318FF] outline-none",
+          "flex w-full items-center justify-between px-4 py-3 bg-[#F4F7FE] text-[#2B3674] font-semibold rounded-2xl transition-all duration-200 focus:ring-2 focus:ring-[#4318FF] outline-none cursor-pointer",
           isOpen && "ring-2 ring-[#4318FF]",
         )}
       >

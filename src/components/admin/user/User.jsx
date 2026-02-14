@@ -25,8 +25,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { STUDENT_PRODI } from "@/utils/constant";
+import { useToast } from "@/utils/hooks/useToast";
 
 const User = () => {
+  const { showToast } = useToast();
   const [showForm, setShowForm] = useState(false);
   const [users, setUsers] = useState([]);
   const [totalPage, setTotalPage] = useState(1);
@@ -92,7 +94,7 @@ const User = () => {
 
   const confirmDelete = async () => {
     if (selectedUserId) {
-      await deleteUserForAdmin(
+      const result = await deleteUserForAdmin(
         selectedUserId,
         setUsers,
         page,
@@ -102,6 +104,13 @@ const User = () => {
         filterProdi,
         searchTerm,
       );
+
+      if (result && result.status === "success") {
+        showToast("User berhasil dihapus", "success");
+      } else {
+        showToast("Gagal menghapus user", "error");
+      }
+
       setAlertDelete(false);
       setSelectedUserId(null);
     }
@@ -173,7 +182,7 @@ const User = () => {
                         return (
                           <th key={header} className="px-6 py-3 text-left">
                             <DropdownMenu>
-                              <DropdownMenuTrigger className="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-wider hover:text-[#4318FF] focus:outline-none transition-colors">
+                              <DropdownMenuTrigger className="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-wider hover:text-[#4318FF] focus:outline-none transition-colors cursor-pointer">
                                 {header} <Filter className="h-3 w-3" />
                               </DropdownMenuTrigger>
                               <DropdownMenuContent

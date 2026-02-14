@@ -3,6 +3,7 @@ import { addUserForAdmin } from "../../../utils/action";
 import { Eye, EyeClosed, X } from "lucide-react";
 import { STUDENT_PRODI } from "../../../utils/constant";
 import CustomSelect from "../../ui/CustomSelect";
+import { useToast } from "@/utils/hooks/useToast";
 
 const prodiOptions = Object.values(STUDENT_PRODI).map((val) => ({
   label: val,
@@ -20,6 +21,7 @@ const AddUserForm = ({
   prodi,
   search,
 }) => {
+  const { showToast } = useToast();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
@@ -69,7 +71,7 @@ const AddUserForm = ({
       prodi: selectedProdi,
     };
 
-    await addUserForAdmin(
+    const result = await addUserForAdmin(
       data,
       setErrMessage,
       setShowForm,
@@ -82,6 +84,12 @@ const AddUserForm = ({
       prodi,
       search,
     );
+
+    if (result && result.status === "success") {
+      showToast("User baru berhasil ditambahkan", "success");
+    } else if (result && result.status === "fail") {
+      showToast(errMessage || "Gagal menambahkan user", "error");
+    }
   };
 
   const onChangeHandler = (e, setValue) => {

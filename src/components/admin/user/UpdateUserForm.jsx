@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { updateUserForAdminAction } from "../../../utils/action";
 import { STUDENT_PRODI } from "../../../utils/constant";
 import CustomSelect from "../../ui/CustomSelect";
+import { useToast } from "@/utils/hooks/useToast";
 
 const prodiOptions = Object.values(STUDENT_PRODI).map((val) => ({
   label: val,
@@ -11,6 +12,7 @@ const prodiOptions = Object.values(STUDENT_PRODI).map((val) => ({
 }));
 
 const UpdateUserForm = ({ userDetail, shwoForm, setShowForm }) => {
+  const { showToast } = useToast();
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [nim, setNim] = useState("");
@@ -50,7 +52,18 @@ const UpdateUserForm = ({ userDetail, shwoForm, setShowForm }) => {
       nik,
       prodi: prodi.toLowerCase(),
     };
-    await updateUserForAdminAction(id, newData, navigate, setErrMessage);
+    const result = await updateUserForAdminAction(
+      id,
+      newData,
+      navigate,
+      setErrMessage,
+    );
+
+    if (result && result.status === "success") {
+      showToast("Informasi user berhasil diperbarui", "success");
+    } else if (result && result.status === "fail") {
+      showToast(errMessage || "Gagal memperbarui user", "error");
+    }
   };
 
   return (
