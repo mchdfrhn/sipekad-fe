@@ -27,6 +27,11 @@ export const formatPathToBreadcrumb = (path) => {
     //   label = "Dashboard";
     // }
 
+    // Custom label for Request Detail
+    if (index > 0 && segments[index - 1] === "pengajuan") {
+      label = "Pengajuan - Detail";
+    }
+
     return {
       label,
       path: segmentPath,

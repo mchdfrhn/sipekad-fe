@@ -1,62 +1,108 @@
 import IframeRequest from "./IframeRequest";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { CopyIcon, Eye } from "lucide-react";
 
 const TableResponse = ({ dataKey, response }) => {
-  const [isDisplay, setIsDisplay] = useState(false);
+  const [selectedFileUrl, setSelectedFileUrl] = useState(null);
+
   return (
     <>
-    <table className="w-full ">
-      <thead>
-        <tr>
-          {dataKey.map((data) => (
-            <th
-              key={data}
-              className="px-3 md:px-6 py-2 md:py-4 text-left text-sm font-semibold uppercase tracking-wide hidden md:table-cell"
-            >
-              {data}
-            </th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {response.map((value, index) => (
-          <tr
-            key={index}
-            className="flex flex-row hover:shadow-md cursor-pointer transition-all transition-duration justify-between gap-4 items-center md:table-row mb-4 md:mb-0 md:border-b-4 border-gray-600 md:border-none md:p-0"
+      <div className="w-full overflow-x-auto">
+        <table className="w-full">
+          <thead>
+            <tr className="border-b border-gray-100">
+              {dataKey.map((header) => (
+                <th
+                  key={header}
+                  className="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider whitespace-nowrap"
+                >
+                  {header}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {response.map((value, index) => (
+              <tr
+                key={index}
+                className={`border-b border-gray-50 last:border-0 hover:bg-blue-50/50 transition-colors ${
+                  index % 2 === 0 ? "bg-white" : "bg-gray-50/50"
+                }`}
+              >
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span className="text-sm font-bold text-[#2B3674]">
+                    {index + 1}
+                  </span>
+                </td>
+                <td className="px-6 py-4">
+                  <p className="text-sm text-gray-600 leading-relaxed min-w-[200px]">
+                    {value.message}
+                  </p>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span className="text-sm font-bold text-[#2B3674]">
+                    {new Date(value.created_at).toLocaleDateString("id-ID", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </span>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {value.url ? (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setSelectedFileUrl(value.url)}
+                      className="text-blue-600 border-blue-200 hover:bg-blue-100 h-8 text-xs"
+                    >
+                      <Eye className="mr-2 h-3 w-3" />
+                      Lihat File
+                    </Button>
+                  ) : (
+                    <span className="text-xs text-gray-400 italic">
+                      Tidak ada file
+                    </span>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Global Modal for this table */}
+      {selectedFileUrl && (
+        <div
+          onClick={() => setSelectedFileUrl(null)}
+          className="fixed inset-0 w-screen h-screen bg-black/60 backdrop-blur-sm z-50 flex justify-center items-center p-4"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-4xl bg-white rounded-xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]"
           >
-            <td className="md:px-6 py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">
-              {index + 1}
-            </td>
-            <td className="md:px-6 py-2 md:py-4 hidden text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">
-              {value.message}
-            </td>
-            <td className="md:px-6 py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">
-              {new Date(value.created_at).toLocaleDateString("id-ID", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-              })}
-            </td>
-            { value.url ?
-              <td className="md:px-6 py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">
-              <button onClick={() => setIsDisplay(!isDisplay)}  className="text-white border transition-duration-color bg-blue-500 py-1 cursor-pointer hover:bg-transparent hover:text-blue-500 hover:border-blue-500 px-2 text-xs md:text-[16px] rounded-md">Buka file</button>
-               {
-                 isDisplay && <div onClick={() => setIsDisplay(!isDisplay)} className="fixed inset-0 w-screen h-screen bg-gray-800/10 z-99 flex justify-center items-center">
-                    <IframeRequest url={response[index].url} className={"w-[40rem] "} />
-                 </div>
-                }
-            </td>
-            : 
-            <td className="md:px-6 py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">
-              tidak ada file
-            </td>
-            }
-            
-          </tr>
-        ))}
-      </tbody>
-    </table>
-    
+            <div className="p-4 border-b flex justify-between items-center bg-white z-10">
+              <h3 className="font-bold text-lg text-gray-800">Preview File</h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSelectedFileUrl(null)}
+              >
+                Tutup
+              </Button>
+            </div>
+            <div className="flex-1 overflow-auto bg-gray-100 p-4">
+              <IframeRequest
+                url={selectedFileUrl}
+                className="w-full h-full min-h-[500px]"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
