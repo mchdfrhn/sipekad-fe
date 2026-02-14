@@ -195,7 +195,7 @@ export const TablePengajuan = ({
             )}
             <th className="px-6 py-3 text-left whitespace-nowrap">
               <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-wider hover:text-[#4318FF] focus:outline-none transition-colors">
+                <DropdownMenuTrigger className="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-wider hover:text-[#4318FF] focus:outline-none transition-colors cursor-pointer">
                   Jenis Surat <Filter className="h-3 w-3" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
@@ -222,7 +222,7 @@ export const TablePengajuan = ({
             </th>
             <th className="px-6 py-3 text-left whitespace-nowrap">
               <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-wider hover:text-[#4318FF] focus:outline-none transition-colors">
+                <DropdownMenuTrigger className="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-wider hover:text-[#4318FF] focus:outline-none transition-colors cursor-pointer">
                   Status <Filter className="h-3 w-3" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
