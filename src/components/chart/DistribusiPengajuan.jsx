@@ -9,8 +9,8 @@ import {
 } from "recharts";
 import { useState, useEffect } from "react";
 import { getDistribusiPengajuan } from "../../utils/api/dashboardValue";
-import { motion } from "motion/react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { format, parseISO, isSameMonth, isValid } from "date-fns";
+import { id } from "date-fns/locale";
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
@@ -33,6 +33,49 @@ const DistribusiPengajuan = () => {
   useEffect(() => {
     getDistribusiPengajuan(setLabel, setDataPengajuan);
   }, []);
+
+  const formatXAxis = (tickItem, index) => {
+    if (!dataPengajuan || dataPengajuan.length === 0) return tickItem;
+
+    // Safety check: ensure index is within bounds
+    const currentItem = dataPengajuan[index];
+    if (!currentItem) return tickItem;
+
+    // Try to parse the date. Assuming 'name' is a date string like YYYY-MM-DD or ISO
+    let date;
+    try {
+      date = parseISO(currentItem.name);
+      if (!isValid(date)) {
+        // If parseISO fails, try new Date
+        date = new Date(currentItem.name);
+        if (!isValid(date)) return currentItem.name; // Fallback to original string
+      }
+    } catch (e) {
+      return currentItem.name;
+    }
+
+    // Always show full date for the first item
+    if (index === 0) {
+      return format(date, "d MMM yyyy", { locale: id });
+    }
+
+    // Check if month/year changed from previous item
+    const prevItem = dataPengajuan[index - 1];
+    let prevDate;
+    try {
+      prevDate = parseISO(prevItem.name);
+      if (!isValid(prevDate)) prevDate = new Date(prevItem.name);
+    } catch {
+      return format(date, "d", { locale: id });
+    }
+
+    if (!isSameMonth(date, prevDate)) {
+      return format(date, "d MMM yyyy", { locale: id });
+    }
+
+    // Default: just show day
+    return format(date, "d", { locale: id });
+  };
 
   return (
     <div className="w-full h-full min-h-[300px]">
@@ -63,6 +106,9 @@ const DistribusiPengajuan = () => {
             tickLine={false}
             tick={{ fill: "#A3AED0", fontSize: 12 }}
             dy={10}
+            tickFormatter={formatXAxis}
+            interval={0}
+            minTickGap={10}
           />
           <YAxis
             axisLine={false}
