@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getAllUserForAdmin } from "../../../utils/api/user";
-import { Link } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import AddUserForm from "./AddUserForm";
 import { deleteUserForAdmin } from "../../../utils/action";
 import Alert from "../../ui/Alert";
@@ -35,9 +35,11 @@ const User = () => {
   const limit = 10;
   const [domReady, setDomReady] = useState(false);
   const [filterProdi, setFilterProdi] = useState("default");
+  const [searchParams] = useSearchParams();
+  const searchTerm = searchParams.get("q") || "";
 
   const handlePageChange = async (p) => {
-    const users = await getAllUserForAdmin(p, limit, filterProdi);
+    const users = await getAllUserForAdmin(p, limit, filterProdi, searchTerm);
     if (users.status === "success") {
       setUsers(users.data);
       setPage(users.page);
@@ -48,7 +50,7 @@ const User = () => {
   const handleFilterProdi = async (prodi) => {
     setFilterProdi(prodi);
     setPage(1);
-    const result = await getAllUserForAdmin(1, limit, prodi);
+    const result = await getAllUserForAdmin(1, limit, prodi, searchTerm);
     if (result.status === "success") {
       setUsers(result.data);
       setTotalPage(result.totalPage);
@@ -58,7 +60,12 @@ const User = () => {
 
   useEffect(() => {
     const getUsers = async () => {
-      const result = await getAllUserForAdmin(1, limit, filterProdi);
+      const result = await getAllUserForAdmin(
+        1,
+        limit,
+        filterProdi,
+        searchTerm,
+      );
       if (result.status === "success") {
         setUsers(result.data);
         setTotalPage(result.totalPage);
@@ -68,7 +75,7 @@ const User = () => {
 
     getUsers();
     setDomReady(true);
-  }, [filterProdi]);
+  }, [filterProdi, searchTerm]);
 
   const handleDeleteClick = (id) => {
     setSelectedUserId(id);

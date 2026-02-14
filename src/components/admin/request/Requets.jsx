@@ -1,7 +1,7 @@
 import { ArrowLeft, ArrowRight, Send, Eye, Filter } from "lucide-react";
 import { useEffect, useState, useCallback } from "react";
 import { getAllRequestForAdmin } from "../../../utils/api/request";
-import { Link } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,38 +16,45 @@ const RequestAdmin = () => {
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const limit = 10;
+  const [searchParams] = useSearchParams();
+  const searchTerm = searchParams.get("q") || "";
 
   // Filter States
   const [filterStatus, setFilterStatus] = useState("default");
   const [filterType, setFilterType] = useState("default");
 
   const getRequests = useCallback(
-    async (p = 1, status = filterStatus, type = filterType) => {
-      const requests = await getAllRequestForAdmin(p, status, type);
+    async (
+      p = 1,
+      status = filterStatus,
+      type = filterType,
+      search = searchTerm,
+    ) => {
+      const requests = await getAllRequestForAdmin(p, status, type, search);
       if (requests.status === "success") {
         setRequests(requests.data);
         setPage(requests.page);
         setTotalPage(requests.totalPage);
       }
     },
-    [filterStatus, filterType],
+    [filterStatus, filterType, searchTerm],
   );
 
   const handlePageChange = async (p) => {
     setPage(p);
-    await getRequests(p, filterStatus, filterType);
+    await getRequests(p, filterStatus, filterType, searchTerm);
   };
 
   const handleStatusChange = async (status) => {
     setFilterStatus(status);
     setPage(1); // Reset to page 1 on filter change
-    await getRequests(1, status, filterType);
+    await getRequests(1, status, filterType, searchTerm);
   };
 
   const handleTypeChange = async (type) => {
     setFilterType(type);
     setPage(1); // Reset to page 1 on filter change
-    await getRequests(1, filterStatus, type);
+    await getRequests(1, filterStatus, type, searchTerm);
   };
 
   useEffect(() => {

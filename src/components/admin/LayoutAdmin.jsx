@@ -1,4 +1,9 @@
-import { Outlet, useLocation, useNavigate } from "react-router";
+import {
+  Outlet,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router";
 import SidebarAdmin from "../sidebar/SidebarAdmin";
 import {
   Breadcrumb,
@@ -18,6 +23,7 @@ import {
   Settings,
   HelpCircle,
   LogOut,
+  X,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -30,19 +36,60 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Alert from "../ui/Alert";
 
 const LayoutAdmin = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const breadcrumbs = formatPathToBreadcrumb(pathname);
   const [user, setUser] = useState({ name: "Admin", role: "admin" });
   const [scrolled, setScrolled] = useState(false);
   const [isDisplayLogout, setIsDisplayLogout] = useState(false);
 
+  // Local state for search input to ensure smooth typing
+  const [searchValue, setSearchValue] = useState(searchParams.get("q") || "");
+  const debounceTimer = useRef(null);
+
   // Check if current page is Dashboard (exact match for /admin or /admin/)
   const isDashboard = pathname === "/admin" || pathname === "/admin/";
+
+  // Update local state when URL changes (e.g., navigating between pages or back/forward)
+  useEffect(() => {
+    setSearchValue(searchParams.get("q") || "");
+  }, [searchParams]);
+
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchValue(value);
+
+    // Clear previous timer
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
+    }
+
+    // Set new timer for debounced URL update
+    debounceTimer.current = setTimeout(() => {
+      const newParams = new URLSearchParams(window.location.search);
+      if (value) {
+        newParams.set("q", value);
+      } else {
+        newParams.delete("q");
+      }
+      setSearchParams(newParams, { replace: true });
+    }, 300); // 300ms debounce
+  };
+
+  const clearSearch = () => {
+    setSearchValue("");
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
+    }
+    const newParams = new URLSearchParams(window.location.search);
+    newParams.delete("q");
+    setSearchParams(newParams, { replace: true });
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -62,6 +109,7 @@ const LayoutAdmin = () => {
 
     return () => {
       if (mainContent) mainContent.removeEventListener("scroll", handleScroll);
+      if (debounceTimer.current) clearTimeout(debounceTimer.current);
     };
   }, []);
 
@@ -158,8 +206,18 @@ const LayoutAdmin = () => {
                 <input
                   type="text"
                   placeholder="Search..."
+                  value={searchValue}
+                  onChange={handleSearchChange}
                   className="pl-8 bg-transparent border-none outline-none text-sm text-[#2B3674] placeholder-gray-400 w-40 focus:w-60 transition-all font-medium"
                 />
+                {searchValue && (
+                  <button
+                    onClick={clearSearch}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 p-0.5 hover:bg-gray-200 rounded-full transition-colors"
+                  >
+                    <X className="h-3 w-3 text-gray-400 hover:text-gray-600" />
+                  </button>
+                )}
               </div>
             )}
 

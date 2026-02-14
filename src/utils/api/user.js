@@ -57,12 +57,21 @@ const updateProfile = async (
 };
 
 // admin
-const getAllUserForAdmin = async (page = 1, limit = 10, prodi = "default") => {
+const getAllUserForAdmin = async (
+  pageNumber = 1,
+  limit = 10,
+  prodi = "default",
+  search = "",
+) => {
   const token = localStorage.getItem("tokenKey");
-  let url = `${BASE_URL}/users?page=${page}&limit=${limit}`;
+  let url = `${BASE_URL}/users?page=${pageNumber}&limit=${limit}`;
 
   if (prodi && prodi !== "default") {
     url += `&prodi=${prodi}`;
+  }
+
+  if (search) {
+    url += `&search=${search}`;
   }
 
   try {
