@@ -6,6 +6,7 @@ import {
   Mail,
   Phone,
   Hash,
+  Camera,
   Settings as SettingsIcon,
 } from "lucide-react";
 import { useUser } from "@/utils/hooks/userContext";
@@ -20,13 +21,36 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import UploadWidget from "@/components/ui/UploadWidget";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useRef } from "react";
+import Cropper from "react-easy-crop";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Sliders, ZoomIn, Check, X } from "lucide-react";
+import { CLD_NAME } from "@/utils/cloudinary.config";
+import axios from "axios";
 
 const Settings = () => {
   const { userData, updateUserData } = useUser();
   const { showToast } = useToast();
   const token = localStorage.getItem("tokenKey");
   const navigate = useNavigate();
+  const fileInputRef = useRef(null);
+
+  const getInitials = (name) => {
+    if (!name) return "U";
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .slice(0, 2)
+      .join("")
+      .toUpperCase();
+  };
 
   // Profile State - Include all fields (even hidden ones) for backend validation
   const [profileData, setProfileData] = useState({
@@ -63,6 +87,86 @@ const Settings = () => {
   const handleAvatarUpload = useCallback((url) => {
     setProfileData((p) => ({ ...p, url_photo: url }));
   }, []);
+
+  // Photo Editor State
+  const [image, setImage] = useState(null);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+  const [isEditorOpen, setIsEditorOpen] = useState(false);
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
+
+  const onCropComplete = useCallback((_setCroppedArea, croppedAreaPixels) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  }, []);
+
+  const handleImageSelect = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.addEventListener("load", () => {
+        setImage(reader.result);
+        setIsEditorOpen(true);
+      });
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const getCroppedImg = async (imageSrc, pixelCrop) => {
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    const image = new Image();
+    image.src = imageSrc;
+
+    return new Promise((resolve, reject) => {
+      image.onload = () => {
+        canvas.width = pixelCrop.width;
+        canvas.height = pixelCrop.height;
+        ctx.drawImage(
+          image,
+          pixelCrop.x,
+          pixelCrop.y,
+          pixelCrop.width,
+          pixelCrop.height,
+          0,
+          0,
+          pixelCrop.width,
+          pixelCrop.height,
+        );
+        canvas.toBlob((blob) => {
+          if (!blob) return reject(new Error("Canvas is empty"));
+          resolve(blob);
+        }, "image/jpeg");
+      };
+      image.onerror = (e) => reject(e);
+    });
+  };
+
+  const handleUploadPhoto = async () => {
+    try {
+      setIsUploadingPhoto(true);
+      const croppedImageBlob = await getCroppedImg(image, croppedAreaPixels);
+      const formData = new FormData();
+      formData.append("file", croppedImageBlob);
+      formData.append("upload_preset", "sipekad");
+
+      const response = await axios.post(
+        `https://api.cloudinary.com/v1_1/${CLD_NAME}/image/upload`,
+        formData,
+      );
+
+      if (response.data.secure_url) {
+        handleAvatarUpload(response.data.secure_url);
+        setIsEditorOpen(false);
+        showToast("Foto berhasil diperbarui", "success");
+      }
+    } catch (error) {
+      console.error("Upload photo error:", error);
+      showToast("Gagal mengunggah foto", "error");
+    } finally {
+      setIsUploadingPhoto(false);
+    }
+  };
 
   const onUpdateProfile = async (e) => {
     e.preventDefault();
@@ -165,17 +269,37 @@ const Settings = () => {
           <CardContent>
             <form onSubmit={onUpdateProfile} className="space-y-6">
               <div className="flex flex-col md:flex-row gap-8 items-center md:items-start">
-                <div className="relative group">
-                  <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-gray-50 shadow-inner bg-gray-100 flex items-center justify-center">
-                    <img
-                      src={profileData.url_photo || "/avatar.png"}
-                      alt="Avatar"
-                      className="w-full h-full object-cover transition-opacity group-hover:opacity-75"
+                <div
+                  className="relative group cursor-pointer w-32 h-32"
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  <Avatar className="w-full h-full border-4 border-[#F4F7FE] shadow-sm transition-all duration-300 group-hover:shadow-lg group-hover:border-indigo-100">
+                    <AvatarImage
+                      src={profileData.url_photo}
+                      className="object-cover transition-transform duration-500 group-hover:scale-110"
                     />
+                    <AvatarFallback className="bg-blue-100 text-[#4318FF] font-bold text-2xl">
+                      {getInitials(profileData.full_name)}
+                    </AvatarFallback>
+                  </Avatar>
+
+                  {/* Professional Overlay */}
+                  <div className="absolute inset-0 rounded-full bg-[#11047A]/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center border-2 border-white/20">
+                    <div className="bg-white/20 p-2 rounded-full mb-1">
+                      <Camera className="w-6 h-6 text-white" />
+                    </div>
+                    <span className="text-[10px] font-bold text-white uppercase tracking-wider">
+                      Ganti Foto
+                    </span>
                   </div>
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <UploadWidget setPublicId={handleAvatarUpload} />
-                  </div>
+
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    className="hidden"
+                    accept="image/*"
+                    onChange={handleImageSelect}
+                  />
                 </div>
 
                 <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
@@ -329,6 +453,83 @@ const Settings = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Photo Editor Modal */}
+      <Dialog open={isEditorOpen} onOpenChange={setIsEditorOpen}>
+        <DialogContent className="sm:max-w-xl p-0 overflow-hidden border-none shadow-2xl rounded-3xl">
+          <DialogHeader className="p-6 pb-2">
+            <DialogTitle className="text-xl font-bold text-[#2B3674] flex items-center gap-2">
+              <Sliders className="w-5 h-5 text-[#4318FF]" />
+              Adjust Profile Photo
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="relative h-80 w-full bg-gray-50">
+            {image && (
+              <Cropper
+                image={image}
+                crop={crop}
+                zoom={zoom}
+                aspect={1}
+                onCropChange={setCrop}
+                onCropComplete={onCropComplete}
+                onZoomChange={setZoom}
+                cropShape="round"
+                showGrid={false}
+              />
+            )}
+          </div>
+
+          <div className="p-6 space-y-6">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between text-sm font-bold text-[#2B3674]">
+                <div className="flex items-center gap-2">
+                  <ZoomIn className="w-4 h-4" />
+                  <span>Zoom Level</span>
+                </div>
+                <span>{Math.round(zoom * 100)}%</span>
+              </div>
+              <input
+                type="range"
+                value={zoom}
+                min={1}
+                max={3}
+                step={0.1}
+                aria-labelledby="Zoom"
+                onChange={(e) => setZoom(parseFloat(e.target.value))}
+                className="w-full h-1.5 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-[#4318FF]"
+              />
+            </div>
+
+            <DialogFooter className="flex gap-3 sm:gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsEditorOpen(false)}
+                className="flex-1 rounded-xl border-gray-100 text-gray-500 font-bold h-11"
+              >
+                <X className="w-4 h-4 mr-2" />
+                Cancel
+              </Button>
+              <Button
+                type="button"
+                onClick={handleUploadPhoto}
+                disabled={isUploadingPhoto}
+                className="flex-2 rounded-xl bg-[#4318FF] hover:bg-[#3311CC] text-white font-bold h-11 shadow-lg shadow-indigo-500/20"
+              >
+                {isUploadingPhoto ? (
+                  "Uploading..."
+                ) : (
+                  <>
+                    <Check className="w-4 h-4 mr-2" />
+                    Save Photo
+                  </>
+                )}
+              </Button>
+            </DialogFooter>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
