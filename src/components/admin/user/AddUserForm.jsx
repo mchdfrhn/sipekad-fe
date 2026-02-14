@@ -16,6 +16,9 @@ const AddUserForm = ({
   setPage,
   setTotalPage,
   page,
+  limit,
+  prodi,
+  search,
 }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -23,7 +26,7 @@ const AddUserForm = ({
   const [email, setEmail] = useState("");
   const [nim, setNim] = useState("");
   const [nik, setNik] = useState("");
-  const [prodi, setProdi] = useState("");
+  const [selectedProdi, setSelectedProdi] = useState("");
   const [phone, setPhone] = useState("");
   const [errMessage, setErrMessage] = useState("");
   const [hiddenPassword, setHiddenPassword] = useState(false);
@@ -40,7 +43,7 @@ const AddUserForm = ({
       return "Please enter a valid email address";
     if (!nim) return "NIM / ID is required";
     if (!nik || nik.length < 16) return "NIK must be 16 characters";
-    if (!prodi) return "Please select a Program Studi";
+    if (!selectedProdi) return "Please select a Program Studi";
     if (!phone || phone.length < 10) return "Please enter a valid phone number";
     return null;
   };
@@ -63,7 +66,7 @@ const AddUserForm = ({
       nim,
       phone: `0${phone}`,
       nik,
-      prodi,
+      prodi: selectedProdi,
     };
 
     await addUserForAdmin(
@@ -75,6 +78,9 @@ const AddUserForm = ({
       setPage,
       setTotalPage,
       page,
+      limit,
+      prodi,
+      search,
     );
   };
 
@@ -179,8 +185,8 @@ const AddUserForm = ({
                   Program Studi
                 </label>
                 <CustomSelect
-                  value={prodi}
-                  onChange={setProdi}
+                  value={selectedProdi}
+                  onChange={setSelectedProdi}
                   options={prodiOptions}
                   placeholder="Select Program Studi"
                 />

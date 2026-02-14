@@ -98,6 +98,9 @@ const User = () => {
         page,
         setPage,
         setTotalPage,
+        limit,
+        filterProdi,
+        searchTerm,
       );
       setAlertDelete(false);
       setSelectedUserId(null);
@@ -137,6 +140,9 @@ const User = () => {
             setTotalPage={setTotalPage}
             setUsers={setUsers}
             page={page}
+            limit={limit}
+            prodi={filterProdi}
+            search={searchTerm}
           />
         </>
       )}

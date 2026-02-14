@@ -139,6 +139,9 @@ export const addUserForAdmin = async (
   setPage,
   setTotalPage,
   page,
+  limit,
+  prodi,
+  search,
 ) => {
   const token = localStorage.getItem("tokenKey");
   const result = await addUser(token, data);
@@ -155,7 +158,7 @@ export const addUserForAdmin = async (
 
   if (result.status === "success") {
     setShowForm(!showForm);
-    const users = await getAllUserForAdmin(page);
+    const users = await getAllUserForAdmin(page, limit, prodi, search);
     setUsers(users.data);
     setPage(users.page);
     setTotalPage(users.totalPage);
@@ -170,13 +173,16 @@ export const deleteUserForAdmin = async (
   page,
   setPage,
   setTotalPage,
+  limit,
+  prodi,
+  search,
   onSuccess, // Added callback
 ) => {
   const token = localStorage.getItem("tokenKey");
   const result = await deleteUser(token, userId);
   if (result.status === "success") {
     if (onSuccess) onSuccess(); // Execute callback
-    const users = await getAllUserForAdmin(page);
+    const users = await getAllUserForAdmin(page, limit, prodi, search);
     setUsers(users.data);
     setPage(users.page);
     setTotalPage(users.totalPage);
