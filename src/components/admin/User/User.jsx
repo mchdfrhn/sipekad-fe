@@ -15,7 +15,6 @@ import Alert from "../../ui/Alert";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { createPortal } from "react-dom";
 
 const User = () => {
   const [showForm, setShowForm] = useState(false);
@@ -24,11 +23,10 @@ const User = () => {
   const [page, setPage] = useState(1);
   const [alertDelete, setAlertDelete] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
-  const limit = 10;
-  const [domReady, setDomReady] = useState(false);
+  const limit = 10; // Set limit to 10 per page
 
   const handlePageChange = async (p) => {
-    const users = await getAllUserForAdmin(p, limit);
+    const users = await getAllUserForAdmin(p, limit); // Pass limit here
     if (users.status === "success") {
       setUsers(users.data);
       setPage(users.page);
@@ -38,7 +36,7 @@ const User = () => {
 
   useEffect(() => {
     const getUsers = async () => {
-      const result = await getAllUserForAdmin(1, limit);
+      const result = await getAllUserForAdmin(1, limit); // Pass limit here (page 1)
       if (result.status === "success") {
         setUsers(result.data);
         setTotalPage(result.totalPage);
@@ -47,7 +45,6 @@ const User = () => {
     };
 
     getUsers();
-    setDomReady(true);
   }, []);
 
   const handleDeleteClick = (id) => {
@@ -99,20 +96,20 @@ const User = () => {
         </>
       )}
 
-      {/* Portal Button to Header */}
-      {domReady &&
-        document.getElementById("header-actions") &&
-        createPortal(
+      <div className="flex flex-col h-full gap-4">
+        {/* Header Actions */}
+        <div className="flex justify-between items-center">
+          <div>
+            {/* Optional: Title or Breadcrumb could go here if needed, keeping it clean for now */}
+          </div>
           <Button
             onClick={() => setShowForm(!showForm)}
-            className="bg-[#4318FF] hover:bg-[#3311CC] text-white rounded-full px-6 mr-2"
+            className="bg-[#4318FF] hover:bg-[#3311CC] text-white rounded-full px-6"
           >
             <Plus className="mr-2 h-4 w-4" /> Tambah User
-          </Button>,
-          document.getElementById("header-actions"),
-        )}
+          </Button>
+        </div>
 
-      <div className="flex flex-col h-full gap-4">
         <Card className="border-0 shadow-lg rounded-[20px] bg-white flex-1 flex flex-col">
           <CardContent className="p-0 pb-6 flex-1 flex flex-col justify-between">
             <div className="w-full overflow-x-auto">

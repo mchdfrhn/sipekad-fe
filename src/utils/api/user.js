@@ -22,7 +22,7 @@ const updateProfile = async (
   updateUserData,
   updateUser,
   setShowProfile,
-  showProfile
+  showProfile,
 ) => {
   const user = JSON.parse(localStorage.getItem("user"));
   const token = localStorage.getItem("tokenKey");
@@ -41,7 +41,7 @@ const updateProfile = async (
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     if (response.data.status === "success") {
       updateUserData(updateUser);
@@ -57,14 +57,17 @@ const updateProfile = async (
 };
 
 // admin
-const getAllUserForAdmin = async (page = 1) => {
-  const token = localStorage.getItem("tokenKey")
+const getAllUserForAdmin = async (page = 1, limit = 10) => {
+  const token = localStorage.getItem("tokenKey");
   try {
-    const result = await Axios.get(`${BASE_URL}/users?page=${page}&limit=5`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const result = await Axios.get(
+      `${BASE_URL}/users?page=${page}&limit=${limit}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
+    );
 
     const users = await result.data;
     return users;
@@ -95,50 +98,79 @@ const getUserDetail = async (token, userId) => {
   }
 };
 
-export const addUser = async(token, { username, password, nim, full_name, email, phone, role, nik, prodi }) => {
+export const addUser = async (
+  token,
+  { username, password, nim, full_name, email, phone, role, nik, prodi },
+) => {
   try {
-    const result = await axios.post(`${ BASE_URL }/users`, {
-      username, password, nim, full_name, email, phone, role, nik, prodi
-    }, {
+    const result = await axios.post(
+      `${BASE_URL}/users`,
+      {
+        username,
+        password,
+        nim,
+        full_name,
+        email,
+        phone,
+        role,
+        nik,
+        prodi,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    return result.data;
+  } catch (err) {
+    return err.response.data;
+  }
+};
+
+export const deleteUser = async (token, userId) => {
+  try {
+    const result = await axios.delete(`${BASE_URL}/users/${userId}`, {
       headers: {
-        Authorization: `Bearer ${ token }`
+        Authorization: `Bearer ${token}`,
       },
     });
 
-    return result.data
-  } catch(err) {
-    return err.response.data
+    return result.data;
+  } catch (err) {
+    return err.response.data;
   }
-}
+};
 
-export const deleteUser = async(token, userId) => {
+export const updateUserForAdmin = async (
+  token,
+  userId,
+  { username, full_name, nim, email, phone, nik, prodi },
+) => {
   try {
-    const result = await axios.delete(`${ BASE_URL }/users/${ userId }`, {
-      headers: {
-        Authorization: `Bearer ${ token }`
-      }
-    });
+    const result = await axios.put(
+      `${BASE_URL}/users/${userId}`,
+      {
+        username,
+        full_name,
+        nim,
+        email,
+        phone,
+        nik,
+        prodi,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
 
-    return result.data
-  } catch(err) {
-    return err.response.data
+    return result.data;
+  } catch (err) {
+    return err.response.data;
   }
-}
-
-export const updateUserForAdmin = async(token, userId, { username, full_name, nim, email, phone, nik, prodi }) => {
-  try {
-    const result = await axios.put(`${ BASE_URL }/users/${ userId }`, {
-      username, full_name, nim, email, phone, nik, prodi
-    }, {
-      headers: {
-        Authorization: `Bearer ${ token }`
-      }
-    });
-
-    return result.data
-  } catch(err) {
-    return err.response.data
-  }
-} 
+};
 
 export { getUser, updateProfile, getAllUserForAdmin, getUserDetail };
