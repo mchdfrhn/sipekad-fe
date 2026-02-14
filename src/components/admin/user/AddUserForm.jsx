@@ -2,6 +2,12 @@ import { useState } from "react";
 import { addUserForAdmin } from "../../../utils/action";
 import { Eye, EyeClosed, X } from "lucide-react";
 import { STUDENT_PRODI } from "../../../utils/constant";
+import CustomSelect from "../../ui/CustomSelect";
+
+const prodiOptions = Object.values(STUDENT_PRODI).map((val) => ({
+  label: val,
+  value: val,
+}));
 
 const AddUserForm = ({
   showForm,
@@ -17,14 +23,37 @@ const AddUserForm = ({
   const [email, setEmail] = useState("");
   const [nim, setNim] = useState("");
   const [nik, setNik] = useState("");
-  const [prodi, setProdi] = useState("")
+  const [prodi, setProdi] = useState("");
   const [phone, setPhone] = useState("");
   const [errMessage, setErrMessage] = useState("");
   const [hiddenPassword, setHiddenPassword] = useState(false);
-  const [role, setRole] = useState("");
+  const [role] = useState("user"); // Default to user as requested
+
+  const validateForm = () => {
+    if (!username || username.length < 3)
+      return "Username must be at least 3 characters";
+    if (!password || password.length < 6)
+      return "Password must be at least 6 characters";
+    if (!fullName || fullName.length < 3)
+      return "Full Name must be at least 3 characters";
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+      return "Please enter a valid email address";
+    if (!nim) return "NIM / ID is required";
+    if (!nik || nik.length < 16) return "NIK must be 16 characters";
+    if (!prodi) return "Please select a Program Studi";
+    if (!phone || phone.length < 10) return "Please enter a valid phone number";
+    return null;
+  };
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    setErrMessage("");
+
+    const validationError = validateForm();
+    if (validationError) {
+      setErrMessage(validationError);
+      return;
+    }
     const data = {
       username,
       password,
@@ -34,7 +63,7 @@ const AddUserForm = ({
       nim,
       phone: `0${phone}`,
       nik,
-      prodi
+      prodi,
     };
 
     await addUserForAdmin(
@@ -45,7 +74,7 @@ const AddUserForm = ({
       setUsers,
       setPage,
       setTotalPage,
-      page
+      page,
     );
   };
 
@@ -54,175 +83,150 @@ const AddUserForm = ({
   };
   return (
     <>
-    <form onSubmit={submitHandler} className="flex flex-col gap-4 mt-4 bg-white shadow-md p-4 h-[88vh] md:h-[64vh] xl:h-[88vh] overflow-y-scroll rounded-md fixed inset-0 w-[20rem] md:w-[30rem] fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-99">
-      <div onClick={() => setShowForm(!showForm)} className="cursor-pointer">
-        <X />
-      </div>
-      <div className="flex flex-col gap-2">
-        <label
-          className="text-sm tracking-[3px] font-semibold uppercase"
-          htmlFor=""
-        >
-          Username
-        </label>
-        <input
-          onChange={(e) => onChangeHandler(e, setUsername)}
-          value={username}
-          className="px-4 py-2 bg-gray-100 focus:outline-none rounded-md shadow-md"
-          type="text"
-          name=""
-          id=""
-          placeholder="username"
-        />
-      </div>
-      <div className="flex flex-col gap-2">
-        <label
-          className="text-sm tracking-[3px] font-semibold uppercase"
-          htmlFor=""
-        >
-          Password
-        </label>
-        <div className="relative">
-          <input
-            value={password}
-            onChange={(e) => onChangeHandler(e, setPassword)}
-            className="px-4 py-2 w-full bg-gray-100 focus:outline-none rounded-md shadow-md"
-            type={!hiddenPassword ? "password" : "text"}
-            name=""
-            id=""
-            placeholder="password"
-          />
+      {showForm && (
+        <>
           <div
-            onClick={() => setHiddenPassword(!hiddenPassword)}
-            className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
-          >
-            {!hiddenPassword ? <EyeClosed /> : <Eye />}
+            onClick={() => setShowForm(!showForm)}
+            className="fixed inset-0 w-screen h-screen bg-[#111c44]/30 backdrop-blur-[2px] z-99"
+          ></div>
+          <div className="flex flex-col gap-4 bg-white shadow-2xl p-8 h-[90vh] md:h-auto max-h-[95vh] overflow-y-auto rounded-[30px] fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-100 w-[90%] max-w-[500px] border border-gray-100">
+            <div className="flex justify-between items-center mb-2">
+              <h2 className="text-xl font-extrabold text-[#2B3674] tracking-tight">
+                Add New Student
+              </h2>
+              <button
+                onClick={() => setShowForm(!showForm)}
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-400 hover:text-red-500"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <form onSubmit={submitHandler} className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1">
+                  Full Name
+                </label>
+                <input
+                  onChange={(e) => onChangeHandler(e, setFullName)}
+                  value={fullName}
+                  className="px-4 py-3 bg-[#F4F7FE] text-[#2B3674] font-semibold border-none focus:ring-2 focus:ring-[#4318FF] outline-none rounded-2xl transition-all duration-200"
+                  type="text"
+                  placeholder="Enter full name"
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1">
+                  Username
+                </label>
+                <input
+                  onChange={(e) => onChangeHandler(e, setUsername)}
+                  value={username}
+                  className="px-4 py-3 bg-[#F4F7FE] text-[#2B3674] font-semibold border-none focus:ring-2 focus:ring-[#4318FF] outline-none rounded-2xl transition-all duration-200"
+                  type="text"
+                  placeholder="Enter username"
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1">
+                  Password
+                </label>
+                <div className="relative">
+                  <input
+                    value={password}
+                    onChange={(e) => onChangeHandler(e, setPassword)}
+                    className="px-4 py-3 w-full bg-[#F4F7FE] text-[#2B3674] font-semibold border-none focus:ring-2 focus:ring-[#4318FF] outline-none rounded-2xl transition-all duration-200"
+                    type={!hiddenPassword ? "password" : "text"}
+                    placeholder="Enter password"
+                  />
+                  <div
+                    onClick={() => setHiddenPassword(!hiddenPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-gray-400 hover:text-[#4318FF]"
+                  >
+                    {!hiddenPassword ? (
+                      <EyeClosed className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1">
+                  NIM / ID
+                </label>
+                <input
+                  value={nim}
+                  onChange={(e) => onChangeHandler(e, setNim)}
+                  className="px-4 py-3 bg-[#F4F7FE] text-[#2B3674] font-semibold border-none focus:ring-2 focus:ring-[#4318FF] outline-none rounded-2xl transition-all duration-200"
+                  type="text"
+                  placeholder="Enter NIM/ID"
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1">
+                  NIK
+                </label>
+                <input
+                  value={nik}
+                  onChange={(e) => onChangeHandler(e, setNik)}
+                  className="px-4 py-3 bg-[#F4F7FE] text-[#2B3674] font-semibold border-none focus:ring-2 focus:ring-[#4318FF] outline-none rounded-2xl transition-all duration-200"
+                  type="text"
+                  placeholder="Enter NIK"
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1">
+                  Program Studi
+                </label>
+                <CustomSelect
+                  value={prodi}
+                  onChange={setProdi}
+                  options={prodiOptions}
+                  placeholder="Select Program Studi"
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1">
+                  Email Address
+                </label>
+                <input
+                  onChange={(e) => onChangeHandler(e, setEmail)}
+                  value={email}
+                  className="px-4 py-3 bg-[#F4F7FE] text-[#2B3674] font-semibold border-none focus:ring-2 focus:ring-[#4318FF] outline-none rounded-2xl transition-all duration-200"
+                  type="email"
+                  placeholder="Enter email address"
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1">
+                  Phone Number
+                </label>
+                <div className="flex items-center bg-[#F4F7FE] rounded-2xl overflow-hidden focus-within:ring-2 focus-within:ring-[#4318FF] transition-all duration-200">
+                  <p className="px-4 py-3 text-gray-500 bg-gray-100 font-bold border-r border-gray-200">
+                    +62
+                  </p>
+                  <input
+                    onChange={(e) => onChangeHandler(e, setPhone)}
+                    value={phone}
+                    className="px-4 py-3 bg-transparent text-[#2B3674] font-semibold border-none outline-none flex-1"
+                    type="number"
+                    placeholder="8123456789"
+                  />
+                </div>
+              </div>
+              <button
+                className="mt-4 bg-[#4318FF] text-white py-3.5 rounded-2xl font-bold shadow-[0_4px_14px_0_rgba(67,24,255,0.39)] hover:shadow-[0_6px_20px_rgba(67,24,255,0.23)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer"
+                type="submit"
+              >
+                Add Student
+              </button>
+            </form>
+            <p className="text-center text-xs font-bold text-red-500 mt-2">
+              {errMessage}
+            </p>
           </div>
-        </div>
-      </div>
-      <div className="flex flex-col gap-2">
-        <label
-          className="text-sm tracking-[3px] font-semibold uppercase"
-          htmlFor=""
-        >
-          NIM
-        </label>
-        <input
-          value={nim}
-          onChange={(e) => onChangeHandler(e, setNim)}
-          className="px-4 py-2 bg-gray-100 focus:outline-none rounded-md shadow-md"
-          type="text"
-          placeholder="NIM"
-        />
-      </div>
-       <div className="flex flex-col gap-2">
-        <label
-          className="text-sm tracking-[3px] font-semibold uppercase"
-          htmlFor=""
-        >
-          Nik
-        </label>
-        <input
-          value={nik}
-          onChange={(e) => onChangeHandler(e, setNik)}
-          className="px-4 py-2 bg-gray-100 focus:outline-none rounded-md shadow-md"
-          type="text"
-          placeholder="NIK"
-        />
-      </div>
-      <div className="flex flex-col gap-2">
-        <label
-          className="text-sm tracking-[3px] font-semibold uppercase"
-          htmlFor=""
-        >
-          Nama lengkap
-        </label>
-        <input
-          onChange={(e) => onChangeHandler(e, setFullName)}
-          value={fullName}
-          className="px-4 py-2 bg-gray-100 focus:outline-none rounded-md shadow-md"
-          type="text"
-          name=""
-          id=""
-          placeholder="nama lengkap"
-        />
-      </div>
-      <div className="flex flex-col gap-2">
-        <label className="text-sm tracking-[3px] font-semibold uppercase">
-          Role
-        </label>
-        <select
-          value={role}
-          onChange={(e) => setRole(e.target.value)}
-          className="px-4 py-2 bg-gray-100 focus:outline-none rounded-md shadow-md"
-        >
-          <option disabled value="">
-            --Pilih Role--
-          </option>
-          <option value="user">User</option>
-          <option value="admin">Admin</option>
-        </select>
-      </div>
-      <div className="flex flex-col gap-2">
-        <label className="text-sm tracking-[3px] font-semibold uppercase">
-          prodi
-        </label>
-        <select
-          value={prodi}
-          onChange={(e) => setProdi(e.target.value)}
-          className="px-4 py-2 bg-gray-100 focus:outline-none rounded-md shadow-md"
-        >
-          <option disabled value="">
-            --Pilih Prodi--
-          </option>
-          <option value={ STUDENT_PRODI.TEKNIK_INFORMATIKA }>Teknik Informatika</option>
-          <option value={ STUDENT_PRODI.TEKNIK_SIPIL }>Teknik Sipil</option>
-          <option value={ STUDENT_PRODI.TEKNIK_LINGKUNGAN }>Teknik Lingkungan</option>
-        </select>
-      </div>
-      <div className="flex flex-col gap-2">
-        <label
-          className="text-sm tracking-[3px] font-semibold uppercase"
-          htmlFor=""
-        >
-          Email
-        </label>
-        <input
-          onChange={(e) => onChangeHandler(e, setEmail)}
-          value={email}
-          className="px-4 py-2 bg-gray-100 focus:outline-none rounded-md shadow-md"
-          type="email"
-          placeholder="email"
-        />
-      </div>
-      <div className="flex flex-col gap-2">
-        <label
-          className="text-sm tracking-[3px] font-semibold uppercase"
-          htmlFor=""
-        >
-          No hp
-        </label>
-        <div className="flex items-center rounded-l-xl rounded-r-md shadow-md overflow-hidden">
-          <p className="block px-2 py-2 text-gray-500 bg-gray-200">+62</p>
-          <input
-            onChange={(e) => onChangeHandler(e, setPhone)}
-            value={phone}
-            className="px-4 py-2 bg-gray-100 focus:outline-none flex-2"
-            type="number"
-            name=""
-            id=""
-            placeholder="phone"
-          />
-        </div>
-      </div>
-      <button
-        className="mb-2 bg-blue-500 py-2 rounded-md text-white border border-transparent font-semibold hover:border-gray-800 hover:text-gray-800 hover:bg-transparent cursor-pointer transition-duration"
-        type="submit"
-      >
-        Tambah User
-      </button>
-      <p className="text-red-500 font-semibold text-sm">{errMessage}</p>
-    </form>
+        </>
+      )}
     </>
   );
 };

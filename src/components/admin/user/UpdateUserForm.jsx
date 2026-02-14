@@ -3,6 +3,12 @@ import { X } from "lucide-react";
 import { useNavigate } from "react-router";
 import { updateUserForAdminAction } from "../../../utils/action";
 import { STUDENT_PRODI } from "../../../utils/constant";
+import CustomSelect from "../../ui/CustomSelect";
+
+const prodiOptions = Object.values(STUDENT_PRODI).map((val) => ({
+  label: val,
+  value: val,
+}));
 
 const UpdateUserForm = ({ userDetail, shwoForm, setShowForm }) => {
   const navigate = useNavigate();
@@ -42,7 +48,7 @@ const UpdateUserForm = ({ userDetail, shwoForm, setShowForm }) => {
       phone,
       full_name: fullName,
       nik,
-      prodi: prodi.toLowerCase()
+      prodi: prodi.toLowerCase(),
     };
     await updateUserForAdminAction(id, newData, navigate, setErrMessage);
   };
@@ -53,144 +59,137 @@ const UpdateUserForm = ({ userDetail, shwoForm, setShowForm }) => {
         <>
           <div
             onClick={() => setShowForm(!shwoForm)}
-            className="fixed inset-0 w-screen h-screen bg-black/20 z-99"
+            className="fixed inset-0 w-screen h-screen bg-[#111c44]/30 backdrop-blur-[2px] z-99"
           ></div>
-          <div className="flex flex-col gap-4 mt-4 bg-white shadow-md p-4 h-[88vh] md:h-[64vh] xl:h-[88vh] overflow-y-scroll rounded-md fixed inset-0 w-[20rem] md:w-[30rem] fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-99">
-            <button
-              onClick={() => setShowForm(!shwoForm)}
-              className="cursor-pointer"
-            >
-              <X />
-            </button>
+          <div className="flex flex-col gap-4 bg-white shadow-2xl p-8 h-[90vh] md:h-auto max-h-[90vh] overflow-y-auto rounded-[30px] fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[100] w-[90%] max-w-[500px] border border-gray-100">
+            <div className="flex justify-between items-center mb-2">
+              <h2 className="text-xl font-extrabold text-[#2B3674] tracking-tight">
+                Update User Information
+              </h2>
+              <button
+                onClick={() => setShowForm(!shwoForm)}
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-400 hover:text-red-500"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
             <form
               onSubmit={submitHandler}
               className="flex flex-col gap-4 mt-4"
               action=""
             >
-              <div className="flex flex-col gap-2 mt-2">
+              <div className="flex flex-col gap-1.5">
                 <label
-                  className="text-sm tracking-[3px] font-semibold uppercase"
-                  htmlFor=""
+                  className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1"
+                  htmlFor="fullName"
+                >
+                  Full Name
+                </label>
+                <input
+                  className="px-4 py-3 bg-[#F4F7FE] text-[#2B3674] font-semibold border-none focus:ring-2 focus:ring-[#4318FF] outline-none rounded-2xl transition-all duration-200"
+                  onChange={(e) => onCHangeHandler(e, setFullName)}
+                  type="text"
+                  value={fullName}
+                  id="fullName"
+                  placeholder="Enter full name"
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label
+                  className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1"
+                  htmlFor="username"
                 >
                   Username
                 </label>
                 <input
-                  className="px-4 py-2 bg-gray-100 focus:outline-none rounded-md shadow-md"
-                  onChange={(e) => onCHangeHandler(e, setFullName)}
-                  type="text"
-                  value={fullName}
-                  name=""
-                  id=""
-                />
-              </div>
-              <div className="flex flex-col gap-2 mt-2">
-                <label
-                  className="text-sm tracking-[3px] font-semibold uppercase"
-                  htmlFor=""
-                >
-                  nama lengkap
-                </label>
-                <input
-                  className="px-4 py-2 bg-gray-100 focus:outline-none rounded-md shadow-md"
+                  className="px-4 py-3 bg-[#F4F7FE] text-[#2B3674] font-semibold border-none focus:ring-2 focus:ring-[#4318FF] outline-none rounded-2xl transition-all duration-200"
                   onChange={(e) => onCHangeHandler(e, setUsername)}
                   type="text"
                   value={username}
-                  name=""
-                  id=""
+                  id="username"
+                  placeholder="Enter username"
                 />
               </div>
-              <div className="flex flex-col gap-2 mt-2">
+              <div className="flex flex-col gap-1.5">
                 <label
-                  className="text-sm tracking-[3px] font-semibold uppercase"
-                  htmlFor=""
+                  className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1"
+                  htmlFor="nim"
                 >
-                  NIM
+                  NIM / ID
                 </label>
                 <input
-                  className="px-4 py-2 bg-gray-100 focus:outline-none rounded-md shadow-md"
+                  className="px-4 py-3 bg-[#F4F7FE] text-[#2B3674] font-semibold border-none focus:ring-2 focus:ring-[#4318FF] outline-none rounded-2xl transition-all duration-200"
                   onChange={(e) => onCHangeHandler(e, setNim)}
                   type="text"
                   value={nim}
-                  name=""
-                  id=""
+                  id="nim"
+                  placeholder="Enter NIM/ID"
                 />
               </div>
-              <div className="flex flex-col gap-2 mt-2">
+              <div className="flex flex-col gap-1.5">
                 <label
-                  className="text-sm tracking-[3px] font-semibold uppercase"
-                  htmlFor=""
+                  className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1"
+                  htmlFor="nik"
                 >
-                  Nik
+                  NIK
                 </label>
                 <input
-                  className="px-4 py-2 bg-gray-100 focus:outline-none rounded-md shadow-md"
+                  className="px-4 py-3 bg-[#F4F7FE] text-[#2B3674] font-semibold border-none focus:ring-2 focus:ring-[#4318FF] outline-none rounded-2xl transition-all duration-200"
                   onChange={(e) => onCHangeHandler(e, setNik)}
                   type="text"
                   value={nik}
-                  name=""
-                  id=""
+                  id="nik"
+                  placeholder="Enter NIK"
                 />
               </div>
-              <div className="flex flex-col gap-2 mt-2">
-                <label className="text-sm tracking-[3px] font-semibold uppercase">
-                  prodi
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1">
+                  Program Studi
                 </label>
-                <select
+                <CustomSelect
                   value={prodi}
-                  onChange={(e) => setProdi(e.target.value)}
-                  className="px-4 py-2 bg-gray-100 focus:outline-none rounded-md shadow-md"
-                >
-                  <option disabled value="">
-                    --Pilih Prodi--
-                  </option>
-                  <option value={STUDENT_PRODI.TEKNIK_INFORMATIKA}>
-                    Teknik Informatika
-                  </option>
-                  <option value={STUDENT_PRODI.TEKNIK_SIPIL}>
-                    Teknik Sipil
-                  </option>
-                  <option value={STUDENT_PRODI.TEKNIK_LINGKUNGAN}>
-                    Teknik Lingkungan
-                  </option>
-                </select>
-              </div>
-              <div className="flex flex-col gap-2 mt-2">
-                <label
-                  className="text-sm tracking-[3px] font-semibold uppercase"
-                  htmlFor=""
-                >
-                  email
-                </label>
-                <input
-                  className="px-4 py-2 bg-gray-100 focus:outline-none rounded-md shadow-md"
-                  onChange={(e) => onCHangeHandler(e, setEmail)}
-                  type="text"
-                  value={email}
-                  name=""
-                  id=""
+                  onChange={setProdi}
+                  options={prodiOptions}
+                  placeholder="Select Program Studi"
                 />
               </div>
-              <div className="flex flex-col gap-2 mt-2">
+              <div className="flex flex-col gap-1.5">
                 <label
-                  className="text-sm tracking-[3px] font-semibold uppercase"
-                  htmlFor=""
+                  className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1"
+                  htmlFor="email"
                 >
-                  phone
+                  Email Address
                 </label>
                 <input
-                  className="px-4 py-2 bg-gray-100 focus:outline-none rounded-md shadow-md"
+                  className="px-4 py-3 bg-[#F4F7FE] text-[#2B3674] font-semibold border-none focus:ring-2 focus:ring-[#4318FF] outline-none rounded-2xl transition-all duration-200"
+                  onChange={(e) => onCHangeHandler(e, setEmail)}
+                  type="email"
+                  value={email}
+                  id="email"
+                  placeholder="Enter email"
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label
+                  className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1"
+                  htmlFor="phone"
+                >
+                  Phone Number
+                </label>
+                <input
+                  className="px-4 py-3 bg-[#F4F7FE] text-[#2B3674] font-semibold border-none focus:ring-2 focus:ring-[#4318FF] outline-none rounded-2xl transition-all duration-200"
                   onChange={(e) => onCHangeHandler(e, setPhone)}
                   type="text"
                   value={phone}
-                  name=""
-                  id=""
+                  id="phone"
+                  placeholder="Enter phone number"
                 />
               </div>
               <button
-                className="mb-2 bg-yellow-500 py-2 rounded-md text-white border border-transparent font-semibold hover:border-gray-800 hover:text-gray-800 hover:bg-transparent cursor-pointer transition-duration"
+                className="mt-4 bg-[#4318FF] text-white py-3.5 rounded-2xl font-bold shadow-[0_4px_14px_0_rgba(67,24,255,0.39)] hover:shadow-[0_6px_20px_rgba(67,24,255,0.23)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer"
                 type="submit"
               >
-                Updated User
+                Update Information
               </button>
             </form>
             <p className="text-xs font-semibold text-red-500">{errMessage}</p>

@@ -62,25 +62,26 @@ const SidebarAdmin = ({ className }) => {
             return (
               <div key={link.path} className="relative">
                 {isActive && (
-                  <div className="absolute right-[-16px] top-1/2 -translate-y-1/2 h-10 w-1.5 rounded-l-lg bg-[#4318FF] shadow-[0_0_12px_rgba(67,24,255,0.4)] transition-all duration-300" />
+                  <div className="absolute right-[-16px] top-1/2 -translate-y-1/2 h-6 w-1 rounded-l-lg bg-[#4318FF] shadow-[0_0_8px_rgba(67,24,255,0.3)] transition-all duration-300" />
                 )}
                 <Link
                   to={link.path}
                   className={cn(
-                    "group flex items-center gap-4 px-5 py-4 rounded-xl font-medium transition-all duration-300",
+                    "group flex items-center gap-4 px-5 py-3 rounded-2xl font-semibold transition-all duration-300",
                     isActive
-                      ? "bg-indigo-50 text-[#2B3674] font-extrabold shadow-sm scale-[1.02]"
-                      : "text-[#A3AED0] hover:text-[#4318FF] hover:bg-gray-50",
+                      ? "bg-indigo-100/50 text-[#4318FF] font-extrabold shadow-sm border border-indigo-100"
+                      : "text-[#A3AED0] hover:text-[#4318FF] hover:bg-gray-100/50",
                   )}
                 >
                   <link.icon
-                    size={isActive ? 24 : 22}
+                    size={22}
                     className={cn(
                       "transition-all duration-300",
                       isActive
                         ? "text-[#4318FF] drop-shadow-[0_0_8px_rgba(67,24,255,0.2)]"
                         : "text-[#A3AED0] group-hover:text-[#4318FF]",
                     )}
+                    fill={isActive ? "currentColor" : "none"}
                   />
                   <span
                     className={cn(

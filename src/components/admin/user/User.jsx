@@ -32,7 +32,7 @@ const User = () => {
   const [page, setPage] = useState(1);
   const [alertDelete, setAlertDelete] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
-  const limit = 10;
+  const limit = 15;
   const [domReady, setDomReady] = useState(false);
   const [filterProdi, setFilterProdi] = useState("default");
   const [searchParams] = useSearchParams();
@@ -139,9 +139,9 @@ const User = () => {
         createPortal(
           <Button
             onClick={() => setShowForm(!showForm)}
-            className="bg-[#4318FF] hover:bg-[#3311CC] text-white rounded-full px-6 mr-2"
+            className="bg-[#4318FF] hover:bg-[#3311CC] text-white rounded-2xl px-6 py-3 font-bold shadow-[0_4px_14px_0_rgba(67,24,255,0.39)] hover:shadow-[0_6px_20px_rgba(67,24,255,0.23)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 mr-2"
           >
-            <Plus className="mr-2 h-4 w-4" /> Tambah User
+            <Plus className="mr-2 h-5 w-5" /> Tambah User
           </Button>,
           document.getElementById("header-actions"),
         )}
@@ -171,7 +171,11 @@ const User = () => {
                                     onClick={() =>
                                       handleFilterProdi(option.value)
                                     }
-                                    className={`cursor-pointer capitalize ${filterProdi === option.value ? "bg-blue-50 text-[#4318FF]" : ""}`}
+                                    className={`cursor-pointer capitalize px-4 py-2 text-sm font-semibold transition-colors duration-200 rounded-lg ${
+                                      filterProdi === option.value
+                                        ? "bg-indigo-50 text-[#4318FF]"
+                                        : "text-[#2B3674] hover:bg-indigo-50 hover:text-[#4318FF]"
+                                    }`}
                                   >
                                     {option.label}
                                   </DropdownMenuItem>
@@ -211,12 +215,12 @@ const User = () => {
                             index % 2 === 0 ? "bg-white" : "bg-gray-50/50"
                           }`}
                         >
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className="px-6 py-2.5 whitespace-nowrap">
                             <span className="text-sm font-bold text-[#2B3674]">
                               {(page - 1) * limit + index + 1}
                             </span>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className="px-6 py-2.5 whitespace-nowrap">
                             <div className="flex items-center gap-3">
                               <Link to={`/admin/user/${value.id}`}>
                                 <Avatar className="h-8 w-8">
@@ -237,27 +241,27 @@ const User = () => {
                               </Link>
                             </div>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className="px-6 py-2.5 whitespace-nowrap">
                             <span className="text-sm font-bold text-[#2B3674]">
                               {value.nim}
                             </span>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className="px-6 py-2.5 whitespace-nowrap">
                             <span className="text-sm font-bold text-[#2B3674] capitalize">
                               {value.prodi || "-"}
                             </span>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className="px-6 py-2.5 whitespace-nowrap">
                             <span className="text-sm text-gray-600">
                               {value.email}
                             </span>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className="px-6 py-2.5 whitespace-nowrap">
                             <span className="text-sm text-gray-600">
                               {value.phone}
                             </span>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className="px-6 py-2.5 whitespace-nowrap">
                             <Button
                               variant="ghost"
                               size="icon"
@@ -274,11 +278,11 @@ const User = () => {
                         [...Array(limit - users.length)].map((_, i) => (
                           <tr
                             key={`empty-${i}`}
-                            className="border-b border-gray-50 last:border-0 h-[69px]"
+                            className="border-b border-gray-50 last:border-0 h-[48px]"
                           >
                             <td
                               colSpan={headers.length}
-                              className="px-6 py-4 whitespace-nowrap"
+                              className="px-6 py-2.5 whitespace-nowrap"
                             >
                               &nbsp;
                             </td>

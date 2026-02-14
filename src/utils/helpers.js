@@ -32,6 +32,11 @@ export const formatPathToBreadcrumb = (path) => {
       label = "Pengajuan - Detail";
     }
 
+    // Custom label for User Detail
+    if (segment.startsWith("users-")) {
+      label = "User Detail";
+    }
+
     return {
       label,
       path: segmentPath,

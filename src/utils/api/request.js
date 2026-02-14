@@ -75,6 +75,7 @@ export const getRequestDetail = async (requestId, setData, setResponses) => {
 // admin
 const getAllRequestForAdmin = async (
   pageNumber = 1,
+  limit = 10,
   filterStatus = "",
   filterType = "",
   search = "",
@@ -82,7 +83,7 @@ const getAllRequestForAdmin = async (
   const token = localStorage.getItem("tokenKey");
   try {
     const result = await Axios.get(
-      `${BASE_URL}/request?page=${pageNumber}&limit=10&filterStatus=${filterStatus}&filterType=${filterType}&search=${search}`,
+      `${BASE_URL}/request?page=${pageNumber}&limit=${limit}&filterStatus=${filterStatus}&filterType=${filterType}&search=${search}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

@@ -15,7 +15,7 @@ const RequestAdmin = () => {
   const [requests, setRequests] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
-  const limit = 10;
+  const limit = 15;
   const [searchParams] = useSearchParams();
   const searchTerm = searchParams.get("q") || "";
 
@@ -30,14 +30,20 @@ const RequestAdmin = () => {
       type = filterType,
       search = searchTerm,
     ) => {
-      const requests = await getAllRequestForAdmin(p, status, type, search);
+      const requests = await getAllRequestForAdmin(
+        p,
+        limit,
+        status,
+        type,
+        search,
+      );
       if (requests.status === "success") {
         setRequests(requests.data);
         setPage(requests.page);
         setTotalPage(requests.totalPage);
       }
     },
-    [filterStatus, filterType, searchTerm],
+    [filterStatus, filterType, searchTerm, limit],
   );
 
   const handlePageChange = async (p) => {
@@ -264,7 +270,7 @@ export const TablePengajuan = ({
                     index % 2 === 0 ? "bg-white" : "bg-gray-50/50"
                   }`}
                 >
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-6 py-2.5 whitespace-nowrap">
                     {/* Updated indexing logic: (page - 1) * limit + mapped index + 1 */}
                     <span className="text-sm font-bold text-[#2B3674]">
                       {(page - 1) * limit + index + 1}
@@ -272,7 +278,7 @@ export const TablePengajuan = ({
                   </td>
 
                   {!dontDisplayUsername && (
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-2.5 whitespace-nowrap">
                       <div className="flex items-center gap-3">
                         <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-[#4318FF] font-bold text-xs">
                           {value.full_name?.charAt(0) || "U"}
@@ -284,13 +290,13 @@ export const TablePengajuan = ({
                     </td>
                   )}
 
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-6 py-2.5 whitespace-nowrap">
                     <span className="text-sm font-bold text-[#2B3674]">
                       {value.type}
                     </span>
                   </td>
 
-                  <td className="px-6 py-4 whitespace-nowrap max-w-[300px]">
+                  <td className="px-6 py-2.5 whitespace-nowrap max-w-[300px]">
                     <span
                       className="text-sm text-gray-600 block truncate"
                       title={value.message}
@@ -299,7 +305,7 @@ export const TablePengajuan = ({
                     </span>
                   </td>
 
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-6 py-2.5 whitespace-nowrap">
                     <span className="text-sm font-bold text-[#2B3674]">
                       {new Date(value.updated_at).toLocaleDateString("id-ID", {
                         day: "numeric",
@@ -309,7 +315,7 @@ export const TablePengajuan = ({
                     </span>
                   </td>
 
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-6 py-2.5 whitespace-nowrap">
                     <span
                       className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold capitalize
                         ${
@@ -328,7 +334,7 @@ export const TablePengajuan = ({
                     </span>
                   </td>
 
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-6 py-2.5 whitespace-nowrap">
                     <Link to={`/admin/pengajuan/${value.id}`}>
                       <Button
                         variant="ghost"
@@ -354,7 +360,7 @@ export const TablePengajuan = ({
                 [...Array(emptyRows)].map((_, i) => (
                   <tr
                     key={`empty-${i}`}
-                    className="border-b border-gray-50 last:border-0 h-[69px]"
+                    className="border-b border-gray-50 last:border-0 h-[48px]"
                   >
                     {" "}
                     {/* Approximate height of a row with content */}
