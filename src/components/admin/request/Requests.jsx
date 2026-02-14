@@ -181,21 +181,21 @@ export const TablePengajuan = ({
   ];
 
   return (
-    <div className="overflow-x-auto rounded-3xl border border-gray-50 mt-4">
-      <table className="w-full border-collapse">
+    <div className="w-full overflow-x-auto mt-4">
+      <table className="w-full">
         <thead>
-          <tr className="bg-[#F4F7FE]">
-            <th className="px-6 py-5 text-left text-xs font-extrabold text-[#A3AED0] uppercase tracking-wider rounded-tl-3xl">
+          <tr className="border-b border-gray-100">
+            <th className="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider whitespace-nowrap">
               No
             </th>
             {!dontDisplayUsername && (
-              <th className="px-6 py-5 text-left text-xs font-extrabold text-[#A3AED0] uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider whitespace-nowrap">
                 Nama Pemohon
               </th>
             )}
-            <th className="px-6 py-5 text-left text-xs font-extrabold text-[#A3AED0] uppercase tracking-wider">
+            <th className="px-6 py-3 text-left whitespace-nowrap">
               <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center gap-2 text-xs font-extrabold text-[#A3AED0] uppercase tracking-wider hover:text-[#4318FF] focus:outline-none transition-colors">
+                <DropdownMenuTrigger className="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-wider hover:text-[#4318FF] focus:outline-none transition-colors">
                   Jenis Surat <Filter className="h-3 w-3" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
@@ -214,15 +214,15 @@ export const TablePengajuan = ({
                 </DropdownMenuContent>
               </DropdownMenu>
             </th>
-            <th className="px-6 py-5 text-left text-xs font-extrabold text-[#A3AED0] uppercase tracking-wider">
+            <th className="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider whitespace-nowrap">
               Pesan
             </th>
-            <th className="px-6 py-5 text-left text-xs font-extrabold text-[#A3AED0] uppercase tracking-wider">
+            <th className="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider whitespace-nowrap">
               Tanggal
             </th>
-            <th className="px-6 py-5 text-left text-xs font-extrabold text-[#A3AED0] uppercase tracking-wider">
+            <th className="px-6 py-3 text-left whitespace-nowrap">
               <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center gap-2 text-xs font-extrabold text-[#A3AED0] uppercase tracking-wider hover:text-[#4318FF] focus:outline-none transition-colors">
+                <DropdownMenuTrigger className="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-wider hover:text-[#4318FF] focus:outline-none transition-colors">
                   Status <Filter className="h-3 w-3" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
@@ -243,7 +243,7 @@ export const TablePengajuan = ({
                 </DropdownMenuContent>
               </DropdownMenu>
             </th>
-            <th className="px-6 py-5 text-center text-xs font-extrabold text-[#A3AED0] uppercase tracking-wider rounded-tr-3xl">
+            <th className="px-6 py-3 text-center text-xs font-bold text-gray-400 uppercase tracking-wider whitespace-nowrap">
               Aksi
             </th>
           </tr>
@@ -267,32 +267,39 @@ export const TablePengajuan = ({
               {requests.map((value, index) => (
                 <tr
                   key={index}
-                  className="hover:bg-gray-50/50 transition-colors group"
+                  className={`group transition-colors border-b border-gray-50 last:border-0 hover:bg-indigo-50/50 ${
+                    index % 2 === 0 ? "bg-white" : "bg-indigo-50/20"
+                  }`}
                 >
-                  <td className="px-6 py-5 text-sm font-bold text-[#2B3674]">
-                    {(page - 1) * limit + index + 1}
+                  <td className="px-6 py-2.5 whitespace-nowrap">
+                    <span className="text-sm font-bold text-[#2B3674]">
+                      {(page - 1) * limit + index + 1}
+                    </span>
                   </td>
 
                   {!dontDisplayUsername && (
-                    <td className="px-6 py-5">
+                    <td className="px-6 py-2.5">
                       <div className="flex items-center gap-3">
                         <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-[#4318FF] font-bold text-xs">
                           {value.full_name?.charAt(0) || "U"}
                         </div>
-                        <span className="text-sm font-bold text-[#2B3674]">
+                        <Link
+                          to={`/admin/user/${value.user_id}`}
+                          className="text-sm font-bold text-[#2B3674] hover:text-[#4318FF] transition-colors"
+                        >
                           {value.full_name}
-                        </span>
+                        </Link>
                       </div>
                     </td>
                   )}
 
-                  <td className="px-6 py-5">
+                  <td className="px-6 py-2.5">
                     <span className="text-sm font-bold text-[#2B3674]">
                       {value.type}
                     </span>
                   </td>
 
-                  <td className="px-6 py-5 max-w-[300px]">
+                  <td className="px-6 py-2.5 max-w-[300px]">
                     <span
                       className="text-sm text-gray-500 block truncate"
                       title={value.message}
@@ -301,7 +308,7 @@ export const TablePengajuan = ({
                     </span>
                   </td>
 
-                  <td className="px-6 py-5">
+                  <td className="px-6 py-2.5">
                     <span className="text-sm font-bold text-[#2B3674]">
                       {new Date(value.updated_at).toLocaleDateString("id-ID", {
                         day: "numeric",
@@ -311,7 +318,7 @@ export const TablePengajuan = ({
                     </span>
                   </td>
 
-                  <td className="px-6 py-5">
+                  <td className="px-6 py-2.5">
                     <span
                       className={`inline-flex items-center px-3 py-1 rounded-lg text-[11px] font-bold capitalize
                         ${
@@ -330,13 +337,13 @@ export const TablePengajuan = ({
                     </span>
                   </td>
 
-                  <td className="px-6 py-5">
+                  <td className="px-6 py-2.5">
                     <div className="flex justify-center">
                       <Link to={`/admin/pengajuan/${value.id}`}>
                         <Button
                           variant="ghost"
                           size="icon"
-                          className={`h-9 w-9 rounded-xl transition-all ${
+                          className={`h-8 w-8 rounded-xl transition-all ${
                             value.status === "pending"
                               ? "bg-green-50 text-green-600 hover:bg-green-100"
                               : "bg-blue-50 text-blue-600 hover:bg-blue-100"
@@ -356,9 +363,12 @@ export const TablePengajuan = ({
               {/* Render Empty Rows to maintain height */}
               {emptyRows > 0 &&
                 [...Array(emptyRows)].map((_, i) => (
-                  <tr key={`empty-${i}`} className="h-[65px]">
+                  <tr
+                    key={`empty-${i}`}
+                    className="border-b border-gray-50 last:border-0 h-[48px]"
+                  >
                     {dataKey.map((_, j) => (
-                      <td key={j} className="px-6 py-5 whitespace-nowrap">
+                      <td key={j} className="px-6 py-2.5 whitespace-nowrap">
                         &nbsp;
                       </td>
                     ))}
