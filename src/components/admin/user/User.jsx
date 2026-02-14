@@ -139,9 +139,9 @@ const User = () => {
         createPortal(
           <Button
             onClick={() => setShowForm(!showForm)}
-            className="bg-[#4318FF] hover:bg-[#3311CC] text-white rounded-2xl px-6 py-3 font-bold shadow-[0_4px_14px_0_rgba(67,24,255,0.39)] hover:shadow-[0_6px_20px_rgba(67,24,255,0.23)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 mr-2"
+            className="bg-[#4318FF] hover:bg-[#3311CC] text-white rounded-full px-5 py-2.5 text-sm font-bold shadow-[0_4px_14px_0_rgba(67,24,255,0.39)] hover:shadow-[0_6px_20px_rgba(67,24,255,0.23)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 mr-2"
           >
-            <Plus className="mr-2 h-5 w-5" /> Tambah User
+            <Plus className="mr-2 h-4 w-4" /> Tambah User
           </Button>,
           document.getElementById("header-actions"),
         )}

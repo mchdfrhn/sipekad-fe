@@ -384,28 +384,34 @@ const LayoutAdmin = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="end"
-                className="w-[200px] rounded-xl shadow-xl border-none bg-white font-bold"
+                className="w-[220px] rounded-2xl shadow-xl border-none bg-white p-0 overflow-hidden font-bold"
               >
-                <DropdownMenuLabel className="font-bold text-[#2B3674]">
-                  My Account
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem className="cursor-pointer font-medium text-gray-600 focus:text-[#4318FF]">
-                  <Settings className="mr-2 h-4 w-4" />
-                  <span>Profile Settings</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="cursor-pointer font-medium text-gray-600 focus:text-[#4318FF]">
-                  <HelpCircle className="mr-2 h-4 w-4" />
-                  <span>Support</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  className="cursor-pointer text-red-500 hover:text-white hover:bg-red-500 focus:bg-red-500 focus:text-white font-bold transition-all mt-1 rounded-lg"
-                  onClick={logoutHandler}
-                >
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>Log out</span>
-                </DropdownMenuItem>
+                <div className="bg-[#4318FF] px-6 py-4 flex flex-col gap-0.5">
+                  <p className="text-white text-sm font-bold truncate">
+                    {user.full_name}
+                  </p>
+                  <p className="text-white/70 text-[10px] uppercase tracking-wider font-medium">
+                    Administrator
+                  </p>
+                </div>
+                <div className="p-2">
+                  <DropdownMenuItem className="cursor-pointer font-bold text-gray-600 focus:bg-indigo-50 focus:text-[#4318FF] rounded-xl px-4 py-2.5 transition-colors">
+                    <Settings className="mr-3 h-4 w-4 text-gray-400 group-focus:text-[#4318FF]" />
+                    <span>Profile Settings</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer font-bold text-gray-600 focus:bg-indigo-50 focus:text-[#4318FF] rounded-xl px-4 py-2.5 transition-colors">
+                    <HelpCircle className="mr-3 h-4 w-4 text-gray-400 group-focus:text-[#4318FF]" />
+                    <span>Support Interface</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator className="my-1 bg-gray-100" />
+                  <DropdownMenuItem
+                    className="cursor-pointer text-red-500 hover:text-white hover:bg-red-500 focus:bg-red-500 focus:text-white font-bold transition-all rounded-xl px-4 py-2.5"
+                    onClick={logoutHandler}
+                  >
+                    <LogOut className="mr-3 h-4 w-4" />
+                    <span>Log out</span>
+                  </DropdownMenuItem>
+                </div>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

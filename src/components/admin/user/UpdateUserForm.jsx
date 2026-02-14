@@ -186,7 +186,7 @@ const UpdateUserForm = ({ userDetail, shwoForm, setShowForm }) => {
                 />
               </div>
               <button
-                className="mt-4 bg-[#4318FF] text-white py-3.5 rounded-2xl font-bold shadow-[0_4px_14px_0_rgba(67,24,255,0.39)] hover:shadow-[0_6px_20px_rgba(67,24,255,0.23)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer"
+                className="mt-4 bg-[#4318FF] text-white py-2.5 rounded-2xl text-sm font-bold shadow-[0_4px_14px_0_rgba(67,24,255,0.39)] hover:shadow-[0_6px_20px_rgba(67,24,255,0.23)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer"
                 type="submit"
               >
                 Update Information
