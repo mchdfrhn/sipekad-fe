@@ -15,7 +15,7 @@ const postrequest = async (token, { type, message }) => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
 
     return response.data;
@@ -37,9 +37,8 @@ const getRequest = async (userId, page = 1, filterStatus = "") => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
-    
 
     return response.data;
   } catch (err) {
@@ -66,7 +65,6 @@ export const getRequestDetail = async (requestId, setData, setResponses) => {
       setData(result.data);
       const id = result.data.id;
       await getResponseById(id, token, setResponses);
-
     }
   } catch (err) {
     console.error(err);
@@ -75,16 +73,20 @@ export const getRequestDetail = async (requestId, setData, setResponses) => {
 };
 
 // admin
-const getAllRequestForAdmin = async (pageNumber = 1, filterStatus = "") => {
+const getAllRequestForAdmin = async (
+  pageNumber = 1,
+  filterStatus = "",
+  filterType = "",
+) => {
   const token = localStorage.getItem("tokenKey");
   try {
     const result = await Axios.get(
-      `${BASE_URL}/request?page=${pageNumber}&limit=10&filterStatus=${filterStatus}`,
+      `${BASE_URL}/request?page=${pageNumber}&limit=10&filterStatus=${filterStatus}&filterType=${filterType}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
 
     const requests = await result.data;

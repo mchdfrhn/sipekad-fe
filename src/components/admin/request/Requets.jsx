@@ -1,17 +1,32 @@
-import { ArrowLeft, ArrowRight, Send,Eye } from "lucide-react";
+import { ArrowLeft, ArrowRight, Send, Eye, Filter } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getAllRequestForAdmin } from "../../../utils/api/request";
 import { Link } from "react-router";
-import FilterControl from "../../ui/SortControl";
-import { filterStatus } from "../../../utils/action";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const RequestAdmin = () => {
   const [requests, setRequests] = useState([]);
-  const [page, setPage] = useState(1); // curent page
+  const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
+  const limit = 10;
 
-  const getRequests = async (page = 1) => {
-    const requests = await getAllRequestForAdmin(page);
+  // Filter States
+  const [filterStatus, setFilterStatus] = useState("default");
+  const [filterType, setFilterType] = useState("default");
+
+  const getRequests = async (
+    p = 1,
+    status = filterStatus,
+    type = filterType,
+  ) => {
+    const requests = await getAllRequestForAdmin(p, status, type);
     if (requests.status === "success") {
       setRequests(requests.data);
       setPage(requests.page);
@@ -20,171 +35,339 @@ const RequestAdmin = () => {
   };
 
   const handlePageChange = async (p) => {
-    await getRequests(p);
+    setPage(p);
+    await getRequests(p, filterStatus, filterType);
+  };
+
+  const handleStatusChange = async (status) => {
+    setFilterStatus(status);
+    setPage(1); // Reset to page 1 on filter change
+    await getRequests(1, status, filterType);
+  };
+
+  const handleTypeChange = async (type) => {
+    setFilterType(type);
+    setPage(1); // Reset to page 1 on filter change
+    await getRequests(1, filterStatus, type);
   };
 
   useEffect(() => {
     getRequests(1);
   }, []);
 
-  const onChangeHandler = async (e) => {
-    const status = e.target.value;
-    let getAllData = status === "default";
-    await filterStatus(status, setRequests, setPage, setTotalPage, getAllData);
-  };
   return (
-    <>
-      <TablePengajuan requests={requests} onChangeHandler={onChangeHandler} />
-      <div className="flex gap-4 justify-end mt-4">
-        <button
-          onClick={() => handlePageChange(page - 1)}
-          className="size-8 rounded-full flex justify-center items-center bg-white shadow-md cursor-pointer disabled:text-gray-400"
-          disabled={page === 1}
-        >
-          <ArrowLeft />
-        </button>
-        {[...Array(totalPage)].map((_, index) => {
-          const pageNumber = index + 1;
-          return (
-            <div className="flex gap-2">
-              <button
-                onClick={() => handlePageChange(pageNumber)}
-                className="size-8 flex justify-center items-center rounded-full bg-white shadow-md"
-              >
-                {pageNumber}
-              </button>
-            </div>
-          );
-        })}
-        <button
-          onClick={() => handlePageChange(page + 1)}
-          className="size-8 rounded-full flex justify-center items-center bg-white shadow-md cursor-pointer disabled:text-gray-400"
-          disabled={page === totalPage}
-        >
-          <ArrowRight />
-        </button>
-      </div>
-    </>
+    <Card className="border-0 shadow-lg rounded-[20px] bg-white h-full flex flex-col">
+      <CardContent className="p-0 pb-6 flex-1 flex flex-col justify-between">
+        <TablePengajuan
+          requests={requests}
+          page={page}
+          limit={limit}
+          dontDisplayLink={false}
+          dontDisplayUsername={false}
+          onStatusFilter={handleStatusChange}
+          onTypeFilter={handleTypeChange}
+          currentStatus={filterStatus}
+          currentType={filterType}
+        />
+
+        {/* Pagination - Fixed at bottom */}
+        {totalPage > 1 && (
+          <div className="flex justify-center items-center gap-2 mt-auto pt-6 border-t border-gray-50">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => handlePageChange(page - 1)}
+              disabled={page === 1}
+              className="rounded-full hover:bg-gray-100 disabled:opacity-50"
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+
+            {[...Array(totalPage)].map((_, index) => {
+              const pageNumber = index + 1;
+              return (
+                <Button
+                  key={pageNumber}
+                  variant={page === pageNumber ? "default" : "ghost"}
+                  onClick={() => handlePageChange(pageNumber)}
+                  className={`h-8 w-8 rounded-full p-0 text-xs font-bold ${
+                    page === pageNumber
+                      ? "bg-[#4318FF] text-white hover:bg-[#3311CC]"
+                      : "text-gray-500 hover:bg-gray-100"
+                  }`}
+                >
+                  {pageNumber}
+                </Button>
+              );
+            })}
+
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => handlePageChange(page + 1)}
+              disabled={page === totalPage}
+              className="rounded-full hover:bg-gray-100 disabled:opacity-50"
+            >
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 
 export const TablePengajuan = ({
   requests,
+  page,
+  limit,
   dontDisplayLink,
   dontDisplayUsername,
-  onChangeHandler,
+  onStatusFilter,
+  onTypeFilter,
+  currentStatus,
+  currentType,
 }) => {
   const dataKey = [
     "No",
-    "Antrian",
-    "nama",
-    "Type",
-    "Created At",
-    "status",
-    "action",
+    "Nama Pemohon",
+    "Jenis Surat",
+    "Pesan",
+    "Tanggal",
+    "Status",
+    "Aksi",
   ];
+
+  // Calculate empty rows needed to maintain height
+  const emptyRows = limit - requests.length;
+
+  // Based on strings found in user request components
+  const typeOptions = [
+    { label: "Semua Jenis", value: "default" },
+    { label: "Mahasiswa Aktif", value: "Mahasiswa Aktif" },
+    { label: "Keterangan Cuti", value: "Keterangan Cuti" },
+    { label: "Keterangan Lulus", value: "Keterangan lulus" },
+    { label: "Pengunduran Diri", value: "Pengunduran diri" },
+    { label: "Transkrip Nilai", value: "Transkrip nilai" },
+    { label: "Surat Sempro", value: "Surat Sempro" },
+    { label: "Seminar KP", value: "Seminar Kp" },
+    { label: "Sidang Skripsi", value: "Sidang skripsi" },
+    { label: "Yudisium", value: "yudisium" },
+    { label: "Judul Skripsi", value: "Judul Skripsi" },
+    { label: "Judul Kerja Praktik", value: "Judul Kerja Praktik" },
+    { label: "Pengantar Kerja Praktik", value: "Pengantar Kerja Praktik" },
+    { label: "Penugasan Dosen (KP/Skripsi)", value: "Penugasan Dosen skripsi" },
+  ];
+
+  const statusOptions = [
+    { label: "Semua Status", value: "default" },
+    { label: "Pending", value: "pending" },
+    { label: "Selesai", value: "completed" },
+    { label: "Ditolak", value: "canceled" },
+  ];
+
   return (
-    <>
-      {!dontDisplayLink && (
-        <Link to={"/admin"} className="my-8 block">
-          <ArrowLeft />
-        </Link>
-      )}
-      <div className="px-4 py-6 bg-white rounded-md shadow-md w-full">
-        <h1 className="font-semibold md:text-xl uppercase">Pengajuan</h1>
-        <span className="inline-block w-8 h-1 bg-gray-800"></span>
-        <FilterControl onChangeHandler={onChangeHandler} />
-        <div className="overflow-x-auto py-8">
-          <table className="w-full">
-            <thead>
-              <tr>
-                {dontDisplayUsername
-                  ? dataKey.map(
-                      (data) =>
-                        data !== "nama" && (
-                          <th
-                            key={data}
-                            className="px-3 md:px-6 py-2 md:py-4 text-left text-sm font-semibold uppercase tracking-wide hidden md:table-cell"
-                          >
-                            {data}
-                          </th>
-                        )
-                    )
-                  : dataKey.map((data) => (
-                      <th
-                        key={data}
-                        className="px-3 md:px-6 py-2 md:py-4 text-left text-sm font-semibold uppercase tracking-wide hidden md:table-cell"
+    <div className="w-full overflow-x-auto">
+      <table className="w-full">
+        <thead>
+          <tr className="border-b border-gray-100">
+            {dataKey.map((header) => {
+              if (dontDisplayUsername && header === "Nama Pemohon") return null;
+
+              if (header === "Jenis Surat") {
+                return (
+                  <th key={header} className="px-6 py-3 text-left">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger className="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-wider hover:text-[#4318FF] focus:outline-none transition-colors">
+                        {header} <Filter className="h-3 w-3" />
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent
+                        align="start"
+                        className="bg-white max-h-[300px] overflow-y-auto"
                       >
-                        {data}
-                      </th>
-                    ))}
-              </tr>
-            </thead>
-            <tbody>
+                        {typeOptions.map((option) => (
+                          <DropdownMenuItem
+                            key={option.value}
+                            onClick={() =>
+                              onTypeFilter && onTypeFilter(option.value)
+                            }
+                            className={`cursor-pointer ${currentType === option.value ? "bg-blue-50 text-[#4318FF]" : ""}`}
+                          >
+                            {option.label}
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </th>
+                );
+              }
+
+              if (header === "Status") {
+                return (
+                  <th key={header} className="px-6 py-3 text-left">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger className="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-wider hover:text-[#4318FF] focus:outline-none transition-colors">
+                        {header} <Filter className="h-3 w-3" />
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="start" className="bg-white">
+                        {statusOptions.map((option) => (
+                          <DropdownMenuItem
+                            key={option.value}
+                            onClick={() =>
+                              onStatusFilter && onStatusFilter(option.value)
+                            }
+                            className={`cursor-pointer ${currentStatus === option.value ? "bg-blue-50 text-[#4318FF]" : ""}`}
+                          >
+                            {option.label}
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </th>
+                );
+              }
+
+              return (
+                <th
+                  key={header}
+                  className="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider whitespace-nowrap"
+                >
+                  {header}
+                </th>
+              );
+            })}
+          </tr>
+        </thead>
+        <tbody>
+          {requests.length === 0 ? (
+            <tr>
+              <td
+                colSpan={dataKey.length}
+                className="px-6 py-8 text-center text-gray-500 text-sm"
+              >
+                Tidak ada data pengajuan yang ditemukan.
+              </td>
+            </tr>
+          ) : (
+            <>
               {requests.map((value, index) => (
                 <tr
                   key={index}
-                  className={`${ index % 2 === 0 && "bg-gray-200/80" } flex flex-row hover:shadow-md cursor-pointer transition-all transition-duration justify-between gap-4 items-center md:table-row mb-4 md:mb-0 md:border-b-4 border-gray-600 md:border-none md:p-0`}
+                  className={`group transition-colors border-b border-gray-50 last:border-0 hover:bg-blue-50/50 ${
+                    index % 2 === 0 ? "bg-white" : "bg-gray-50/50"
+                  }`}
                 >
-                  <td className="md:px-6 py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">
-                    <Link to={`/admin/pengajuan/${value.id}`}>{index + 1}</Link>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {/* Updated indexing logic: (page - 1) * limit + mapped index + 1 */}
+                    <span className="text-sm font-bold text-[#2B3674]">
+                      {(page - 1) * limit + index + 1}
+                    </span>
                   </td>
-                  <td className="md:px-6 py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">
-                    <Link to={`/admin/pengajuan/${value.id}`}>
-                      {value.queue}
-                    </Link>
-                  </td>
+
                   {!dontDisplayUsername && (
-                    <td className="md:px-6 py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">
-                      <Link to={`/admin/pengajuan/${value.id}`}>
-                        {value.full_name}
-                      </Link>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center gap-3">
+                        <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-[#4318FF] font-bold text-xs">
+                          {value.full_name?.charAt(0) || "U"}
+                        </div>
+                        <span className="text-sm font-bold text-[#2B3674]">
+                          {value.full_name}
+                        </span>
+                      </div>
                     </td>
                   )}
 
-                  <td className="md:px-6 py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">
-                    <Link to={`/admin/pengajuan/${value.id}`}>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className="text-sm font-bold text-[#2B3674]">
                       {value.type}
-                    </Link>
-                  </td>
-                  <td className="md:px-6 hidden py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">
-                    <Link to={`/admin/pengajuan/${value.id}`}>
-                      {new Date(value.updated_at).toLocaleDateString("id-ID", {
-                        year: "numeric",
-                        month: "2-digit",
-                        day: "2-digit",
-                      })}
-                    </Link>
-                  </td>
-                  <td className="md:px-6 uppercase py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">
-                    <span
-                      className={`px-2 py-1 rounded-md ${
-                        value.status === "completed" &&
-                        "bg-green-300 text-green-800"
-                      } ${
-                        value.status === "pending" &&
-                        "bg-yellow-400 text-yellow-800"
-                      } ${
-                        value.status === "canceled" && "bg-red-400 text-red-800"
-                      }`}
-                    >
-                      {value.status}
                     </span>
                   </td>
-                  <td className="md:px-6 py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">
-                    <Link to={`/admin/pengajuan/${ value.id }`} className={`block size-8 md:size-10 ${ value.status !== "pending" ? "bg-blue-500/50":"bg-green-500/40" } rounded-md flex justify-center items-center`}>
-                      {value.status !== "pending" 
-                        ? <Eye className="text-blue-800" />
-                        : <Send className="text-green-800" />}
+
+                  <td className="px-6 py-4 whitespace-nowrap max-w-[300px]">
+                    <span
+                      className="text-sm text-gray-600 block truncate"
+                      title={value.message}
+                    >
+                      {value.message}
+                    </span>
+                  </td>
+
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className="text-sm font-bold text-[#2B3674]">
+                      {new Date(value.updated_at).toLocaleDateString("id-ID", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </span>
+                  </td>
+
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span
+                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold capitalize
+                        ${
+                          value.status === "completed"
+                            ? "bg-green-100 text-green-600"
+                            : value.status === "pending"
+                              ? "bg-orange-100 text-orange-600"
+                              : "bg-red-100 text-red-600"
+                        }`}
+                    >
+                      {value.status === "completed"
+                        ? "Selesai"
+                        : value.status === "pending"
+                          ? "Menunggu"
+                          : "Ditolak"}
+                    </span>
+                  </td>
+
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <Link to={`/admin/pengajuan/${value.id}`}>
+                      <Button
+                        size="sm"
+                        className={`rounded-full px-4 font-bold shadow-none ${
+                          value.status === "pending"
+                            ? "bg-green-100 text-green-600 hover:bg-green-200"
+                            : "bg-blue-100 text-blue-600 hover:bg-blue-200"
+                        }`}
+                      >
+                        {value.status === "pending" ? (
+                          <>
+                            <Send className="mr-2 h-3.5 w-3.5" />
+                            Proses
+                          </>
+                        ) : (
+                          <>
+                            <Eye className="mr-2 h-3.5 w-3.5" />
+                            Detail
+                          </>
+                        )}
+                      </Button>
                     </Link>
                   </td>
                 </tr>
               ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </>
+              {/* Render Empty Rows to maintain height */}
+              {emptyRows > 0 &&
+                [...Array(emptyRows)].map((_, i) => (
+                  <tr
+                    key={`empty-${i}`}
+                    className="border-b border-gray-50 last:border-0 h-[69px]"
+                  >
+                    {" "}
+                    {/* Approximate height of a row with content */}
+                    {dataKey.map((_, j) => (
+                      <td key={j} className="px-6 py-4 whitespace-nowrap">
+                        &nbsp;
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+            </>
+          )}
+        </tbody>
+      </table>
+    </div>
   );
 };
 

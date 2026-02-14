@@ -17,10 +17,15 @@ export const formatPathToBreadcrumb = (path) => {
     const segmentPath = `/${segments.slice(0, index + 1).join("/")}`;
 
     // Format the label (capitalize, remove hyphens)
-    const label = segment
+    let label = segment
       .replace(/-/g, " ")
       .replace(/_/g, " ")
       .replace(/\b\w/g, (char) => char.toUpperCase());
+
+    // Customize specific path names (optional - commented out to keep Admin as Admin in breadcrumbs)
+    // if (label === "Admin") {
+    //   label = "Dashboard";
+    // }
 
     return {
       label,
