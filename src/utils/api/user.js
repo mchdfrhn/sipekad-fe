@@ -18,7 +18,7 @@ const getUser = async (token) => {
 };
 
 const updateProfile = async (
-  { username, email, phone, url_photo },
+  { username, email, phone, url_photo, full_name, nim, nik, prodi },
   updateUserData,
   updateUser,
   setShowProfile,
@@ -29,12 +29,16 @@ const updateProfile = async (
   const { id } = user;
   try {
     const response = await Axios.put(
-      `${BASE_URL}/users/user/${id}`,
+      `${BASE_URL}/users/${id}`,
       {
         username,
         email,
         phone,
         url_photo,
+        full_name,
+        nim,
+        nik,
+        prodi,
       },
       {
         headers: {
@@ -45,13 +49,14 @@ const updateProfile = async (
     );
     if (response.data.status === "success") {
       updateUserData(updateUser);
-      setShowProfile(!showProfile);
+      if (setShowProfile) setShowProfile(!showProfile);
     }
+    return response.data;
   } catch (err) {
     console.error(err);
     return {
       status: "fail",
-      message: err.response.data.message,
+      message: err.response?.data?.message || "Internal server error",
     };
   }
 };
@@ -179,6 +184,26 @@ export const updateUserForAdmin = async (
       },
     );
 
+    return result.data;
+  } catch (err) {
+    return err.response.data;
+  }
+};
+
+export const changePassword = async (
+  token,
+  { currentPassword, newPassword },
+) => {
+  try {
+    const result = await axios.put(
+      `${BASE_URL}/users/change-password`,
+      { currentPassword, newPassword },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
     return result.data;
   } catch (err) {
     return err.response.data;

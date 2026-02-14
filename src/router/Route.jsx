@@ -10,6 +10,7 @@ import Dashboard from "../pages/Dashboard";
 import DashboardHome from "../components/Dashboard/DashboardHome";
 import DashboardRequest from "../components/Dashboard/DashboardRequest";
 import DashboardUser from "../components/Dashboard/DashboardUser";
+import Settings from "../pages/Settings";
 
 // admin
 import LayoutAdmin from "../components/admin/LayoutAdmin";
@@ -89,6 +90,10 @@ const Router = createBrowserRouter([
             Component: UserBio,
           },
         ],
+      },
+      {
+        path: "settings",
+        Component: Settings,
       },
       {
         path: "request",
@@ -223,6 +228,10 @@ const Router = createBrowserRouter([
             Component: RequestDetail,
           },
         ],
+      },
+      {
+        path: "settings",
+        Component: Settings,
       },
     ],
   },

@@ -43,9 +43,9 @@ const kategoriPermintaan = [
 ];
 
 export const STUDENT_PRODI = {
-    TEKNIK_INFORMATIKA: "teknik informatika",
-    TEKNIK_LINGKUNGAN: "teknik lingkungan",
-    TEKNIK_SIPIL: "teknik sipil"
+    TEKNIK_INFORMATIKA: "Teknik Informatika",
+    TEKNIK_LINGKUNGAN: "Teknik Lingkungan",
+    TEKNIK_SIPIL: "Teknik Sipil"
 }
 
 export const USER_ROLE = {

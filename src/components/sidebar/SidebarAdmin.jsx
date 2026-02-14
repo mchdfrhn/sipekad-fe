@@ -1,4 +1,4 @@
-import { LayoutDashboard, User, Send, Info } from "lucide-react";
+import { LayoutDashboard, User, Send, Info, Settings } from "lucide-react";
 import { Link, useLocation } from "react-router";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";

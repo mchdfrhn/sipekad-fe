@@ -1,6 +1,5 @@
-import { AnimatePresence } from "motion/react";
+import { AnimatePresence, motion as Motion } from "motion/react";
 import { CheckCircle, AlertCircle, X, Info } from "lucide-react";
-import { motion } from "motion/react";
 import { useEffect } from "react";
 
 const Toast = ({ message, type = "success", onClose, duration = 3000 }) => {
@@ -33,7 +32,7 @@ const Toast = ({ message, type = "success", onClose, duration = 3000 }) => {
   const style = variants[type] || variants.success;
 
   return (
-    <motion.div
+    <Motion.div
       initial={{ opacity: 0, y: 50, scale: 0.9 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
@@ -41,7 +40,13 @@ const Toast = ({ message, type = "success", onClose, duration = 3000 }) => {
     >
       <div className="shrink-0">{style.icon}</div>
       <div className="flex-1">
-        <p className="text-sm font-bold text-[#2B3674]">{message}</p>
+        <p className="text-sm font-bold text-[#2B3674]">
+          {typeof message === "string"
+            ? message
+            : typeof message === "object"
+              ? JSON.stringify(message)
+              : String(message)}
+        </p>
       </div>
       <button
         onClick={onClose}
@@ -51,13 +56,13 @@ const Toast = ({ message, type = "success", onClose, duration = 3000 }) => {
       </button>
 
       {/* Progress Bar */}
-      <motion.div
+      <Motion.div
         initial={{ width: "100%" }}
         animate={{ width: "0%" }}
         transition={{ duration: duration / 1000, ease: "linear" }}
         className={`absolute bottom-0 left-0 h-1 ${style.progress}`}
       />
-    </motion.div>
+    </Motion.div>
   );
 };
 

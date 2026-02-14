@@ -396,7 +396,10 @@ const LayoutAdmin = () => {
                   </p>
                 </div>
                 <div className="p-2">
-                  <DropdownMenuItem className="cursor-pointer font-bold text-gray-600 focus:bg-indigo-50 focus:text-[#4318FF] rounded-xl px-4 py-2.5 transition-colors">
+                  <DropdownMenuItem
+                    className="cursor-pointer font-bold text-gray-600 focus:bg-indigo-50 focus:text-[#4318FF] rounded-xl px-4 py-2.5 transition-colors"
+                    onClick={() => navigate("/admin/settings")}
+                  >
                     <Settings className="mr-3 h-4 w-4 text-gray-400 group-focus:text-[#4318FF]" />
                     <span>Profile Settings</span>
                   </DropdownMenuItem>

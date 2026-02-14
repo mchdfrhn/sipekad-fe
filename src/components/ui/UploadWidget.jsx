@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, memo } from "react";
 import { CLD_NAME } from "../../utils/cloudinary.config";
 import { Upload } from "lucide-react";
 
@@ -17,7 +17,7 @@ const UploadWidget = ({ setPublicId }) => {
         if (publicId) {
           setPublicId(secure_url);
         }
-      }
+      },
     );
   }, [setPublicId]);
 
@@ -34,4 +34,4 @@ const UploadWidget = ({ setPublicId }) => {
   );
 };
 
-export default UploadWidget;
+export default memo(UploadWidget);

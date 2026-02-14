@@ -2,7 +2,7 @@ import { Outlet, useNavigate } from "react-router";
 import Sidebar from "../components/sidebar/Sidebar";
 import HeaderDashboard from "../components/Header/HeaderDashboard";
 import { useState, useEffect } from "react";
-import { LayoutDashboard, User, Send } from "lucide-react";
+import { LayoutDashboard, User, Send, Settings } from "lucide-react";
 
 const Dashboard = () => {
   const navigate = useNavigate();
