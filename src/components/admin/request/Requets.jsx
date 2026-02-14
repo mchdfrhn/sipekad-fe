@@ -4,6 +4,7 @@ import { getAllRequestForAdmin } from "../../../utils/api/request";
 import { Link, useSearchParams } from "react-router";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { LoadingOverlay } from "@/components/ui/Loading";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,6 +19,7 @@ const RequestAdmin = () => {
   const limit = 15;
   const [searchParams] = useSearchParams();
   const searchTerm = searchParams.get("q") || "";
+  const [loading, setLoading] = useState(true);
 
   // Filter States
   const [filterStatus, setFilterStatus] = useState("default");
@@ -30,6 +32,7 @@ const RequestAdmin = () => {
       type = filterType,
       search = searchTerm,
     ) => {
+      setLoading(true);
       const requests = await getAllRequestForAdmin(
         p,
         limit,
@@ -42,6 +45,7 @@ const RequestAdmin = () => {
         setPage(requests.page);
         setTotalPage(requests.totalPage);
       }
+      setLoading(false);
     },
     [filterStatus, filterType, searchTerm, limit],
   );
@@ -68,8 +72,9 @@ const RequestAdmin = () => {
   }, [getRequests]);
 
   return (
-    <Card className="border-0 shadow-lg rounded-[20px] bg-white h-full flex flex-col">
-      <CardContent className="p-0 pb-6 flex-1 flex flex-col justify-between">
+    <Card className="border-0 shadow-lg rounded-[20px] bg-white h-full flex flex-col relative overflow-hidden">
+      <CardContent className="p-0 pb-6 flex-1 flex flex-col justify-between relative">
+        {loading && <LoadingOverlay />}
         <TablePengajuan
           requests={requests}
           page={page}

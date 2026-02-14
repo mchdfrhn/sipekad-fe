@@ -14,7 +14,7 @@ import DashboardUser from "../components/Dashboard/DashboardUser";
 // admin
 import LayoutAdmin from "../components/admin/LayoutAdmin";
 import User from "../components/admin/user/User";
-import RequestLayout from "../components/admin/RequestLayout"
+import RequestLayout from "../components/admin/RequestLayout";
 import MainAdmin from "../components/admin/MainAdmin";
 import LayoutUser from "../components/admin/LayoutUser";
 import UserDetail from "../components/admin/user/UserDetail";
@@ -78,7 +78,7 @@ const Router = createBrowserRouter([
       },
       {
         path: ":id",
-        Component: RequestDetailUser
+        Component: RequestDetailUser,
       },
       {
         path: "user",
@@ -206,7 +206,7 @@ const Router = createBrowserRouter([
           },
           {
             path: ":id",
-            Component: UserDetail
+            Component: UserDetail,
           },
         ],
       },
@@ -216,13 +216,13 @@ const Router = createBrowserRouter([
         children: [
           {
             index: true,
-            Component: RequestAdmin
+            Component: RequestAdmin,
           },
           {
             path: ":id",
-            Component: RequestDetail
-          }
-        ]
+            Component: RequestDetail,
+          },
+        ],
       },
     ],
   },

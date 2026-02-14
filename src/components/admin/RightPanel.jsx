@@ -92,16 +92,14 @@ const ActivityItem = ({
         <p className="text-sm font-medium text-[#2B3674] leading-relaxed">
           {type === "response" ? (
             <>
-              <span className="font-bold text-[#4318FF]">{admin_name}</span>{" "}
-              responded to <span className="font-bold">{request_type}</span> for{" "}
+              Responded to <span className="font-bold">{request_type}</span> for{" "}
               {requester_name}
             </>
           ) : (
             <>
-              <span className="font-bold text-[#4318FF]">{admin_name}</span>{" "}
-              updated status of{" "}
-              <span className="font-bold">{request_type}</span> {requester_name}{" "}
-              to <span className={`font-bold ${colorClass}`}>{status}</span>
+              Status of <span className="font-bold">{request_type}</span>{" "}
+              {requester_name} updated to{" "}
+              <span className={`font-bold ${colorClass}`}>{status}</span>
             </>
           )}
         </p>

@@ -399,10 +399,17 @@ const LayoutAdmin = () => {
                     <Settings className="mr-3 h-4 w-4 text-gray-400 group-focus:text-[#4318FF]" />
                     <span>Profile Settings</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer font-bold text-gray-600 focus:bg-indigo-50 focus:text-[#4318FF] rounded-xl px-4 py-2.5 transition-colors">
-                    <HelpCircle className="mr-3 h-4 w-4 text-gray-400 group-focus:text-[#4318FF]" />
-                    <span>Support Interface</span>
-                  </DropdownMenuItem>
+                  <a
+                    href={`https://wa.me/${import.meta.env.VITE_WHATSAPP_NUMBER}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block"
+                  >
+                    <DropdownMenuItem className="cursor-pointer font-bold text-gray-600 focus:bg-indigo-50 focus:text-[#4318FF] rounded-xl px-4 py-2.5 transition-colors">
+                      <HelpCircle className="mr-3 h-4 w-4 text-gray-400 group-focus:text-[#4318FF]" />
+                      <span>Contact Support</span>
+                    </DropdownMenuItem>
+                  </a>
                   <DropdownMenuSeparator className="my-1 bg-gray-100" />
                   <DropdownMenuItem
                     className="cursor-pointer text-red-500 hover:text-white hover:bg-red-500 focus:bg-red-500 focus:text-white font-bold transition-all rounded-xl px-4 py-2.5"

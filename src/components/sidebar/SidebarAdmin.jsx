@@ -1,4 +1,4 @@
-import { LayoutDashboard, User, Send } from "lucide-react";
+import { LayoutDashboard, User, Send, Info } from "lucide-react";
 import { Link, useLocation } from "react-router";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
@@ -69,7 +69,7 @@ const SidebarAdmin = ({ className }) => {
                   className={cn(
                     "group flex items-center gap-4 px-5 py-3 rounded-2xl font-semibold transition-all duration-300",
                     isActive
-                      ? "bg-indigo-100/50 text-[#4318FF] font-extrabold shadow-sm border border-indigo-100"
+                      ? "bg-indigo-100/50 text-[#4318FF] font-extrabold shadow-sm"
                       : "text-[#A3AED0] hover:text-[#4318FF] hover:bg-gray-100/50",
                   )}
                 >
@@ -96,6 +96,22 @@ const SidebarAdmin = ({ className }) => {
             );
           })}
         </div>
+      </div>
+
+      {/* Footer / Support */}
+      <div className="px-4 mt-auto pt-6">
+        <Separator className="mb-6 opacity-50" />
+        <a
+          href={`https://wa.me/${import.meta.env.VITE_WHATSAPP_NUMBER}?text=${encodeURIComponent("Saya mau melaporkan ada bug pada aplikasi SIPEKAD, berikut list bug nya...")}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group flex items-center gap-4 px-5 py-2 rounded-2xl font-bold bg-red-50 text-red-500 hover:bg-red-100 transition-all duration-300 shadow-sm border border-red-100/50"
+        >
+          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-white shadow-sm group-hover:scale-110 transition-transform">
+            <Info size={18} />
+          </div>
+          <span className="text-sm tracking-wide">Report Bug</span>
+        </a>
       </div>
     </div>
   );

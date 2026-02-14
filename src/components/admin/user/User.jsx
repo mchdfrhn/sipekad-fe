@@ -12,7 +12,8 @@ import { getAllUserForAdmin } from "../../../utils/api/user";
 import { Link, useSearchParams } from "react-router";
 import AddUserForm from "./AddUserForm";
 import { deleteUserForAdmin } from "../../../utils/action";
-import Alert from "../../ui/Alert";
+import ConfirmDialog from "../../ui/ConfirmDialog";
+import { LoadingOverlay, TableSkeleton } from "@/components/ui/Loading";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -37,17 +38,21 @@ const User = () => {
   const [filterProdi, setFilterProdi] = useState("default");
   const [searchParams] = useSearchParams();
   const searchTerm = searchParams.get("q") || "";
+  const [loading, setLoading] = useState(true);
 
   const handlePageChange = async (p) => {
+    setLoading(true);
     const users = await getAllUserForAdmin(p, limit, filterProdi, searchTerm);
     if (users.status === "success") {
       setUsers(users.data);
       setPage(users.page);
       setTotalPage(users.totalPage);
     }
+    setLoading(false);
   };
 
   const handleFilterProdi = async (prodi) => {
+    setLoading(true);
     setFilterProdi(prodi);
     setPage(1);
     const result = await getAllUserForAdmin(1, limit, prodi, searchTerm);
@@ -56,10 +61,12 @@ const User = () => {
       setTotalPage(result.totalPage);
       setPage(result.page);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
     const getUsers = async () => {
+      setLoading(true);
       const result = await getAllUserForAdmin(
         1,
         limit,
@@ -71,6 +78,7 @@ const User = () => {
         setTotalPage(result.totalPage);
         setPage(result.page);
       }
+      setLoading(false);
     };
 
     getUsers();
@@ -139,7 +147,7 @@ const User = () => {
         createPortal(
           <Button
             onClick={() => setShowForm(!showForm)}
-            className="bg-[#4318FF] hover:bg-[#3311CC] text-white rounded-full px-5 py-2.5 text-sm font-bold shadow-[0_4px_14px_0_rgba(67,24,255,0.39)] hover:shadow-[0_6px_20px_rgba(67,24,255,0.23)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 mr-2"
+            className="bg-[#4318FF] hover:bg-[#3311CC] text-white rounded-full px-4 py-3 text-sm font-bold shadow-[0_4px_14px_0_rgba(67,24,255,0.39)] hover:shadow-[0_6px_20px_rgba(67,24,255,0.23)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 mr-2"
           >
             <Plus className="mr-2 h-4 w-4" /> Tambah User
           </Button>,
@@ -148,7 +156,8 @@ const User = () => {
 
       <div className="flex flex-col h-full gap-4">
         <Card className="border-0 shadow-lg rounded-[20px] bg-white flex-1 flex flex-col">
-          <CardContent className="p-0 pb-6 flex-1 flex flex-col justify-between">
+          <CardContent className="p-0 pb-6 flex-1 flex flex-col justify-between relative">
+            {loading && <LoadingOverlay />}
             <div className="w-full overflow-x-auto">
               <table className="w-full">
                 <thead>
@@ -338,15 +347,16 @@ const User = () => {
             )}
           </CardContent>
         </Card>
-      </div>
-
-      {alertDelete && (
-        <Alert
-          onYesHundler={confirmDelete}
-          setDisplay={setAlertDelete}
-          isDisplay={alertDelete}
+        <ConfirmDialog
+          isOpen={alertDelete}
+          onClose={() => setAlertDelete(false)}
+          onConfirm={confirmDelete}
+          title="Delete User"
+          description="Are you sure you want to delete this user? This action cannot be undone and will remove all associated data."
+          confirmText="Delete User"
+          variant="danger"
         />
-      )}
+      </div>
     </>
   );
 };

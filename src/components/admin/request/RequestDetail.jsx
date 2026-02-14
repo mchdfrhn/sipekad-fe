@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import IframeRequest from "./IframeRequest";
 import SuccessModal from "../../ui/SuccessModal";
+import ConfirmDialog from "../../ui/ConfirmDialog";
 import {
   Card,
   CardContent,
@@ -51,6 +52,7 @@ const RequestDetail = () => {
   const [isDisplay, setIsDisplay] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [errMessage, setErrorMessage] = useState("");
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const fileUrl = requestDetail?.url
     ? requestDetail.url.startsWith("http")
@@ -94,8 +96,16 @@ const RequestDetail = () => {
     }
   };
 
-  const onAddResponseHandler = async (e) => {
+  const onAddResponseHandler = (e) => {
     e.preventDefault();
+    if (!message && isActive) {
+      setErrorMessage("Pesan balasan harus diisi untuk menyetujui.");
+      return;
+    }
+    setShowConfirm(true);
+  };
+
+  const handleFinalSubmit = async () => {
     setLoading(true);
     addResponseHandler(
       { id, message, isComplete: isActive, file },
@@ -579,6 +589,20 @@ const RequestDetail = () => {
           </div>
         </div>
       )}
+
+      <ConfirmDialog
+        isOpen={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        onConfirm={handleFinalSubmit}
+        title={isActive ? "Setujui Pengajuan?" : "Tolak Pengajuan?"}
+        description={
+          isActive
+            ? "Apakah Anda yakin ingin menyetujui pengajuan ini? Mahasiswa akan menerima notifikasi bahwa pengajuan mereka telah selesai."
+            : "Apakah Anda yakin ingin menolak pengajuan ini? Harap pastikan alasan penolakan sudah jelas dalam pesan balasan."
+        }
+        confirmText={isActive ? "Ya, Setujui" : "Ya, Tolak"}
+        variant={isActive ? "primary" : "danger"}
+      />
     </div>
   );
 };
