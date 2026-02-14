@@ -49,23 +49,26 @@
   }
 
   /* Buttons - Refined */
+  /* Remove button-base as a dependency for @apply and repeat styles or use simple CSS inheritance if applicable, 
+     but for @apply simplicity we just repeat the utility classes. */
+
   .button-base {
     @apply rounded-xl px-6 py-3 font-bold text-white transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
   }
 
   .button-blue {
-    @apply button-base bg-[#4318FF] hover:bg-[#3311CC];
+    @apply rounded-xl px-6 py-3 font-bold text-white transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-[#4318FF] hover:bg-[#3311CC];
   }
 
   /* Legacy Button classes kept for compatibility, but updated style */
   .button-yellow {
-    @apply button-base bg-amber-400;
+    @apply rounded-xl px-6 py-3 font-bold text-white transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-amber-400;
   }
   .button-green {
-    @apply button-base bg-emerald-500;
+    @apply rounded-xl px-6 py-3 font-bold text-white transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-emerald-500;
   }
   .button-red {
-    @apply button-base bg-red-500;
+    @apply rounded-xl px-6 py-3 font-bold text-white transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-red-500;
   }
 
   .input {

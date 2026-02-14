@@ -74,7 +74,7 @@ const LayoutAdmin = () => {
   return (
     <div className="flex h-screen w-full bg-[#F4F7FE] overflow-hidden">
       {/* Sidebar - Fixed on Desktop */}
-      <div className="hidden md:block w-[280px] shrink-0 border-r bg-white h-full relative z-20">
+      <div className="hidden md:block w-[280px] shrink-0 bg-white h-full relative z-20">
         <SidebarAdmin />
       </div>
 

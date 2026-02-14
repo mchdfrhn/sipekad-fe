@@ -9,14 +9,34 @@ import {
 } from "recharts";
 import { useState, useEffect } from "react";
 import { getDistribusiPengajuan } from "../../utils/api/dashboardValue";
-import { format, parseISO, isSameMonth, isValid } from "date-fns";
+import { format, parseISO, isValid } from "date-fns";
 import { id } from "date-fns/locale";
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
+    // label is the formatted_date string "YYYY-MM-DD" from payload
+    let dateObj;
+    try {
+      // Try parsing assuming ISO YYYY-MM-DD
+      const parts = typeof label === "string" ? label.split("-") : [];
+      if (parts.length === 3) {
+        dateObj = new Date(parts[0], parts[1] - 1, parts[2]); // Month is 0-indexed in JS Date
+      } else {
+        dateObj = parseISO(label);
+      }
+
+      if (!isValid(dateObj)) dateObj = new Date(label);
+    } catch (e) {
+      dateObj = new Date();
+    }
+
+    const formattedLabel = isValid(dateObj)
+      ? format(dateObj, "d MMMM yyyy", { locale: id })
+      : label;
+
     return (
       <div className="bg-white p-3 border border-gray-100 shadow-xl rounded-xl">
-        <p className="font-bold text-[#2B3674] mb-1">{label}</p>
+        <p className="font-bold text-[#2B3674] mb-1">{formattedLabel}</p>
         <p className="text-[#4318FF] font-medium text-sm">
           Pengajuan: <span className="font-bold">{payload[0].value}</span>
         </p>
@@ -34,47 +54,29 @@ const DistribusiPengajuan = () => {
     getDistribusiPengajuan(setLabel, setDataPengajuan);
   }, []);
 
-  const formatXAxis = (tickItem, index) => {
-    if (!dataPengajuan || dataPengajuan.length === 0) return tickItem;
+  const formatXAxis = (tickItem) => {
+    // tickItem matches the connection data "formatted_date" -> "YYYY-MM-DD"
+    if (!tickItem) return "";
 
-    // Safety check: ensure index is within bounds
-    const currentItem = dataPengajuan[index];
-    if (!currentItem) return tickItem;
-
-    // Try to parse the date. Assuming 'name' is a date string like YYYY-MM-DD or ISO
-    let date;
-    try {
-      date = parseISO(currentItem.name);
-      if (!isValid(date)) {
-        // If parseISO fails, try new Date
-        date = new Date(currentItem.name);
-        if (!isValid(date)) return currentItem.name; // Fallback to original string
+    if (typeof tickItem === "string") {
+      const parts = tickItem.split("-");
+      // If string is "2026-02-14", parts is ["2026", "02", "14"]
+      if (parts.length === 3) {
+        // Return only the day part, parsing to int removes leading zeros (e.g. "01" -> "1")
+        return parseInt(parts[2], 10).toString();
       }
-    } catch (e) {
-      return currentItem.name;
     }
 
-    // Always show full date for the first item
-    if (index === 0) {
-      return format(date, "d MMM yyyy", { locale: id });
-    }
-
-    // Check if month/year changed from previous item
-    const prevItem = dataPengajuan[index - 1];
-    let prevDate;
+    // Fallback attempts
     try {
-      prevDate = parseISO(prevItem.name);
-      if (!isValid(prevDate)) prevDate = new Date(prevItem.name);
-    } catch {
-      return format(date, "d", { locale: id });
+      const date = parseISO(tickItem);
+      if (isValid(date)) {
+        return format(date, "d", { locale: id });
+      }
+      return tickItem;
+    } catch (e) {
+      return tickItem;
     }
-
-    if (!isSameMonth(date, prevDate)) {
-      return format(date, "d MMM yyyy", { locale: id });
-    }
-
-    // Default: just show day
-    return format(date, "d", { locale: id });
   };
 
   return (
@@ -107,8 +109,7 @@ const DistribusiPengajuan = () => {
             tick={{ fill: "#A3AED0", fontSize: 12 }}
             dy={10}
             tickFormatter={formatXAxis}
-            interval={0}
-            minTickGap={10}
+            minTickGap={30}
           />
           <YAxis
             axisLine={false}
