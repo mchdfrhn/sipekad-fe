@@ -20,6 +20,7 @@ const NotificationItem = ({
   variant = "blue",
   onClick,
   is_read,
+  icon: Icon,
 }) => {
   const bgColors = {
     blue: "bg-blue-50 text-blue-500",

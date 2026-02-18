@@ -48,9 +48,9 @@ const DistribusiPengajuan = () => {
   const [dataPengajuan, setDataPengajuan] = useState([]);
 
   useEffect(() => {
-    // Generate last 7 days as default
-    const last7Days = Array.from({ length: 7 }, (_, i) => {
-      const date = subDays(new Date(), 6 - i);
+    // Generate last 30 days as default
+    const last30Days = Array.from({ length: 30 }, (_, i) => {
+      const date = subDays(new Date(), 29 - i);
       return {
         name: format(date, "yyyy-MM-dd"),
         uv: 0,
@@ -59,8 +59,8 @@ const DistribusiPengajuan = () => {
 
     getDistribusiPengajuan(null, (apiData) => {
       if (apiData && Array.isArray(apiData)) {
-        // Merge API data into our 7 days template
-        const mergedData = last7Days.map((defaultItem) => {
+        // Merge API data into our 30 days template
+        const mergedData = last30Days.map((defaultItem) => {
           const apiMatch = apiData.find(
             (item) => item.name === defaultItem.name,
           );
@@ -68,7 +68,7 @@ const DistribusiPengajuan = () => {
         });
         setDataPengajuan(mergedData);
       } else {
-        setDataPengajuan(last7Days);
+        setDataPengajuan(last30Days);
       }
     });
   }, []);
