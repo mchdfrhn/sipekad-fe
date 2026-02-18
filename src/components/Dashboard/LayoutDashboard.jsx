@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { formatPathToBreadcrumb } from "../../utils/helpers";
 import { useUser } from "../../utils/hooks/userContext";
+import { cn } from "@/lib/utils";
 import {
   Search,
   Bell,
@@ -89,6 +90,44 @@ const LayoutDashboard = () => {
     const newParams = new URLSearchParams(window.location.search);
     newParams.delete("q");
     setSearchParams(newParams, { replace: true });
+  };
+
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  const fetchDashboardData = async () => {
+    try {
+      const { getDashboardActivities } =
+        await import("../../utils/api/dashboardValue");
+      await getDashboardActivities(
+        (activities) => {
+          if (activities) console.log("Activities fetched:", activities.length);
+        },
+        (notifs) => {
+          setNotifications(notifs || []);
+          setUnreadCount(notifs?.filter((n) => !n.is_read).length || 0);
+        },
+      );
+    } catch (err) {
+      console.error("Error fetching notifications:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchDashboardData();
+    // Poll every 30 seconds for new notifications
+    const interval = setInterval(fetchDashboardData, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleMarkAsRead = async (id) => {
+    try {
+      const { markAsRead } = await import("../../utils/api/dashboardValue");
+      await markAsRead(id);
+      fetchDashboardData();
+    } catch (err) {
+      console.error("Error marking as read:", err);
+    }
   };
 
   useEffect(() => {
@@ -233,14 +272,78 @@ const LayoutDashboard = () => {
               </Button>
             </Link>
 
-            {/* Notification Bell (Placeholder for now) */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="relative rounded-full text-gray-400 hover:text-[#4318FF] transition-colors"
-            >
-              <Bell className="h-5 w-5" />
-            </Button>
+            {/* Notification Bell */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="relative rounded-full text-gray-400 hover:text-[#4318FF] transition-colors"
+                >
+                  <Bell className="h-5 w-5" />
+                  {unreadCount > 0 && (
+                    <span className="absolute top-2 right-2 flex h-2 w-2 shrink-0 rounded-full bg-red-500 ring-2 ring-white"></span>
+                  )}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                className="w-[350px] rounded-2xl shadow-xl border-none bg-white p-0 overflow-hidden font-bold"
+              >
+                <div className="bg-[#4318FF] px-6 py-4 flex items-center justify-between">
+                  <div>
+                    <p className="text-white text-sm font-bold">
+                      Notifications
+                    </p>
+                    <p className="text-white/70 text-[10px] uppercase tracking-wider font-medium">
+                      You have {unreadCount} unread messages
+                    </p>
+                  </div>
+                </div>
+                <div className="max-h-[400px] overflow-y-auto p-2 no-scrollbar">
+                  {notifications.length > 0 ? (
+                    notifications.map((notif) => (
+                      <DropdownMenuItem
+                        key={notif.id}
+                        onClick={() => handleMarkAsRead(notif.id)}
+                        className={cn(
+                          "cursor-pointer flex flex-col items-start gap-1 rounded-xl px-4 py-3 mb-1 transition-all",
+                          notif.is_read
+                            ? "text-gray-400 focus:bg-gray-50"
+                            : "text-[#2B3674] bg-blue-50/50 focus:bg-blue-50 border-l-4 border-[#4318FF]",
+                        )}
+                      >
+                        <div className="flex justify-between w-full">
+                          <span className="text-xs font-black uppercase tracking-wider">
+                            {notif.request_type}
+                          </span>
+                          <span className="text-[10px] text-gray-400 font-medium">
+                            {new Date(notif.time).toLocaleDateString("id-ID", {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </span>
+                        </div>
+                        <p className="text-sm font-bold leading-tight">
+                          {notif.title}
+                        </p>
+                        {!notif.is_read && (
+                          <span className="text-[10px] text-[#4318FF] font-bold mt-1">
+                            Click to mark as read
+                          </span>
+                        )}
+                      </DropdownMenuItem>
+                    ))
+                  ) : (
+                    <div className="py-8 text-center">
+                      <p className="text-gray-400 text-sm font-medium">
+                        No notifications yet
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             {/* Info Icon */}
             <Button
@@ -269,7 +372,7 @@ const LayoutDashboard = () => {
                       {user.full_name}
                     </p>
                     <p className="text-[10px] font-medium text-gray-400 uppercase">
-                      User
+                      {user.role}
                     </p>
                   </div>
                 </div>

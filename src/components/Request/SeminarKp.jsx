@@ -14,7 +14,7 @@ const ChildrenSempro = () => {
         content={" Link pengajuan transkrip nilai"}
       />
       <LinkTranskrip
-        path={"dashboard/request/suratpenugasan/dosentugasakhir"}
+        path={"/dashboard/request/suratpenugasan/dosentugasakhir"}
         content={"Link pengajuan surat penugasan dosen"}
       />
     </>
@@ -31,7 +31,7 @@ const SeminarKp = () => {
     e.preventDefault();
     setIsLoading(true);
     const result = await requestPengajuan(
-      "Seminar Kp",
+      "Seminar KP",
       message,
       file,
       null,

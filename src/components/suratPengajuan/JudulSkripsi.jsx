@@ -8,7 +8,7 @@ import { useToast } from "@/utils/hooks/useToast";
 const JudulSkripsi = () => {
   const { showToast } = useToast();
   const [message, setMessage] = useState("");
-  const [file, setFIle] = useState(null);
+  const [file, setFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const { syarat, title } = judulSkripsi;
 
@@ -28,7 +28,7 @@ const JudulSkripsi = () => {
     if (result && result.status === "success") {
       showToast("Pengajuan berhasil dikirim", "success");
       setMessage("");
-      setFIle(null);
+      setFile(null);
     } else {
       showToast(result?.message || "Gagal mengirim pengajuan", "error");
     }
@@ -42,7 +42,7 @@ const JudulSkripsi = () => {
         setMessage={setMessage}
         syarat={syarat}
         title={title}
-        setFile={setFIle}
+        setFile={setFile}
         isLoading={isLoading}
         children={
           <LinkTranskrip

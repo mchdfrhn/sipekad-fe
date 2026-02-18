@@ -8,7 +8,7 @@ import LinkTranskrip from "../ui/LinkTranskrip";
 const DosenSkripsi = () => {
   const { showToast } = useToast();
   const [message, setMessage] = useState("");
-  const [file, setFIle] = useState(null);
+  const [file, setFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const { syarat, title } = penugasanDosenSkripsi;
 
@@ -28,7 +28,7 @@ const DosenSkripsi = () => {
     if (result && result.status === "success") {
       showToast("Pengajuan berhasil dikirim", "success");
       setMessage("");
-      setFIle(null);
+      setFile(null);
     } else {
       showToast(result?.message || "Gagal mengirim pengajuan", "error");
     }
@@ -41,7 +41,7 @@ const DosenSkripsi = () => {
         setMessage={setMessage}
         syarat={syarat}
         title={title}
-        setFile={setFIle}
+        setFile={setFile}
         isLoading={isLoading}
         children={
           <LinkTranskrip

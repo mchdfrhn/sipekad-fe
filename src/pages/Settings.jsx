@@ -426,9 +426,9 @@ const Settings = () => {
                       <input
                         name="prodi"
                         value={profileData.prodi}
-                        onChange={handleProfileChange}
-                        className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-transparent rounded-xl focus:bg-white focus:ring-2 focus:ring-[#4318FF] transition-all outline-none text-sm font-medium"
+                        className="w-full pl-10 pr-4 py-2 bg-gray-100 border border-transparent rounded-xl outline-none text-sm font-medium cursor-not-allowed"
                         placeholder="Program Studi"
+                        disabled
                       />
                     </div>
                   </div>

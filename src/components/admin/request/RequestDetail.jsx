@@ -170,7 +170,7 @@ const RequestDetail = () => {
               className="gap-2 pl-0 hover:bg-transparent hover:text-[#4318FF] text-gray-500 transition-all"
             >
               <ArrowLeft className="h-6 w-6" />
-              <span className="text-lg font-bold">Kembali</span>
+              <span className="text-lg font-bold">Kembali ke Daftar</span>
             </Button>
           </Link>
         </div>
@@ -499,7 +499,7 @@ const RequestDetail = () => {
                       <div className="bg-gray-50 p-3 rounded-xl rounded-tl-none border border-gray-100">
                         <div className="flex justify-between items-start mb-2">
                           <span className="text-xs font-bold text-[#4318FF]">
-                            Admin Respon
+                            Respon: {res.admin_name || "Admin"}
                           </span>
                           <span className="text-[10px] text-gray-400">
                             {new Date(res.created_at).toLocaleDateString(

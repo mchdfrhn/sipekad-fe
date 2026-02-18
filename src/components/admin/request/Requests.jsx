@@ -160,17 +160,21 @@ export const TablePengajuan = ({
     { label: "Semua Jenis", value: "default" },
     { label: "Mahasiswa Aktif", value: "Mahasiswa Aktif" },
     { label: "Keterangan Cuti", value: "Keterangan Cuti" },
-    { label: "Keterangan Lulus", value: "Keterangan lulus" },
-    { label: "Pengunduran Diri", value: "Pengunduran diri" },
-    { label: "Transkrip Nilai", value: "Transkrip nilai" },
+    { label: "Keterangan Lulus", value: "Keterangan Lulus" },
+    { label: "Pengunduran Diri", value: "Pengunduran Diri" },
+    { label: "Transkrip Nilai", value: "Transkrip Nilai" },
     { label: "Surat Sempro", value: "Surat Sempro" },
-    { label: "Seminar KP", value: "Seminar Kp" },
-    { label: "Sidang Skripsi", value: "Sidang skripsi" },
-    { label: "Yudisium", value: "yudisium" },
+    { label: "Seminar KP", value: "Seminar KP" },
+    { label: "Sidang Skripsi", value: "Sidang Skripsi" },
+    { label: "Yudisium", value: "Yudisium" },
     { label: "Judul Skripsi", value: "Judul Skripsi" },
     { label: "Judul Kerja Praktik", value: "Judul Kerja Praktik" },
     { label: "Pengantar Kerja Praktik", value: "Pengantar Kerja Praktik" },
-    { label: "Penugasan Dosen (KP/Skripsi)", value: "Penugasan Dosen skripsi" },
+    { label: "Penugasan Dosen Skripsi", value: "Penugasan Dosen Skripsi" },
+    {
+      label: "Penugasan Dosen Kerja Praktik",
+      value: "Penugasan Dosen Kerja Praktik",
+    },
   ];
 
   const statusOptions = [

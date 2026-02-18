@@ -108,7 +108,7 @@ const RequestDetailUser = () => {
               <div className="flex items-center justify-between">
                 <CardTitle className="text-xl font-bold text-[#2B3674] flex items-center gap-2">
                   <FileText className="h-5 w-5 text-[#4318FF]" />
-                  Detail Pengajuan
+                  Pengajuan - Detail
                 </CardTitle>
                 {data && getStatusBadge(data.status)}
               </div>
@@ -210,6 +210,15 @@ const RequestDetailUser = () => {
                     </p>
                     <p className="text-sm font-bold text-[#2B3674] bg-[#F4F7FE] p-4 rounded-2xl border border-indigo-50">
                       {response?.message || "-"}
+                    </p>
+                  </div>
+
+                  <div className="space-y-1">
+                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+                      Admin yang Merespon
+                    </p>
+                    <p className="text-sm font-bold text-[#2B3674]">
+                      {response?.admin_name || "Admin"}
                     </p>
                   </div>
 

@@ -8,7 +8,7 @@ const PengunduranDiri = () => {
   const { showToast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
-  const [file, setFIle] = useState(null);
+  const [file, setFile] = useState(null);
   const { title, syarat, url, fileName } = pengunduranDiri;
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -26,7 +26,7 @@ const PengunduranDiri = () => {
     if (result && result.status === "success") {
       showToast("Pengajuan berhasil dikirim", "success");
       setMessage("");
-      setFIle(null);
+      setFile(null);
     } else {
       showToast(result?.message || "Gagal mengirim pengajuan", "error");
     }
@@ -41,7 +41,7 @@ const PengunduranDiri = () => {
         syarat={syarat}
         title={title}
         fileName={fileName}
-        setFile={setFIle}
+        setFile={setFile}
         isLoading={isLoading}
       />
     </>

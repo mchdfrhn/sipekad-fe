@@ -9,18 +9,16 @@ import {
 } from "recharts";
 import { useState, useEffect } from "react";
 import { getDistribusiPengajuan } from "../../utils/api/dashboardValue";
-import { format, parseISO, isValid } from "date-fns";
+import { format, parseISO, isValid, subDays } from "date-fns";
 import { id } from "date-fns/locale";
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
-    // label is the formatted_date string "YYYY-MM-DD" from payload
     let dateObj;
     try {
-      // Try parsing assuming ISO YYYY-MM-DD
       const parts = typeof label === "string" ? label.split("-") : [];
       if (parts.length === 3) {
-        dateObj = new Date(parts[0], parts[1] - 1, parts[2]); // Month is 0-indexed in JS Date
+        dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
       } else {
         dateObj = parseISO(label);
       }
@@ -50,7 +48,29 @@ const DistribusiPengajuan = () => {
   const [dataPengajuan, setDataPengajuan] = useState([]);
 
   useEffect(() => {
-    getDistribusiPengajuan(null, setDataPengajuan);
+    // Generate last 7 days as default
+    const last7Days = Array.from({ length: 7 }, (_, i) => {
+      const date = subDays(new Date(), 6 - i);
+      return {
+        name: format(date, "yyyy-MM-dd"),
+        uv: 0,
+      };
+    });
+
+    getDistribusiPengajuan(null, (apiData) => {
+      if (apiData && Array.isArray(apiData)) {
+        // Merge API data into our 7 days template
+        const mergedData = last7Days.map((defaultItem) => {
+          const apiMatch = apiData.find(
+            (item) => item.name === defaultItem.name,
+          );
+          return apiMatch ? { ...defaultItem, uv: apiMatch.uv } : defaultItem;
+        });
+        setDataPengajuan(mergedData);
+      } else {
+        setDataPengajuan(last7Days);
+      }
+    });
   }, []);
 
   const formatXAxis = (tickItem) => {
