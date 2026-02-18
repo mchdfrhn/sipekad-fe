@@ -1,10 +1,17 @@
-import Axios from "axios";
-import BASE_URL from ".";
 import axios from "axios";
+import BASE_URL from ".";
+
+const handleApiError = (err) => {
+  console.error("API Error:", err);
+  return {
+    status: "fail",
+    message: err.response?.data?.message || "Terjadi kesalahan pada server",
+  };
+};
 
 const getUser = async (token) => {
   try {
-    const response = await Axios.get(`${BASE_URL}/profile`, {
+    const response = await axios.get(`${BASE_URL}/profile`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -13,132 +20,189 @@ const getUser = async (token) => {
 
     return response.data;
   } catch (err) {
-    console.log(err);
+    return handleApiError(err);
   }
 };
 
 const updateProfile = async (
-  { username, email, phone, url_photo },
+  { username, email, phone, url_photo, full_name, nim, nik, prodi },
   updateUserData,
   updateUser,
   setShowProfile,
-  showProfile
+  showProfile,
 ) => {
   const user = JSON.parse(localStorage.getItem("user"));
   const token = localStorage.getItem("tokenKey");
   const { id } = user;
   try {
-    const response = await Axios.put(
-      `${BASE_URL}/users/user/${id}`,
+    const response = await axios.put(
+      `${BASE_URL}/users/${id}`,
       {
         username,
         email,
         phone,
         url_photo,
+        full_name,
+        nim,
+        nik,
+        prodi,
       },
       {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     if (response.data.status === "success") {
       updateUserData(updateUser);
-      setShowProfile(!showProfile);
+      if (setShowProfile) setShowProfile(!showProfile);
     }
+    return response.data;
   } catch (err) {
-    console.error(err);
-    return {
-      status: "fail",
-      message: err.response.data.message,
-    };
+    return handleApiError(err);
   }
 };
 
 // admin
-const getAllUserForAdmin = async (page = 1) => {
-  const token = localStorage.getItem("tokenKey")
+const getAllUserForAdmin = async (
+  pageNumber = 1,
+  limit = 10,
+  prodi = "default",
+  search = "",
+) => {
+  const token = localStorage.getItem("tokenKey");
+  let url = `${BASE_URL}/users?page=${pageNumber}&limit=${limit}`;
+
+  if (prodi && prodi !== "default") {
+    url += `&prodi=${prodi}`;
+  }
+
+  if (search) {
+    url += `&search=${search}`;
+  }
+
   try {
-    const result = await Axios.get(`${BASE_URL}/users?page=${page}&limit=5`, {
+    const result = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
 
-    const users = await result.data;
-    return users;
+    return result.data;
   } catch (err) {
-    return {
-      success: false,
-      error: err.response.data,
-    };
+    return handleApiError(err);
   }
 };
 
 const getUserDetail = async (token, userId) => {
   try {
-    const result = await Axios.get(`${BASE_URL}/users/${userId}`, {
+    const result = await axios.get(`${BASE_URL}/users/${userId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
 
-    const users = await result.data;
-    console.log(users);
-    return users;
+    return result.data;
   } catch (err) {
-    return {
-      success: false,
-      error: err.response.data,
-    };
+    return handleApiError(err);
   }
 };
 
-export const addUser = async(token, { username, password, nim, full_name, email, phone, role, nik, prodi }) => {
+export const addUser = async (
+  token,
+  { username, password, nim, full_name, email, phone, role, nik, prodi },
+) => {
   try {
-    const result = await axios.post(`${ BASE_URL }/users`, {
-      username, password, nim, full_name, email, phone, role, nik, prodi
-    }, {
+    const result = await axios.post(
+      `${BASE_URL}/users`,
+      {
+        username,
+        password,
+        nim,
+        full_name,
+        email,
+        phone,
+        role,
+        nik,
+        prodi,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    return result.data;
+  } catch (err) {
+    return handleApiError(err);
+  }
+};
+
+export const deleteUser = async (token, userId) => {
+  try {
+    const result = await axios.delete(`${BASE_URL}/users/${userId}`, {
       headers: {
-        Authorization: `Bearer ${ token }`
+        Authorization: `Bearer ${token}`,
       },
     });
 
-    return result.data
-  } catch(err) {
-    return err.response.data
+    return result.data;
+  } catch (err) {
+    return handleApiError(err);
   }
-}
+};
 
-export const deleteUser = async(token, userId) => {
+export const updateUserForAdmin = async (
+  token,
+  userId,
+  { username, full_name, nim, email, phone, nik, prodi },
+) => {
   try {
-    const result = await axios.delete(`${ BASE_URL }/users/${ userId }`, {
-      headers: {
-        Authorization: `Bearer ${ token }`
-      }
-    });
+    const result = await axios.put(
+      `${BASE_URL}/users/${userId}`,
+      {
+        username,
+        full_name,
+        nim,
+        email,
+        phone,
+        nik,
+        prodi,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
 
-    return result.data
-  } catch(err) {
-    return err.response.data
+    return result.data;
+  } catch (err) {
+    return handleApiError(err);
   }
-}
+};
 
-export const updateUserForAdmin = async(token, userId, { username, full_name, nim, email, phone, nik, prodi }) => {
+export const changePassword = async (
+  token,
+  { currentPassword, newPassword },
+) => {
   try {
-    const result = await axios.put(`${ BASE_URL }/users/${ userId }`, {
-      username, full_name, nim, email, phone, nik, prodi
-    }, {
-      headers: {
-        Authorization: `Bearer ${ token }`
-      }
-    });
-
-    return result.data
-  } catch(err) {
-    return err.response.data
+    const result = await axios.put(
+      `${BASE_URL}/users/change-password`,
+      { currentPassword, newPassword },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return result.data;
+  } catch (err) {
+    return handleApiError(err);
   }
-} 
+};
 
 export { getUser, updateProfile, getAllUserForAdmin, getUserDetail };

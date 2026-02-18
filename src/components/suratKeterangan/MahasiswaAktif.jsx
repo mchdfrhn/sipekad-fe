@@ -2,35 +2,46 @@ import Pengajuan from "../ui/Pengajuan";
 import { pengajuanMahasiswaAktif } from "../../utils/constant";
 import { useState } from "react";
 import { requestPengajuan } from "../../utils/action";
-import SuccessModal from "../ui/SuccessModal";
+import { useToast } from "@/utils/hooks/useToast";
+import { useNavigate } from "react-router";
 
 const MahasiswaAktif = () => {
+  const navigate = useNavigate();
+  const { showToast } = useToast();
   const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
-  const [isLoading, setLoading] = useState(false);
-  const [displayModal, setDisplayModal] = useState(false);
-  const [err, setErr] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    setLoading(false);
-    await requestPengajuan(
+    setIsLoading(true);
+    const result = await requestPengajuan(
       "Mahasiswa Aktif",
       message,
       file,
-      setDisplayModal,
-      displayModal,
-      setLoading,
-      setErr
+      null,
+      null,
+      setIsLoading,
+      null,
     );
+
+    if (result && result.status === "success") {
+      showToast("Pengajuan berhasil dikirim", "success");
+      setMessage("");
+      setFile(null);
+      if (result.pengajuanId) {
+        navigate(`/dashboard/pengajuan-${result.pengajuanId}`);
+      } else {
+        navigate("/dashboard");
+      }
+    } else {
+      showToast(result?.message || "Gagal mengirim pengajuan", "error");
+    }
   };
 
   const { syarat, title, url, fileName } = pengajuanMahasiswaAktif;
   return (
     <>
-      {displayModal && (
-        <SuccessModal onOkHandler={() => setDisplayModal(!displayModal)} isSuccess={err} />
-      )}
       <Pengajuan
         submitHandler={submitHandler}
         message={message}

@@ -2,34 +2,44 @@ import { transkripNilai } from "../../utils/constant";
 import Pengajuan from "../ui/Pengajuan.jsx";
 import { useState } from "react";
 import { requestPengajuan } from "../../utils/action";
+import { useToast } from "@/utils/hooks/useToast";
 import BackLink from "../ui/BackLink.jsx";
-import SuccessModal from "../ui/SuccessModal.jsx";
+import { useNavigate } from "react-router";
 
 const TranskripNilai = () => {
+  const navigate = useNavigate();
+  const { showToast } = useToast();
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [displayModal, setDisplayModal] = useState(false);
-  const [err, setErr] = useState(false);
 
   const submitHandler = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    await requestPengajuan(
-      "Transkrip nilai",
+    const result = await requestPengajuan(
+      "Transkrip Nilai",
       message,
       null,
-      setDisplayModal,
-      displayModal,
+      null,
+      null,
       setIsLoading,
-      setErr
+      null,
     );
+
+    if (result && result.status === "success") {
+      showToast("Pengajuan berhasil dikirim", "success");
+      setMessage("");
+      if (result.pengajuanId) {
+        navigate(`/dashboard/pengajuan-${result.pengajuanId}`);
+      } else {
+        navigate("/dashboard");
+      }
+    } else {
+      showToast(result?.message || "Gagal mengirim pengajuan", "error");
+    }
   };
   const { syarat, title } = transkripNilai;
   return (
     <>
-      {displayModal && (
-        <SuccessModal onOkHandler={ () => setDisplayModal(!displayModal) } isSuccess={err} />
-      )}
       <BackLink />
       <Pengajuan
         message={message}

@@ -1,77 +1,118 @@
-import { Mail } from "lucide-react";
-import { Phone } from "lucide-react";
-import { Pen } from "lucide-react";
+import { Mail, Phone, Pen, Users } from "lucide-react";
 import { Link } from "react-router";
-import FormUpdateUser from "../dashboardUser/FormUpdateUser";
-import { ArrowLeft } from "lucide-react";
-import { motion } from "motion/react"
-import { useState } from "react";
+import { useUser } from "../../utils/hooks/userContext";
+import { Button } from "@/components/ui/button";
 
 const UserBio = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
-  const [showForm, setShowForm] = useState(false);
-  return (
-    <>
-      <Link className="mb-4" to={"/dashboard"}>
-        <ArrowLeft />
-      </Link>
-      {showForm && (
-        <div className="bg-black/20 z-20 fixed inset-0 w-screen h-screen"></div>
-      )}
-      {showForm && (
-         <FormUpdateUser showForm={showForm} setShowForm={setShowForm} />
-      )}
-     
-      <motion.div initial={{ translateY: 20, opacity: 0 }} animate={{ translateY: 0, opacity: 1 }} transition={{ duration: 0.5, ease: ["easeInOut"] }} className="relative bg-white shadow-md rounded-md p-4">
-        <div className="bg-gradient-to-r from-purple-300 via-blue-200 to-blue-500 rounded-md relative h-40">
-       
-          <div className="size-40 flex items-center gap-4 absolute -bottom-20 left-1/2 -translate-x-1/2 rounded-full p-2 bg-white">
-            {user?.url_photo ? (
-              <img
-                className="w-full h-full object-top object-cover rounded-full"
-                src={user.url_photo}
-              />
-            ) : (
-              <img
-                className="w-full h-full object-center object-cover rounded-full"
-                src="/avatar.png"
-                alt="image user"
-              />
-            )}
-            <div></div>
-          </div>
-        </div>
+  const { userData: user } = useUser();
 
-        <div className="mt-20 flex flex-col justify-center items-center">
-          <div className="flex items-center gap-2">
-            <h1 className="text-sm md:text-2xl tracking-[4px] font-bold uppercase">
-              {user.username}
-            </h1>
-            <button
-              onClick={() => setShowForm(!showForm)}
-              className="block md:size-5 size-4 cursor-pointer"
-            >
-              <Pen className="w-full h-full" />
-            </button>
-          </div>
-          <p className="text-xs md:text-xl tracking-[4px] text-gray-400">
-            {user?.nim}
-          </p>
-          <div className="flex items-center gap-2 mt-4">
-            <div className="size-4">
-              <Phone className="w-full h-full" />
+  if (!user) return null;
+
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="text-xl font-bold text-[#2B3674] hidden md:block">
+            User Profile
+          </h2>
+        </div>
+        <Link to="/dashboard/settings">
+          <Button className="flex items-center gap-2 bg-[#4318FF] hover:bg-[#3311CC] text-white rounded-xl px-6 font-bold shadow-lg shadow-indigo-500/20 transition-all hover:scale-105">
+            <Pen className="h-4 w-4" />
+            <span>Edit Profile Settings</span>
+          </Button>
+        </Link>
+      </div>
+
+      <div className="bg-white rounded-[20px] shadow-sm border border-gray-100 overflow-hidden p-6 lg:p-10">
+        <div className="flex flex-col md:flex-row items-center gap-10">
+          {/* Profile Picture */}
+          <div className="relative group shrink-0">
+            <div className="h-32 w-32 md:h-40 md:w-40 rounded-full overflow-hidden border-[6px] border-indigo-50 shadow-lg">
+              {user?.url_photo ? (
+                <img
+                  src={user.url_photo}
+                  alt={user.username}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full bg-[#F4F7FE] flex items-center justify-center">
+                  <Users className="h-16 w-16 text-[#4318FF]" />
+                </div>
+              )}
             </div>
-            <p className="flex items-center md:text-xl text-sm">{user.phone}</p>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="size-4">
-              <Mail className="w-full h-full" />
+
+          {/* Profile Info Grid */}
+          <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-8 gap-x-12 w-full">
+            <div>
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">
+                Nama Lengkap
+              </p>
+              <h3 className="text-lg md:text-xl font-bold text-[#2B3674]">
+                {user.username || user.full_name || "-"}
+              </h3>
             </div>
-            <p className="text-sm md:text-xl">{user.email}</p>
+
+            <div>
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">
+                Program Studi
+              </p>
+              <p className="text-base font-semibold text-[#2B3674]">
+                {user.prodi || "-"}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">
+                NIM/ID
+              </p>
+              <p className="text-base font-semibold text-[#2B3674]">
+                {user.nim || "-"}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">
+                Email Address
+              </p>
+              <div className="flex items-center gap-2 text-base font-semibold text-[#2B3674]">
+                <Mail className="h-4 w-4 text-gray-400" />
+                {user.email || "-"}
+              </div>
+            </div>
+
+            <div>
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">
+                Phone Number
+              </p>
+              <div className="flex items-center gap-2 text-base font-semibold text-[#2B3674]">
+                <Phone className="h-4 w-4 text-gray-400" />
+                {user.phone || "-"}
+              </div>
+            </div>
+
+            <div>
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">
+                NIK
+              </p>
+              <p className="text-base font-semibold text-[#2B3674]">
+                {user.nik || "-"}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">
+                Role
+              </p>
+              <p className="text-base font-semibold text-[#2B3674] capitalize">
+                {user.role || "User"}
+              </p>
+            </div>
           </div>
         </div>
-      </motion.div>
-    </>
+      </div>
+    </div>
   );
 };
 

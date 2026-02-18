@@ -2,42 +2,53 @@ import Pengajuan from "../ui/Pengajuan";
 import { penugasanDosenKerjaPraktik } from "../../utils/constant";
 import { useState } from "react";
 import { requestPengajuan } from "../../utils/action";
-import SuccessModal from "../ui/SuccessModal";
+import { useToast } from "@/utils/hooks/useToast";
 import LinkTranskrip from "../ui/LinkTranskrip";
+import { useNavigate } from "react-router";
+
 const DosenKerjaPraktik = () => {
+  const navigate = useNavigate();
+  const { showToast } = useToast();
   const [message, setMessage] = useState("");
-  const [file, setFIle] = useState(null);
+  const [file, setFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [displayModal, setDisplayModal] = useState(false);
   const { syarat, title } = penugasanDosenKerjaPraktik;
-  const [err, setErr] = useState(false);
 
   const submitHandler = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    await requestPengajuan(
-      "Penugasan Dosen skripsi",
+    const result = await requestPengajuan(
+      "Penugasan Dosen Kerja Praktik",
       message,
       file,
-      setDisplayModal,
-      displayModal,
+      null,
+      null,
       setIsLoading,
-      setErr
+      null,
     );
+
+    if (result && result.status === "success") {
+      showToast("Pengajuan berhasil dikirim", "success");
+      setMessage("");
+      setFile(null);
+      if (result.pengajuanId) {
+        navigate(`/dashboard/pengajuan-${result.pengajuanId}`);
+      } else {
+        navigate("/dashboard");
+      }
+    } else {
+      showToast(result?.message || "Gagal mengirim pengajuan", "error");
+    }
   };
   return (
     <>
-      {displayModal && (
-        <SuccessModal onOkHandler={() => setDisplayModal(!displayModal)} isSuccess={err} />
-      )}
-      ;
       <Pengajuan
         submitHandler={submitHandler}
         message={message}
         setMessage={setMessage}
         syarat={syarat}
         title={title}
-        setFile={setFIle}
+        setFile={setFile}
         isLoading={isLoading}
         children={
           <LinkTranskrip

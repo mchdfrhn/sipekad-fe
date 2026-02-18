@@ -1,7 +1,7 @@
 import { getRequest, postrequest } from "./api/request";
 import { addResponse } from "./api/response";
 import { uploadPdf } from "./api/uploadPdf.js";
-import { getAllRequestForAdmin} from "./api/request";
+import { getAllRequestForAdmin } from "./api/request";
 import {
   addUser,
   deleteUser,
@@ -17,47 +17,58 @@ export const requestPengajuan = async (
   setDisplayModal,
   displayModal,
   setLoading,
-  setErr
+  setErr,
 ) => {
   const token = localStorage.getItem("tokenKey");
-  const response = await postrequest(token, {
-    type,
-    message,
-  });
-  console.log(response);
-  if (response.status === "success") {
-    if (file) {
-      const pengajuanId = response.pengajuanId;
-      const resultUpload = await uploadPdf(
-        file,
-        pengajuanId,
-        token,
-        "upload-request"
-      );
+  try {
+    const response = await postrequest(token, {
+      type,
+      message,
+    });
+    console.log(response);
+    if (response.status === "success") {
+      if (file) {
+        const pengajuanId = response.pengajuanId;
+        const resultUpload = await uploadPdf(
+          file,
+          pengajuanId,
+          token,
+          "upload-request",
+        );
+        console.log(resultUpload);
+      }
 
-      console.log(resultUpload);
+      if (setDisplayModal) setDisplayModal(!displayModal);
+      if (setLoading) setLoading(false);
+      return response;
     }
-    
-    setDisplayModal(!displayModal);
-    setLoading(false);
-  }
-  console.log(response.message);
-  const result = response.message;
-  if (result.status === 'faiil') {
-    setDisplayModal(true)
-    setLoading(false);
-    setErr(true)
+
+    if (response.status === "faiil") {
+      if (setDisplayModal) setDisplayModal(true);
+      if (setLoading) setLoading(false);
+      if (setErr) setErr(true);
+    }
+    return response;
+  } catch (error) {
+    if (setLoading) setLoading(false);
+    return {
+      status: "fail",
+      message: error.message || "Internal server error",
+    };
   }
 };
 
 export const addResponseHandler = async (
   { id, message, isComplete, file },
-  setDisplayModal, displayModal, setLoading, setErrorMessage
+  setDisplayModal,
+  displayModal,
+  setLoading,
+  setErrorMessage,
 ) => {
   const token = localStorage.getItem("tokenKey");
   if (!message) {
     setErrorMessage("Pesan tidak boleh kosong");
-    setLoading(false)
+    setLoading(false);
     return;
   } else {
     const result = await addResponse(id, message, isComplete, token);
@@ -68,13 +79,15 @@ export const addResponseHandler = async (
           file,
           responseId,
           token,
-          "upload-response"
+          "upload-response",
         );
-        console.log(resultUpload)
+        console.log(resultUpload);
       }
       setDisplayModal(!displayModal);
       setLoading(false);
+      return result;
     }
+    return result;
   }
 };
 
@@ -84,7 +97,7 @@ export const filterStatus = async (
   setPage,
   setTotalPage,
   getAllData,
-  page = 1
+  page = 1,
 ) => {
   let result;
 
@@ -108,7 +121,7 @@ export const filterStatusForUserDetail = async (
   setTotalPage,
   getAllData,
   userId,
-  page = 1
+  page = 1,
 ) => {
   let result;
 
@@ -133,7 +146,10 @@ export const addUserForAdmin = async (
   setUsers,
   setPage,
   setTotalPage,
-  page
+  page,
+  limit,
+  prodi,
+  search,
 ) => {
   const token = localStorage.getItem("tokenKey");
   const result = await addUser(token, data);
@@ -150,11 +166,13 @@ export const addUserForAdmin = async (
 
   if (result.status === "success") {
     setShowForm(!showForm);
-    const users = await getAllUserForAdmin(page);
+    const users = await getAllUserForAdmin(page, limit, prodi, search);
     setUsers(users.data);
     setPage(users.page);
     setTotalPage(users.totalPage);
+    return result;
   }
+  return result;
 };
 
 export const deleteUserForAdmin = async (
@@ -162,23 +180,30 @@ export const deleteUserForAdmin = async (
   setUsers,
   page,
   setPage,
-  setTotalPage
+  setTotalPage,
+  limit,
+  prodi,
+  search,
+  onSuccess, // Added callback
 ) => {
   const token = localStorage.getItem("tokenKey");
   const result = await deleteUser(token, userId);
   if (result.status === "success") {
-    const users = await getAllUserForAdmin(page);
+    if (onSuccess) onSuccess(); // Execute callback
+    const users = await getAllUserForAdmin(page, limit, prodi, search);
     setUsers(users.data);
     setPage(users.page);
     setTotalPage(users.totalPage);
+    return result; // Return result for toast
   }
+  return result;
 };
 
 export const updateUserForAdminAction = async (
   userId,
   data,
   navigate,
-  setErrorMessage
+  setErrorMessage,
 ) => {
   const token = localStorage.getItem("tokenKey");
   const result = await updateUserForAdmin(token, userId, data);
@@ -191,28 +216,30 @@ export const updateUserForAdminAction = async (
 
   if (result.status === "success") {
     navigate("/admin/user");
+    return result;
   }
+  return result;
 };
 
-export const loginFlow = async (
-  data,
-  updateUserData,
-  navigate,
-  setErrMessage,
-  setLoading
-) => {
+export const loginFlow = async (data, updateUserData, navigate, setLoading) => {
   const result = await login(data);
   if (result.status === "success") {
     localStorage.setItem("tokenKey", result.accessToken);
     updateUserData(result.user);
     localStorage.setItem("user", JSON.stringify(result.user));
-    navigate("/dashboard");
+    localStorage.setItem("loginTimestamp", Date.now().toString());
     if (result.user.role === "admin") {
       navigate("/admin");
+    } else {
+      navigate("/dashboard");
     }
+    setLoading(false);
+    return { status: "success" };
   }
-  setLoading(false)
+
+  setLoading(false);
   if (result.status === "error") {
-    setErrMessage("Email atau password salah");
+    return { status: "error", message: "Email atau password salah" };
   }
+  return { status: "error", message: result.message || "An error occurred" };
 };

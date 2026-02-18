@@ -2,9 +2,18 @@ import { getUserDetail } from "../../../utils/api/user";
 import { getRequest } from "../../../utils/api/request";
 import { useParams, Link } from "react-router";
 import { useEffect, useState } from "react";
-import { TablePengajuan } from "../request/Requets";
-import { ArrowLeft, ArrowRight, Pen } from "lucide-react";
-import CardDashboardUser from "./CardDashboardUser";
+import { TablePengajuan } from "../request/Requests";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Pen,
+  LayoutDashboard,
+  Clock,
+  Users,
+  CheckCircle,
+  XCircle,
+} from "lucide-react";
+import StatsCard from "../StatsCard";
 import { filterStatusForUserDetail } from "../../../utils/action";
 import { getSummeryDataByUserId } from "../../../utils/api/dashboardValue";
 import UpdateUserForm from "./UpdateUserForm";
@@ -49,7 +58,7 @@ const UserDetail = () => {
       setPage,
       setTotalPage,
       getAllData,
-      userId
+      userId,
     );
   };
   return (
@@ -59,95 +68,116 @@ const UserDetail = () => {
         userDetail={userDetail}
         shwoForm={showForm}
       />
-      <div className="flex justify-between items-center">
-        <Link to={"/admin/user"} className="my-8 block">
-          <ArrowLeft />
+      <div className="flex justify-between items-center mb-6">
+        <Link
+          to={"/admin/user"}
+          className="p-2 hover:bg-gray-100 rounded-full transition-colors flex items-center justify-center text-[#2B3674]"
+        >
+          <ArrowLeft className="h-6 w-6" />
         </Link>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="flex items-center gap-2 px-2 py-1 bg-yellow-500 rounded-md shadow-md cursor-pointer border border-transparent hover:border-gray-700 hover:bg-transparent transition-duration"
+          className="flex items-center gap-2 px-4 py-3 mr-2 bg-[#4318FF] text-white rounded-full text-sm shadow-[0_4px_14px_0_rgba(67,24,255,0.39)] hover:shadow-[0_6px_20px_rgba(67,24,255,0.23)] hover:scale-[1.02] transition-all duration-300 font-bold"
         >
-          <div className="size-4">
-            <Pen className="w-full h-full" />
-          </div>
-          <span>Update User</span>
+          <Pen className="h-4 w-4" />
+          <span>Perbarui Pengguna</span>
         </button>
       </div>
-      <div className="mt-8 bg-white rounded-md shadow-md flex flex-col md:flex-row gap-4 px-2 py-6">
-        <div className="flex items-center gap-2">
-          <div className="size-30 rounded-full overflow-hidden">
-            {userDetail?.url_photo ? (
-              <img
-                src={userDetail?.url_photo}
-                alt=""
-                className="w-full h-full object-center object-cover"
-              />
-            ) : (
-              <img
-                src={"/avatar.png"}
-                alt=""
-                className="w-full h-full object-center object-cover"
-              />
-            )}
+
+      <div className="bg-white rounded-[20px] shadow-sm border border-gray-100 overflow-hidden mb-6 p-6">
+        <div className="flex flex-col md:flex-row items-center gap-8">
+          <div className="relative group">
+            <div className="h-28 w-28 rounded-full overflow-hidden border-4 border-gray-50 shadow-sm">
+              {userDetail?.url_photo ? (
+                <img
+                  src={userDetail?.url_photo}
+                  alt={userDetail?.username}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full bg-[#F4F7FE] flex items-center justify-center">
+                  <Users className="h-12 w-12 text-[#4318FF]" />
+                </div>
+              )}
+            </div>
           </div>
-          <div className="grid xl:grid-cols-3 xl:grid-rows-2 gap-1 md:gap-4 items-start grid-rows-3 grid-cols-2 px-2">
+
+          <div className="flex-1 grid grid-cols-2 lg:grid-cols-3 gap-y-6 gap-x-12 w-full">
             <div>
-              <p className="text-gray-400 uppercase md:tracking-[2px] text-xs">Nama Lengkap</p>
-              <h1 className="md:text-xl font-semibold">{userDetail?.username}</h1>
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1 leading-none">
+                Nama Lengkap
+              </p>
+              <h1 className="text-xl font-bold text-[#2B3674]">
+                {userDetail?.username}
+              </h1>
             </div>
             <div>
-              <p className="text-gray-400 uppercase md:tracking-[2px] text-xs">Prodi</p>
-              <p className="text-xs md:text-[16px]">{ userDetail?.prodi }</p>
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1 leading-none">
+                Program Studi
+              </p>
+              <p className="text-sm font-semibold text-[#2B3674]">
+                {userDetail?.prodi || "-"}
+              </p>
             </div>
             <div>
-              <p className="text-gray-400 uppercase md:tracking-[2px] text-xs">NIM</p>
-              <p className="text-xs md:text-[16px]">{userDetail?.nim}</p>
-            </div>
-            <div className="">
-              <p className="text-gray-400 uppercase md:tracking-[2px] text-xs">Email</p>
-              <p className="text-xs md:text-[16px]">{userDetail?.email}</p>
-            </div>
-            <div>
-              <p className="text-gray-400 uppercase md:tracking-[2px] text-xs">No telephone</p>
-              <p className="text-xs md:text-[16px]">{userDetail?.phone}</p>
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1 leading-none">
+                NIM/ID
+              </p>
+              <p className="text-sm font-semibold text-[#2B3674]">
+                {userDetail?.nim || "-"}
+              </p>
             </div>
             <div>
-              <p className="text-gray-400 uppercase md:tracking-[2px] text-xs">Nik</p>
-              <p className="text-xs md:text-[16px]">{userDetail?.nik ? userDetail?.nik : "Nik belum dimasukan"}</p>
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1 leading-none">
+                Alamat Email
+              </p>
+              <p className="text-sm font-semibold text-[#2B3674]">
+                {userDetail?.email || "-"}
+              </p>
+            </div>
+            <div>
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1 leading-none">
+                Nomor Telepon
+              </p>
+              <p className="text-sm font-semibold text-[#2B3674]">
+                {userDetail?.phone || "-"}
+              </p>
+            </div>
+            <div>
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1 leading-none">
+                NIK
+              </p>
+              <p className="text-sm font-semibold text-[#2B3674]">
+                {userDetail?.nik || "Belum dimasukan"}
+              </p>
             </div>
           </div>
         </div>
       </div>
-      <div className="mt-4 flex-4 grid grid-cols-2 xl:grid-cols-4 gap-4 bg-white p-4 shadow-md rounded-md">
-        <CardDashboardUser
-          index={5}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <StatsCard
+          variant="premium"
           title={summery[0]?.label}
           value={summery[0]?.value}
-          className={
-            "bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-500"
-          }
+          icon={LayoutDashboard}
         />
-        <CardDashboardUser
-          index={6}
-          title={summery[3]?.label}
-          value={summery[3]?.value}
-          className={
-            "bg-gradient-to-r from-green-600 via-green-500 to-emerald-400"
-          }
-        />
-        <CardDashboardUser
-          index={7}
+        <StatsCard
+          variant="orange"
           title={summery[1]?.label}
           value={summery[1]?.value}
-          className={
-            "bg-gradient-to-r from-amber-500 via-amber-400 to-amber-300"
-          }
+          icon={Clock}
         />
-        <CardDashboardUser
-          index={8}
+        <StatsCard
+          variant="green"
+          title={summery[3]?.label}
+          value={summery[3]?.value}
+          icon={CheckCircle}
+        />
+        <StatsCard
+          variant="red"
           title={summery[2]?.label}
           value={summery[2]?.value}
-          className={"bg-gradient-to-r from-rose-600 via-red-500 to-red-400"}
+          icon={XCircle}
         />
       </div>
       <div className="my-10">

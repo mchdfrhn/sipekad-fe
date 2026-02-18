@@ -1,103 +1,119 @@
-import { LayoutDashboard, LogOut, User, Send, Menu, X } from "lucide-react";
-import { Link, useLocation, useNavigate } from "react-router";
-import Alert from "../ui/Alert";
-import { useState } from "react";
+import { LayoutDashboard, User, Send, Info, Settings } from "lucide-react";
+import { Link, useLocation } from "react-router";
+import { cn } from "@/lib/utils";
+import { Separator } from "@/components/ui/separator";
 
-const SidebarAdmin = ({ activeSidebar, setActiveSideBar }) => {
-  const navigate = useNavigate();
-  const [isDisplay, setIsDisplay] = useState(false);
-
-  const logoutHandler = async () => {
-    const token = localStorage.getItem("tokenKey");
-
-    if (token) {
-      navigate("/");
-      localStorage.removeItem("tokenKey");
-      localStorage.removeItem("user");
-    }
-  };
+const SidebarAdmin = ({ className }) => {
+  const { pathname } = useLocation();
 
   const links = [
     {
       path: "/admin",
-      name: "dashbord",
+      name: "Dashboard",
       icon: LayoutDashboard,
-    },
-    {
-      path: "/admin/user",
-      name: "User",
-      icon: User,
+      exact: true,
     },
     {
       path: "/admin/pengajuan",
       name: "Pengajuan",
       icon: Send,
     },
+    {
+      path: "/admin/user",
+      name: "Manajemen Pengguna",
+      icon: User,
+    },
   ];
 
-  const { pathname } = useLocation();
   return (
-    <>
-      <button
-        onClick={() => setActiveSideBar(!activeSidebar)}
-        className="block md:hidden fixed right-8 rounded-full shadow-md cursor-pointer bg-white p-2 top-14 z-40"
-      >
-        <Menu />
-      </button>
-      <aside
-        className={`bg-white pt-12 pr-8 pl-2 shadow-md h-screen z-40 fixed left-0 ${
-          activeSidebar && "-translate-x-full"
-        } md:translate-x-0 transition-transform duration-300 ease-in-out`}
-      >
-        {isDisplay && (
-          <Alert
-            setDisplay={setIsDisplay}
-            isDisplay={isDisplay}
-            onYesHundler={logoutHandler}
-          />
-        )}
-        <div className="flex justify-center items-center">
-          <img
-            src="/sttimage.png"
-            alt="stt-logo"
-            loading="lazy"
-            className="w-40"
-          />
+    <div
+      className={cn(
+        "flex flex-col h-full bg-white transition-all duration-300 py-6",
+        className,
+      )}
+    >
+      {/* Logo Section */}
+      <div className="flex flex-col items-center justify-center gap-2 px-8 pb-8">
+        <img
+          src="/sttimage.png"
+          alt="stt-logo"
+          className="w-16 h-16 object-contain"
+        />
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-[#2B3674] tracking-tight">
+            SIPEKAD
+          </h1>
+          <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mt-1">
+            Sistem Pengajuan Akademik
+          </p>
         </div>
-        <ul className="">
-          {links.map((link) => (
-            <li className="cursor-pointer mt-2 group">
-              <Link
-                onClick={() => setActiveSideBar(!activeSidebar)}
-                to={link.path}
-                className={`p-4 text-xs md:text-lg rounded-md block group-hover:bg-blue-500/20 hover:text-blue-500 hover:translate-x-1 flex max-w-sm:justify-center items-center gap-2 transition-duration ${
-                  pathname === link.path &&
-                  "bg-blue-500/20 text-blue-500  translate-x-1"
-                }`}
-              >
-                <div className="size-4 md:size-6">
-                  <link.icon className="w-full h-full" />
-                </div>
-                <p className="text-sm">{link.name}</p>
-              </Link>
-            </li>
-          ))}
-          <li
-            onClick={() => setIsDisplay(!isDisplay)}
-            className="mt-8 group w-full"
-          >
-            <button
-              className={`p-4 text-xs md:text-lg rounded-md cursor-pointer block group-hover:bg-blue-500/20 w-full h-full hover:text-blue-500 hover:translate-x-1 flex max-w-sm:justify-center items-center gap-2 transition-duration`}
-            >
-              <div className=" size-4 md:size-6 flex">
-                <LogOut className="w-full h-full" />
+      </div>
+
+      <Separator className="mb-6 opacity-50" />
+
+      {/* Main Menu */}
+      <div className="flex-1 px-4">
+        <div className="space-y-2">
+          {links.map((link) => {
+            const isActive = link.exact
+              ? pathname === link.path
+              : pathname.startsWith(link.path);
+
+            return (
+              <div key={link.path} className="relative">
+                {isActive && (
+                  <div className="absolute right-[-16px] top-1/2 -translate-y-1/2 h-6 w-1 rounded-l-lg bg-[#4318FF] shadow-[0_0_8px_rgba(67,24,255,0.3)] transition-all duration-300" />
+                )}
+                <Link
+                  to={link.path}
+                  className={cn(
+                    "group flex items-center gap-4 px-5 py-3 rounded-2xl font-semibold transition-all duration-300",
+                    isActive
+                      ? "bg-indigo-100/50 text-[#4318FF] font-extrabold shadow-sm"
+                      : "text-[#A3AED0] hover:text-[#4318FF] hover:bg-gray-100/50",
+                  )}
+                >
+                  <link.icon
+                    size={22}
+                    className={cn(
+                      "transition-all duration-300",
+                      isActive
+                        ? "text-[#4318FF] drop-shadow-[0_0_8px_rgba(67,24,255,0.2)]"
+                        : "text-[#A3AED0] group-hover:text-[#4318FF]",
+                    )}
+                    fill={isActive ? "currentColor" : "none"}
+                  />
+                  <span
+                    className={cn(
+                      "text-sm tracking-wide transition-colors",
+                      isActive ? "text-[#2B3674]" : "text-[#A3AED0]",
+                    )}
+                  >
+                    {link.name}
+                  </span>
+                </Link>
               </div>
-              <p className="text-xs md:text-sm">Logout</p>
-            </button>
-          </li>
-        </ul>
-      </aside>
-    </>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Footer / Support */}
+      <div className="px-4 mt-auto pt-6">
+        <Separator className="mb-6 opacity-50" />
+        <a
+          href={`https://wa.me/${import.meta.env.VITE_WHATSAPP_NUMBER}?text=${encodeURIComponent("Saya mau melaporkan ada bug pada aplikasi SIPEKAD, berikut list bug nya...")}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group flex items-center gap-4 px-5 py-2 rounded-2xl font-bold bg-red-50 text-red-500 hover:bg-red-100 transition-all duration-300 shadow-sm border border-red-100/50"
+        >
+          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-white shadow-sm group-hover:scale-110 transition-transform">
+            <Info size={18} />
+          </div>
+          <span className="text-sm tracking-wide">Lapor Bug</span>
+        </a>
+      </div>
+    </div>
   );
 };
 

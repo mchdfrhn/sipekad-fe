@@ -1,78 +1,106 @@
+import {
+  FileText,
+  FileSpreadsheet,
+  ClipboardList,
+  GraduationCap,
+  ScrollText,
+  Presentation,
+  UserCheck,
+  Award,
+  BookOpen,
+  Briefcase,
+  Users,
+  Clock,
+  XCircle,
+} from "lucide-react";
+
 // Route pengajuan
 const kategoriPermintaan = [
   {
     content: "Surat Keterangan",
     path: "/dashboard/request/suratketerangan",
     color: "button-yellow",
+    icon: FileText,
   },
   {
     content: "Surat Pengajuan",
     path: "/dashboard/request/suratpengajuan",
     color: "button-green",
+    icon: ScrollText,
   },
   {
     content: "Surat Penugasan",
     path: "/dashboard/request/suratpenugasan",
     color: "button-blue",
+    icon: ClipboardList,
   },
   {
     content: "Transkrip Nilai",
     path: "/dashboard/request/transkripnilai",
     color: "button-orange",
+    icon: FileSpreadsheet,
   },
   {
     content: "Permohonan Yudisium",
     path: "/dashboard/request/yudisium",
     color: "button-gray",
+    icon: GraduationCap,
   },
   {
     content: "Pengajuan Sempro",
     path: "/dashboard/request/pengajuansempro",
     color: "button-red",
+    icon: Presentation,
   },
   {
     content: "Pengajuan Seminar Kp",
     path: "/dashboard/request/seminarkp",
     color: "button-teal",
+    icon: UserCheck,
   },
   {
     content: "Pengajuan Sidang Skripsi",
     path: "/dashboard/request/skripsi",
     color: "button-violet",
+    icon: Award,
   },
 ];
 
 export const STUDENT_PRODI = {
-    TEKNIK_INFORMATIKA: "teknik informatika",
-    TEKNIK_LINGKUNGAN: "teknik lingkungan",
-    TEKNIK_SIPIL: "teknik sipil"
-}
+  TEKNIK_INFORMATIKA: "Teknik Informatika",
+  TEKNIK_LINGKUNGAN: "Teknik Lingkungan",
+  TEKNIK_SIPIL: "Teknik Sipil",
+};
 
 export const USER_ROLE = {
-    USER_REGULAR: "user",
-    USER_ADMIN: "admin"
-}
+  USER_REGULAR: "user",
+  USER_ADMIN: "admin",
+};
 
 const kategoriKeterangan = [
   {
     content: "Keterangan Mahasiswa Aktif",
     path: "/dashboard/request/suratketerangan/mahasiswaaktif",
     color: "button-green",
+    icon: UserCheck,
   },
   {
     content: "Keterangan Cuti",
-    path: "/dashboard/request/suratKeterangan/cuti",
+    path: "/dashboard/request/suratketerangan/cuti",
     color: "button-gray",
+    icon: Clock,
   },
   {
     content: "Keterangan Lulus",
     path: "/dashboard/request/suratketerangan/keteranganlulus",
     color: "button-blue",
+    icon: GraduationCap,
   },
   {
     content: "Pengunduran Diri",
     path: "/dashboard/request/suratketerangan/pengundurandiri",
     color: "button-red",
+    icon: XCircle,
   },
 ];
 
@@ -81,16 +109,19 @@ const kategoriPengajuan = [
     content: "Judul Kerja Praktik",
     path: "/dashboard/request/suratpengajuan/kerjapraktik",
     color: "button-green",
+    icon: Briefcase,
   },
   {
     content: "Judul Skripsi",
     path: "/dashboard/request/suratpengajuan/judulskripsi",
     color: "button-yellow",
+    icon: BookOpen,
   },
   {
     content: "Pengantar Kerja Praktik",
     path: "/dashboard/request/suratpengajuan/pengantar-kerja-praktik",
     color: "button-blue",
+    icon: ScrollText,
   },
 ];
 
@@ -99,11 +130,13 @@ const kategoriPenugasan = [
     content: "Penugasan Dosen Pembimbing Kerja Praktik",
     path: "/dashboard/request/suratpenugasan/dosenkerjapraktik",
     color: "button-green",
+    icon: Users,
   },
   {
     content: "Penugasan Dosen Pembimbing Tugas Akhir/skripsi",
     path: "/dashboard/request/suratpenugasan/dosentugasakhir",
     color: "button-blue",
+    icon: Users,
   },
 ];
 
@@ -145,10 +178,10 @@ export const penugasanDosenSkripsi = {
     "Setelah terisi silahkan isi informasi pengaju dengan benar",
     "Upload berkas persyaratan dengan format pdf",
     "Pengajuan akan di tinjau oleh admin",
-    "berkas akan dikirm melalui aplikasi ini, karena itu silahkan cek secara berkala"
+    "berkas akan dikirm melalui aplikasi ini, karena itu silahkan cek secara berkala",
   ],
-  title: 'Penugasan Dosen Pembimbing Tugas Akhir/Skripsi'
-}
+  title: "Penugasan Dosen Pembimbing Tugas Akhir/Skripsi",
+};
 
 export const penugasanDosenKerjaPraktik = {
   syarat: [
@@ -157,10 +190,10 @@ export const penugasanDosenKerjaPraktik = {
     "Setelah terisi silahkan isi informasi pengaju dengan benar",
     "Upload berkas persyaratan dengan format pdf",
     "Pengajuan akan di tinjau oleh admin",
-    "berkas akan dikirm melalui aplikasi ini, karena itu silahkan cek secara berkala"
+    "berkas akan dikirm melalui aplikasi ini, karena itu silahkan cek secara berkala",
   ],
-  title: 'Penugasan Dosen Pembimbing Tugas Akhir/Skripsi'
-}
+  title: "Penugasan Dosen Pembimbing Tugas Akhir/Skripsi",
+};
 
 const keteranganLulus = {
   syarat: [
@@ -169,7 +202,7 @@ const keteranganLulus = {
     "Pengajuan anda akan di tinjau oleh admin",
     "Berkas akan dikirim melalui aplikasi ini, karena itu silahkan cek secara berkala",
   ],
-  title: 'Surat keterangan lulus'
+  title: "Surat keterangan lulus",
 };
 
 const pengunduranDiri = {
@@ -181,10 +214,10 @@ const pengunduranDiri = {
     "Pengajuan anda akan di tinjau oleh admin",
     "Berkas akan dikirim melalui aplikasi ini, karena itu silahkan cek secara berkala",
   ],
-  url: '/suratKeterangan/pengunduranDiri.pdf',
-  title: 'Surat pengunduran diri',
-  fileName: 'pengunduranDiri.pdf'
-}
+  url: "/suratKeterangan/pengunduranDiri.pdf",
+  title: "Surat pengunduran diri",
+  fileName: "pengunduranDiri.pdf",
+};
 
 const judulKerjaPraktik = {
   syarat: [
@@ -196,10 +229,10 @@ const judulKerjaPraktik = {
     "Pengajuan anda akan di tinjau oleh admin",
     "Berkas akan dikirim melalui aplikasi ini, karena itu silahkan cek secara berkala",
   ],
-  url: '/suratPengajuan/Pengajuan_kp.pdf',
-  title: 'Judul kerja praktik',
-  fileName: 'judul_kp.pdf'
-}
+  url: "/suratPengajuan/Pengajuan_kp.pdf",
+  title: "Judul kerja praktik",
+  fileName: "judul_kp.pdf",
+};
 
 const judulSkripsi = {
   syarat: [
@@ -209,8 +242,8 @@ const judulSkripsi = {
     "Pengajuan anda akan di tinjau oleh admin",
     "Berkas akan dikirim melalui aplikasi ini, karena itu silahkan cek secara berkala",
   ],
-  title: 'Judul skripsi'
-}
+  title: "Judul skripsi",
+};
 
 const pengantarKp = {
   syarat: [
@@ -222,20 +255,20 @@ const pengantarKp = {
     "Pengajuan anda akan di tinjau oleh admin",
     "Berkas akan dikirim melalui aplikasi ini, karena itu silahkan cek secara berkala",
   ],
-  title: 'Pengantar kerja praktik',
-  url: '/suratPengajuan/pengantar_kp.pdf',
-  fileName: 'Pengantar_kp.pdf'
-}
+  title: "Pengantar kerja praktik",
+  url: "/suratPengajuan/pengantar_kp.pdf",
+  fileName: "Pengantar_kp.pdf",
+};
 
 const transkripNilai = {
-   syarat: [
+  syarat: [
     "Isi informasi pengaju dengan benar",
     "Setelah terisi, silahkan submit",
     "Pengajuan anda akan di tinjau oleh admin",
     "Berkas akan dikirim melalui aplikasi ini, karena itu silahkan cek secara berkala",
   ],
-  title: 'Transkrip nilai'
-}
+  title: "Transkrip nilai",
+};
 
 const yudisium = {
   syarat: [
@@ -246,65 +279,64 @@ const yudisium = {
     "Pengajuan anda akan di tinjau oleh admin",
     "Berkas akan dikirim melalui aplikasi ini, karena itu silahkan cek secara berkala",
   ],
-  title: 'Yudisium',
-  url: '/yudisium/yudisium.pdf',
-  fileName: 'yudisium.pdf'
-}
+  title: "Yudisium",
+  url: "/yudisium/yudisium.pdf",
+  fileName: "yudisium.pdf",
+};
 
 const sempro = {
   syarat: [
-    'Silahkan unduh berkas persayaratan untuk pengajuan',
-    'Isi data-data yang dibutuhkan dalam surat tersebut',
-    'Ajukan transkrip nilai jika tidak ada',
-    'Screenshoot rekap pembayaran seminar skripsi melalui SIAKAD',
-    'Masukan penugasan dosen skripsi/tugas akhir',
-    'Masukan sisa persayaratan administrasi daftar seminar tugas akhir',
-    'Upload semua berkas dalam satu file pdf',
-    'Buku sidang skripsi 3 jilid (Bab 1 - 3)',
-    'Pengajuan anda akan ditinjau oleh admin',
-    'Berkas akan dikirim melalui aplikasi ini, karena itu silahkan cek secara berkala'
+    "Silahkan unduh berkas persayaratan untuk pengajuan",
+    "Isi data-data yang dibutuhkan dalam surat tersebut",
+    "Ajukan transkrip nilai jika tidak ada",
+    "Screenshoot rekap pembayaran seminar skripsi melalui SIAKAD",
+    "Masukan penugasan dosen skripsi/tugas akhir",
+    "Masukan sisa persayaratan administrasi daftar seminar tugas akhir",
+    "Upload semua berkas dalam satu file pdf",
+    "Buku sidang skripsi 3 jilid (Bab 1 - 3)",
+    "Pengajuan anda akan ditinjau oleh admin",
+    "Berkas akan dikirim melalui aplikasi ini, karena itu silahkan cek secara berkala",
   ],
-  title: 'Sempro',
-  url: '/sempro/sempro.pdf',
-  fileName: 'sempro.pdf'
-}
+  title: "Sempro",
+  url: "/sempro/sempro.pdf",
+  fileName: "sempro.pdf",
+};
 
 const seminarKerjaPraktik = {
   syarat: [
-    'Silahkan unduh berkas persayaratan untuk pengajuan',
-    'Isi data-data yang dibutuhkan dalam surat tersebut',
-    'Ajukan transkrip nilai jika tidak ada',
-    'Screenshoot rekap pembayaran seminar KP melalui SIAKAD',
-    'Masukan penugasan dosen skripsi/tugas akhir',
-    'Masukan sisa persayaratan administrasi daftar seminar tugas akhir',
-    'Upload semua berkas dalam satu file pdf',
-    'Buku laporan KP 2 jilid',
-    'Pengajuan anda akan ditinjau oleh admin',
-    'Berkas akan dikirim melalui aplikasi ini, karena itu silahkan cek secara berkala'
+    "Silahkan unduh berkas persayaratan untuk pengajuan",
+    "Isi data-data yang dibutuhkan dalam surat tersebut",
+    "Ajukan transkrip nilai jika tidak ada",
+    "Screenshoot rekap pembayaran seminar KP melalui SIAKAD",
+    "Masukan penugasan dosen skripsi/tugas akhir",
+    "Masukan sisa persayaratan administrasi daftar seminar tugas akhir",
+    "Upload semua berkas dalam satu file pdf",
+    "Buku laporan KP 2 jilid",
+    "Pengajuan anda akan ditinjau oleh admin",
+    "Berkas akan dikirim melalui aplikasi ini, karena itu silahkan cek secara berkala",
   ],
-  title: 'Seminar Kerja Praktik',
-  url: '/sempro/sempro.pdf',
-  fileName: 'Seminar_kerja_praktik.pdf'
-}
+  title: "Seminar Kerja Praktik",
+  url: "/sempro/sempro.pdf",
+  fileName: "Seminar_kerja_praktik.pdf",
+};
 
 const sidangSkripsi = {
   syarat: [
-    'Silahkan unduh berkas persayaratan untuk pengajuan',
-    'Isi data-data yang dibutuhkan dalam surat tersebut',
-    'Ajukan transkrip nilai jika tidak ada',
-    'Screenshoot rekap pembayaran sidangg skripsi melalui SIAKAD',
-    'Masukan penugasan dosen skripsi/tugas akhir',
-    'Masukan sisa persayaratan administrasi daftar seminar tugas akhir',
-    'Upload semua berkas dalam satu file pdf',
-    'Buku laporan KP 2 jilid',
-    'Pengajuan anda akan ditinjau oleh admin',
-    'Berkas akan dikirim melalui aplikasi ini, karena itu silahkan cek secara berkala'
+    "Silahkan unduh berkas persayaratan untuk pengajuan",
+    "Isi data-data yang dibutuhkan dalam surat tersebut",
+    "Ajukan transkrip nilai jika tidak ada",
+    "Screenshoot rekap pembayaran sidangg skripsi melalui SIAKAD",
+    "Masukan penugasan dosen skripsi/tugas akhir",
+    "Masukan sisa persayaratan administrasi daftar seminar tugas akhir",
+    "Upload semua berkas dalam satu file pdf",
+    "Buku laporan KP 2 jilid",
+    "Pengajuan anda akan ditinjau oleh admin",
+    "Berkas akan dikirim melalui aplikasi ini, karena itu silahkan cek secara berkala",
   ],
-  title: 'Sidang skripsi',
-  url: '/sempro/sempro.pdf',
-  fileName: 'Seminar_kerja_praktik.pdf'
-}
-
+  title: "Sidang skripsi",
+  url: "/sempro/sempro.pdf",
+  fileName: "Seminar_kerja_praktik.pdf",
+};
 
 export {
   kategoriPermintaan,

@@ -1,10 +1,8 @@
 import Underline from "./Underline";
 import { Link } from "react-router";
-import { motion } from "motion/react";
-
+import { motion as Motion } from "motion/react";
 
 const TableRiwayat = ({ historyRequest }) => {
-
   const propertyTable = [
     "antrian",
     "tanggal Pengajuan",
@@ -32,7 +30,12 @@ const TableRiwayat = ({ historyRequest }) => {
           <p>: diproses</p>
         </div>
       </div>
-      <motion.div initial={{ opacity: 0, translateY: 20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ duration: 0.5, ease: ["easeInOut"] }} className="rounded-lg bg-white overflow-hidden shadow-xl ">
+      <Motion.div
+        initial={{ opacity: 0, translateY: 20 }}
+        animate={{ opacity: 1, translateY: 0 }}
+        transition={{ duration: 0.5, ease: ["easeInOut"] }}
+        className="rounded-lg bg-white overflow-hidden shadow-xl "
+      >
         <div className="px-2 md:py-4 overflow-x-auto">
           <table className="w-full">
             <thead>
@@ -51,48 +54,42 @@ const TableRiwayat = ({ historyRequest }) => {
               {historyRequest.map((value, index) => (
                 <tr
                   key={index}
-                  className={`flex flex-row ${ index % 2 === 0 && "bg-gray-500/20" } items-center justify-between hover:shadow-md cursor-pointer transition-all transition-duration justify-between gap-2 md:table-row md:mb-0 md:border-b-4 border-gray-600 md:border-none md:p-0`}
+                  className={`flex flex-row ${index % 2 === 0 && "bg-gray-500/20"} items-center justify-between hover:shadow-md cursor-pointer transition-all transition-duration gap-2 md:table-row md:mb-0 md:border-b-4 border-gray-600 md:border-none md:p-0`}
                 >
                   <td className="md:px-6 hidden py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">
-                    <Link to={`/dashboard/${ value.id }`}>{value.queue}</Link>
+                    <Link to={`/dashboard/${value.id}`}>{value.queue}</Link>
                   </td>
-                   <td className="md:px-6 py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">
-                    <Link to={`/dashboard/${ value.id }`}>
+                  <td className="md:px-6 py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">
+                    <Link to={`/dashboard/${value.id}`}>
                       {new Date(value.created_at).toLocaleDateString("id-ID", {
                         year: "numeric",
                         month: "2-digit",
-                        day: "2-digit"
+                        day: "2-digit",
                       })}
                     </Link>
                   </td>
-                  <td className="md:px-6 py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell"
-                  >
-                    <Link to={`/dashboard/${ value.id }`}>
-                      {value.type}
-                    </Link>
+                  <td className="md:px-6 py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">
+                    <Link to={`/dashboard/${value.id}`}>{value.type}</Link>
                   </td>
-                  <td className="md:px-6 hidden py-2 md:py-4 text-left text-xs md:text-[16px] font-medium text-wrap md:table-cell"
-                  >
-                    <Link to={`/dashboard/${ value.id }`}>
-                     {value.message}
-                    </Link>
+                  <td className="md:px-6 hidden py-2 md:py-4 text-left text-xs md:text-[16px] font-medium text-wrap md:table-cell">
+                    <Link to={`/dashboard/${value.id}`}>{value.message}</Link>
                   </td>
-                  <td className="md:table-cell"
-                  >
-                    <Link className="block flex justify-center" to={`/dashboard/${ value.id }`}>
-                      <span className={`size-2 md:size-3 block rounded-md ${ value.status === "completed" && "bg-green-500" } ${ value.status === "pending" && "bg-yellow-400" } ${ value.status === "canceled" && "bg-red-500" }`}>
-                        
-                      </span>
-                  
+                  <td className="md:table-cell">
+                    <Link
+                      className="flex justify-center"
+                      to={`/dashboard/${value.id}`}
+                    >
+                      <span
+                        className={`size-2 md:size-3 block rounded-md ${value.status === "completed" && "bg-green-500"} ${value.status === "pending" && "bg-yellow-400"} ${value.status === "canceled" && "bg-red-500"}`}
+                      ></span>
                     </Link>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-
         </div>
-      </motion.div>
+      </Motion.div>
     </>
   );
 };
