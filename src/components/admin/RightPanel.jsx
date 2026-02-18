@@ -18,7 +18,6 @@ const NotificationItem = ({
   request_type,
   time,
   variant = "blue",
-  icon: Icon,
   onClick,
   is_read,
 }) => {
