@@ -2,35 +2,39 @@ import Pengajuan from "../ui/Pengajuan";
 import { penugasanDosenSkripsi } from "../../utils/constant";
 import { useState } from "react";
 import { requestPengajuan } from "../../utils/action";
-import SuccessModal from "../ui/SuccessModal";
+import { useToast } from "@/utils/hooks/useToast";
 import LinkTranskrip from "../ui/LinkTranskrip";
 
 const DosenSkripsi = () => {
+  const { showToast } = useToast();
   const [message, setMessage] = useState("");
   const [file, setFIle] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [displayModal, setDisplayModal] = useState(false);
   const { syarat, title } = penugasanDosenSkripsi;
-  const [err, setErr] = useState(false);
 
   const submitHandler = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    await requestPengajuan(
-      "Penugasan Dosen skripsi",
+    const result = await requestPengajuan(
+      "Penugasan Dosen Skripsi",
       message,
       file,
-      setDisplayModal,
-      displayModal,
+      null,
+      null,
       setIsLoading,
-      setErr
+      null,
     );
+
+    if (result && result.status === "success") {
+      showToast("Pengajuan berhasil dikirim", "success");
+      setMessage("");
+      setFIle(null);
+    } else {
+      showToast(result?.message || "Gagal mengirim pengajuan", "error");
+    }
   };
   return (
     <>
-      {displayModal && (
-        <SuccessModal onOkHandler={() => setDisplayModal(!displayModal)} isSuccess={err} />
-      )};
       <Pengajuan
         submitHandler={submitHandler}
         message={message}
@@ -39,7 +43,12 @@ const DosenSkripsi = () => {
         title={title}
         setFile={setFIle}
         isLoading={isLoading}
-        children={<LinkTranskrip path={'/dashboard/request/suratpengajuan/judulskripsi'} content={"Link Pengajuan Judul Skripsi"} />}
+        children={
+          <LinkTranskrip
+            path={"/dashboard/request/suratpengajuan/judulskripsi"}
+            content={"Link Pengajuan Judul Skripsi"}
+          />
+        }
       />
     </>
   );

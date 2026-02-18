@@ -1,4 +1,10 @@
-import { useState, createContext, useContext, useCallback } from "react";
+import {
+  useState,
+  createContext,
+  useContext,
+  useCallback,
+  useMemo,
+} from "react";
 
 const UserContext = createContext();
 
@@ -22,10 +28,10 @@ export const UserProvider = ({ children }) => {
     return {};
   });
 
-  const updateUserData = (newUserData) => {
+  const updateUserData = useCallback((newUserData) => {
     setUserData(newUserData);
     localStorage.setItem("user", JSON.stringify(newUserData));
-  };
+  }, []);
 
   const logout = useCallback(() => {
     setUserData({});
@@ -43,12 +49,13 @@ export const UserProvider = ({ children }) => {
     return now - parseInt(timestamp) < twentyFourHours;
   }, []);
 
+  const contextValue = useMemo(
+    () => ({ userData, updateUserData, logout, isSessionValid }),
+    [userData, updateUserData, logout, isSessionValid],
+  );
+
   return (
-    <UserContext.Provider
-      value={{ userData, updateUserData, logout, isSessionValid }}
-    >
-      {children}
-    </UserContext.Provider>
+    <UserContext.Provider value={contextValue}>{children}</UserContext.Provider>
   );
 };
 

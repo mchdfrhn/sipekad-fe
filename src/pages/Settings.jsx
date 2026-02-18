@@ -417,6 +417,51 @@ const Settings = () => {
                       />
                     </div>
                   </div>
+                  <div className="space-y-1">
+                    <label className="text-sm font-bold text-[#2B3674] ml-1">
+                      Program Studi
+                    </label>
+                    <div className="relative">
+                      <SettingsIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                      <input
+                        name="prodi"
+                        value={profileData.prodi}
+                        onChange={handleProfileChange}
+                        className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-transparent rounded-xl focus:bg-white focus:ring-2 focus:ring-[#4318FF] transition-all outline-none text-sm font-medium"
+                        placeholder="Program Studi"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-sm font-bold text-[#2B3674] ml-1">
+                      NIM/ID
+                    </label>
+                    <div className="relative">
+                      <Hash className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                      <input
+                        name="nim"
+                        value={profileData.nim}
+                        className="w-full pl-10 pr-4 py-2 bg-gray-100 border border-transparent rounded-xl outline-none text-sm font-medium cursor-not-allowed"
+                        placeholder="NIM/ID"
+                        disabled
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-sm font-bold text-[#2B3674] ml-1">
+                      NIK
+                    </label>
+                    <div className="relative">
+                      <Hash className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                      <input
+                        name="nik"
+                        value={profileData.nik}
+                        onChange={handleProfileChange}
+                        className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-transparent rounded-xl focus:bg-white focus:ring-2 focus:ring-[#4318FF] transition-all outline-none text-sm font-medium"
+                        placeholder="NIK"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
               <div className="flex justify-end pt-4">

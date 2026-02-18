@@ -3,34 +3,38 @@ import LinkTranskrip from "../ui/LinkTranskrip";
 import Pengajuan from "../ui/Pengajuan";
 import { requestPengajuan } from "../../utils/action";
 import { useState } from "react";
-import SuccessModal from "../ui/SuccessModal";
+import { useToast } from "@/utils/hooks/useToast";
 
 const PengantarKerjaPraktik = () => {
+  const { showToast } = useToast();
   const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [displayModal, setIsDisplayModal] = useState(false);
   const { syarat, url, fileName, title } = pengantarKp;
-  const [err, setErr] = useState(false);
 
   const submitHandler = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    await requestPengajuan(
+    const result = await requestPengajuan(
       "Pengantar Kerja Praktik",
       message,
       file,
-      setIsDisplayModal,
-      displayModal,
+      null,
+      null,
       setIsLoading,
-      setErr
+      null,
     );
+
+    if (result && result.status === "success") {
+      showToast("Pengajuan berhasil dikirim", "success");
+      setMessage("");
+      setFile(null);
+    } else {
+      showToast(result?.message || "Gagal mengirim pengajuan", "error");
+    }
   };
   return (
     <>
-      {displayModal && (
-        <SuccessModal onOkHandler={() => setIsDisplayModal(!displayModal)} isSuccess={err} />
-      )}
       <Pengajuan
         submitHandler={submitHandler}
         message={message}

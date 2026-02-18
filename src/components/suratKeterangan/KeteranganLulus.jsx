@@ -2,33 +2,36 @@ import Pengajuan from "../ui/Pengajuan";
 import { keteranganLulus } from "../../utils/constant";
 import { useState } from "react";
 import { requestPengajuan } from "../../utils/action";
-import SuccessModal from "../ui/SuccessModal";
+import { useToast } from "@/utils/hooks/useToast";
 
 const KeteranganLulus = () => {
+  const { showToast } = useToast();
   const [message, setMessage] = useState("");
-  const [displayModal, setDisplayModal] = useState(false);
-  const [isLoading, setLoading] = useState(false);
-  const [err, setErr] = useState(false)
-  const { syarat, title } = keteranganLulus;
-  
+  const [isLoading, setIsLoading] = useState(false);
+  const { title, syarat } = keteranganLulus;
+
   const submitHandler = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    await requestPengajuan(
-      "Keterangan lulus",
+    setIsLoading(true);
+    const result = await requestPengajuan(
+      "Keterangan Lulus",
       message,
       null,
-      setDisplayModal,
-      displayModal,
-      setLoading,
-      setErr
+      null, // setDisplayModal
+      null, // displayModal
+      setIsLoading,
+      null, // setErr
     );
+
+    if (result && result.status === "success") {
+      showToast("Pengajuan berhasil dikirim", "success");
+      setMessage("");
+    } else {
+      showToast(result?.message || "Gagal mengirim pengajuan", "error");
+    }
   };
   return (
     <>
-      {displayModal && (
-        <SuccessModal onOkHandler={() => setDisplayModal(!displayModal)} isSuccess={err}  />
-      )}
       <Pengajuan
         submitHandler={submitHandler}
         message={message}

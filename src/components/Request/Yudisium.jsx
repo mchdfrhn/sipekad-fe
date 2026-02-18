@@ -2,37 +2,38 @@ import Pengajuan from "../ui/Pengajuan";
 import { yudisium } from "../../utils/constant";
 import { useState } from "react";
 import { requestPengajuan } from "../../utils/action";
+import { useToast } from "@/utils/hooks/useToast";
 import BackLink from "../ui/BackLink";
-import SuccessModal from "../ui/SuccessModal";
 
 const Yudisium = () => {
+  const { showToast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
-  const [displayModal, setDisplayModal] = useState(false);
   const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
-  const [err, setErr] = useState(false);
   const submitHandler = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    await requestPengajuan(
-      "yudisium",
+    const result = await requestPengajuan(
+      "Yudisium",
       message,
       file,
-      setDisplayModal,
-      displayModal,
+      null,
+      null,
       setIsLoading,
-      setErr,
+      null,
     );
+
+    if (result && result.status === "success") {
+      showToast("Pengajuan berhasil dikirim", "success");
+      setMessage("");
+      setFile(null);
+    } else {
+      showToast(result?.message || "Gagal mengirim pengajuan", "error");
+    }
   };
   const { title, syarat, url, fileName } = yudisium;
   return (
     <>
-      {displayModal && (
-        <SuccessModal
-          onOkHandler={() => setDisplayModal(!displayModal)}
-          isSuccess={err}
-        />
-      )}
       <BackLink />
       <Pengajuan
         message={message}

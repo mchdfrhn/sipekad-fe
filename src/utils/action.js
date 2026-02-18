@@ -20,33 +20,41 @@ export const requestPengajuan = async (
   setErr,
 ) => {
   const token = localStorage.getItem("tokenKey");
-  const response = await postrequest(token, {
-    type,
-    message,
-  });
-  console.log(response);
-  if (response.status === "success") {
-    if (file) {
-      const pengajuanId = response.pengajuanId;
-      const resultUpload = await uploadPdf(
-        file,
-        pengajuanId,
-        token,
-        "upload-request",
-      );
+  try {
+    const response = await postrequest(token, {
+      type,
+      message,
+    });
+    console.log(response);
+    if (response.status === "success") {
+      if (file) {
+        const pengajuanId = response.pengajuanId;
+        const resultUpload = await uploadPdf(
+          file,
+          pengajuanId,
+          token,
+          "upload-request",
+        );
+        console.log(resultUpload);
+      }
 
-      console.log(resultUpload);
+      if (setDisplayModal) setDisplayModal(!displayModal);
+      if (setLoading) setLoading(false);
+      return response;
     }
 
-    setDisplayModal(!displayModal);
-    setLoading(false);
-  }
-  console.log(response.message);
-  const result = response.message;
-  if (result.status === "faiil") {
-    setDisplayModal(true);
-    setLoading(false);
-    setErr(true);
+    if (response.status === "faiil") {
+      if (setDisplayModal) setDisplayModal(true);
+      if (setLoading) setLoading(false);
+      if (setErr) setErr(true);
+    }
+    return response;
+  } catch (error) {
+    if (setLoading) setLoading(false);
+    return {
+      status: "fail",
+      message: error.message || "Internal server error",
+    };
   }
 };
 

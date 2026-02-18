@@ -6,7 +6,7 @@ import App from "../App";
 import Login from "../components/Auth/Login";
 
 // Dashboard
-import Dashboard from "../pages/Dashboard";
+import LayoutDashboard from "../components/Dashboard/LayoutDashboard";
 import DashboardHome from "../components/Dashboard/DashboardHome";
 import DashboardRequest from "../components/Dashboard/DashboardRequest";
 import DashboardUser from "../components/Dashboard/DashboardUser";
@@ -84,7 +84,7 @@ const Router = createBrowserRouter([
         children: [
           {
             path: "/dashboard",
-            Component: Dashboard,
+            Component: LayoutDashboard,
             children: [
               {
                 index: true,

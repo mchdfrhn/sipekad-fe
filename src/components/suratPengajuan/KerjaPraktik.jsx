@@ -3,43 +3,55 @@ import { judulKerjaPraktik } from "../../utils/constant";
 import LinkTranskrip from "../ui/LinkTranskrip";
 import { useState } from "react";
 import { requestPengajuan } from "../../utils/action";
-import SuccessModal from "../ui/SuccessModal";
+import { useToast } from "@/utils/hooks/useToast";
 
 const KerjaPraktik = () => {
+  const { showToast } = useToast();
   const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
   const { syarat, url, title, fileName } = judulKerjaPraktik;
-  const [displayModal, setDisplayModal] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [err, setErr] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    setLoading(true)
-    await requestPengajuan("Judul Kerja Praktik", message, file, setDisplayModal, displayModal, setLoading, setErr);
+    setIsLoading(true);
+    const result = await requestPengajuan(
+      "Judul Kerja Praktik",
+      message,
+      file,
+      null,
+      null,
+      setIsLoading,
+      null,
+    );
+
+    if (result && result.status === "success") {
+      showToast("Pengajuan berhasil dikirim", "success");
+      setMessage("");
+      setFile(null);
+    } else {
+      showToast(result?.message || "Gagal mengirim pengajuan", "error");
+    }
   };
   return (
     <>
-    {
-      displayModal && <SuccessModal onOkHandler={() => setDisplayModal(!displayModal)} isSuccess={err} />
-    }   
-    <Pengajuan
-      url={url}
-      syarat={syarat}
-      message={message}
-      setMessage={setMessage}
-      submitHandler={submitHandler}
-      title={title}
-      fileName={fileName}
-      setFile={setFile}
-      isLoading={loading}
-      children={
-        <LinkTranskrip
-          path={"/dashboard/request/transkripnilai"}
-          content={" Link pengajuan transkrip nilai"}
-        />
-      }
-    />
+      <Pengajuan
+        url={url}
+        syarat={syarat}
+        message={message}
+        setMessage={setMessage}
+        submitHandler={submitHandler}
+        title={title}
+        fileName={fileName}
+        setFile={setFile}
+        isLoading={isLoading}
+        children={
+          <LinkTranskrip
+            path={"/dashboard/request/transkripnilai"}
+            content={" Link pengajuan transkrip nilai"}
+          />
+        }
+      />
     </>
   );
 };
