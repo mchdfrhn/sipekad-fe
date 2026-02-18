@@ -213,25 +213,24 @@ export const updateUserForAdminAction = async (
   return result;
 };
 
-export const loginFlow = async (
-  data,
-  updateUserData,
-  navigate,
-  setErrMessage,
-  setLoading,
-) => {
+export const loginFlow = async (data, updateUserData, navigate, setLoading) => {
   const result = await login(data);
   if (result.status === "success") {
     localStorage.setItem("tokenKey", result.accessToken);
     updateUserData(result.user);
     localStorage.setItem("user", JSON.stringify(result.user));
-    navigate("/dashboard");
     if (result.user.role === "admin") {
       navigate("/admin");
+    } else {
+      navigate("/dashboard");
     }
+    setLoading(false);
+    return { status: "success" };
   }
+
   setLoading(false);
   if (result.status === "error") {
-    setErrMessage("Email atau password salah");
+    return { status: "error", message: "Email atau password salah" };
   }
+  return { status: "error", message: result.message || "An error occurred" };
 };
