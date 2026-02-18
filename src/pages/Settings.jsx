@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router";
 import {
   User,
@@ -32,7 +32,6 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Sliders, ZoomIn, Check, X } from "lucide-react";
-import { CLD_NAME } from "@/utils/cloudinary.config";
 import axios from "axios";
 
 const Settings = () => {
@@ -63,6 +62,20 @@ const Settings = () => {
     nik: userData?.nik || "",
     prodi: userData?.prodi || "",
   });
+  useEffect(() => {
+    if (userData && Object.keys(userData).length > 0) {
+      setProfileData({
+        username: userData.username || "",
+        full_name: userData.full_name || "",
+        email: userData.email || "",
+        phone: userData.phone || "",
+        url_photo: userData.url_photo || "",
+        nim: userData.nim || "",
+        nik: userData.nik || "",
+        prodi: userData.prodi || "",
+      });
+    }
+  }, [userData]);
 
   // Security State
   const [securityData, setSecurityData] = useState({
@@ -120,8 +133,11 @@ const Settings = () => {
 
     return new Promise((resolve, reject) => {
       image.onload = () => {
-        canvas.width = pixelCrop.width;
-        canvas.height = pixelCrop.height;
+        // Enforce 512x512 size for better performance and storage
+        const targetSize = 512;
+        canvas.width = targetSize;
+        canvas.height = targetSize;
+
         ctx.drawImage(
           image,
           pixelCrop.x,
@@ -130,13 +146,19 @@ const Settings = () => {
           pixelCrop.height,
           0,
           0,
-          pixelCrop.width,
-          pixelCrop.height,
+          targetSize,
+          targetSize,
         );
-        canvas.toBlob((blob) => {
-          if (!blob) return reject(new Error("Canvas is empty"));
-          resolve(blob);
-        }, "image/jpeg");
+
+        // Use quality 0.8 for good balance between size and quality
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) return reject(new Error("Canvas is empty"));
+            resolve(blob);
+          },
+          "image/jpeg",
+          0.8,
+        );
       };
       image.onerror = (e) => reject(e);
     });
@@ -148,17 +170,48 @@ const Settings = () => {
       const croppedImageBlob = await getCroppedImg(image, croppedAreaPixels);
       const formData = new FormData();
       formData.append("file", croppedImageBlob);
-      formData.append("upload_preset", "sipekad");
 
       const response = await axios.post(
-        `https://api.cloudinary.com/v1_1/${CLD_NAME}/image/upload`,
+        `${import.meta.env.VITE_API_BASE_URL}/users-photo/${userData.id}`,
         formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        },
       );
 
-      if (response.data.secure_url) {
-        handleAvatarUpload(response.data.secure_url);
+      if (response.data.status === "success" && response.data.url) {
+        const newUrl = response.data.url;
+        const oldPhotoUrl = profileData.url_photo;
+        handleAvatarUpload(newUrl);
+
+        // Update local user data state
+        const updatedUser = { ...userData, url_photo: newUrl };
+        updateUserData(updatedUser);
+
         setIsEditorOpen(false);
-        showToast("Foto berhasil diperbarui", "success");
+        showToast("Foto profil berhasil diperbarui", "success");
+
+        if (
+          oldPhotoUrl &&
+          (oldPhotoUrl.includes("cloudinary.com") ||
+            oldPhotoUrl.includes("amazonaws.com"))
+        ) {
+          try {
+            await axios.delete(
+              `${import.meta.env.VITE_API_BASE_URL}/storage/delete`,
+              {
+                headers: { Authorization: `Bearer ${token}` },
+                data: { url: oldPhotoUrl },
+              },
+            );
+          } catch (deleteError) {
+            console.error("Failed to delete old photo:", deleteError);
+            // Silent fail for deletion to not interrupt user flow
+          }
+        }
       }
     } catch (error) {
       console.error("Upload photo error:", error);

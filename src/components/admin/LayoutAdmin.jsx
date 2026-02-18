@@ -22,6 +22,7 @@ import {
   getDashboardActivities,
   markAsRead,
 } from "../../utils/api/dashboardValue";
+import { useUser } from "../../utils/hooks/userContext";
 import {
   Search,
   Bell,
@@ -50,13 +51,9 @@ import Alert from "../ui/Alert";
 const LayoutAdmin = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const { userData: user } = useUser();
   const [searchParams, setSearchParams] = useSearchParams();
   const breadcrumbs = formatPathToBreadcrumb(pathname);
-  const [user, setUser] = useState({
-    full_name: "Admin",
-    role: "admin",
-    url_photo: "",
-  });
   const [scrolled, setScrolled] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const unreadCount = notifications.filter((n) => !n.is_read).length;
@@ -127,10 +124,6 @@ const LayoutAdmin = () => {
   }, []);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
     // Initial fetch of notifications
     getDashboardActivities(null, setNotifications);
 
@@ -157,13 +150,19 @@ const LayoutAdmin = () => {
   };
 
   const logoutHandler = async () => {
-    const token = localStorage.getItem("tokenKey");
+    navigate("/");
+    localStorage.removeItem("tokenKey");
+    localStorage.removeItem("user");
+  };
 
-    if (token) {
-      navigate("/");
-      localStorage.removeItem("tokenKey");
-      localStorage.removeItem("user");
-    }
+  const getInitials = (name) => {
+    if (!name) return "A";
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .slice(0, 2)
+      .join("")
+      .toUpperCase();
   };
 
   if (user?.role !== "admin") {
@@ -367,10 +366,13 @@ const LayoutAdmin = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <div className="flex items-center gap-3 cursor-pointer p-1 pr-4 hover:bg-gray-50 rounded-full transition-colors">
-                  <Avatar className="h-10 w-10 border-2 border-white shadow-sm bg-gray-100">
-                    <AvatarImage src={user.url_photo} />
-                    <AvatarFallback className="bg-gray-100 flex items-center justify-center">
-                      <User className="h-6 w-6 text-gray-400" />
+                  <Avatar className="h-10 w-10 border-2 border-white shadow-sm">
+                    <AvatarImage
+                      src={user.url_photo}
+                      className="object-cover"
+                    />
+                    <AvatarFallback className="bg-blue-100 text-[#4318FF] font-bold text-xs">
+                      {getInitials(user.full_name)}
                     </AvatarFallback>
                   </Avatar>
                   <div className="hidden md:block text-left">

@@ -23,6 +23,16 @@ const HeaderDashboard = () => {
     navigate("/");
   };
 
+  const getInitials = (name) => {
+    if (!name) return "U";
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .slice(0, 2)
+      .join("")
+      .toUpperCase();
+  };
+
   return (
     <Motion.header
       initial={{ opacity: 0, translateY: -20 }}
@@ -36,8 +46,8 @@ const HeaderDashboard = () => {
             <div className="flex items-center gap-3 cursor-pointer p-1 pr-4 hover:bg-gray-50 rounded-full transition-colors">
               <Avatar className="h-10 w-10 border-2 border-white shadow-sm bg-gray-100">
                 <AvatarImage src={userData?.url_photo} />
-                <AvatarFallback className="bg-gray-100 flex items-center justify-center">
-                  <User className="h-6 w-6 text-gray-400" />
+                <AvatarFallback className="bg-blue-100 text-[#4318FF] font-bold text-xs">
+                  {getInitials(userData?.full_name)}
                 </AvatarFallback>
               </Avatar>
               <div className="hidden md:block text-left">
