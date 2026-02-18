@@ -4,6 +4,7 @@ import { Eye, EyeClosed, X } from "lucide-react";
 import { STUDENT_PRODI } from "../../../utils/constant";
 import CustomSelect from "../../ui/CustomSelect";
 import { useToast } from "@/utils/hooks/useToast";
+import { motion } from "framer-motion";
 
 const prodiOptions = Object.values(STUDENT_PRODI).map((val) => ({
   label: val,
@@ -97,11 +98,19 @@ const AddUserForm = ({
     <>
       {showForm && (
         <>
-          <div
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             onClick={() => setShowForm(!showForm)}
             className="fixed inset-0 w-screen h-screen bg-[#111c44]/30 backdrop-blur-[2px] z-99"
-          ></div>
-          <div className="flex flex-col gap-4 bg-white shadow-2xl p-8 h-[90vh] md:h-auto max-h-[95vh] overflow-y-auto rounded-[30px] fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-100 w-[90%] max-w-[500px] border border-gray-100">
+          ></motion.div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8, x: "-50%", y: "-50%" }}
+            animate={{ opacity: 1, scale: 1, x: "-50%", y: "-50%" }}
+            exit={{ opacity: 0, scale: 0.8, x: "-50%", y: "-50%" }}
+            className="flex flex-col gap-4 bg-white shadow-2xl p-8 h-[90vh] md:h-auto max-h-[95vh] overflow-y-auto rounded-[30px] fixed top-1/2 left-1/2 z-100 w-[90%] max-w-[500px] border border-gray-100"
+          >
             <div className="flex justify-between items-center mb-2">
               <h2 className="text-xl font-extrabold text-[#2B3674] tracking-tight">
                 Tambah Pengguna Baru
@@ -236,7 +245,7 @@ const AddUserForm = ({
             <p className="text-center text-xs font-bold text-red-500 mt-2">
               {errMessage}
             </p>
-          </div>
+          </motion.div>
         </>
       )}
     </>

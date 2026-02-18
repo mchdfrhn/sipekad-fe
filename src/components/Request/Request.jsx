@@ -52,5 +52,3 @@ const Request = () => {
 };
 
 export default Request;
-Users are reporting that search and filter functionalities are case-sensitive. This is primarily due to strict equality checks (=) in SQL queries in the backend.
-
