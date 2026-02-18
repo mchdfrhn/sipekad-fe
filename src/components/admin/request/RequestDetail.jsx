@@ -46,7 +46,6 @@ const RequestDetail = () => {
   const [requestDetail, setRequestDetail] = useState(null);
   const [responses, setResponses] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isDisplay, setIsDisplay] = useState(false);
   const [isActive, setIsActive] = useState(true);
   const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
@@ -72,13 +71,6 @@ const RequestDetail = () => {
     getDetail();
   }, [getDetail]);
 
-  const onOkHandler = () => {
-    setIsDisplay(false);
-    getDetail();
-    setMessage("");
-    setFile(null);
-  };
-
   const onAddResponseHandler = (e) => {
     e.preventDefault();
     if (!message && isActive) {
@@ -103,7 +95,9 @@ const RequestDetail = () => {
         isActive ? "Permohonan disetujui" : "Permohonan ditolak",
         "success",
       );
-      setIsDisplay(true);
+      getDetail();
+      setMessage("");
+      setFile(null);
       setShowConfirm(false);
     } else if (result && result.status === "fail") {
       showToast(errMessage || "Gagal memproses permohonan", "error");
@@ -153,13 +147,6 @@ const RequestDetail = () => {
 
   return (
     <div className="space-y-8 pb-10">
-      {isDisplay && (
-        <SuccessModal
-          onOkHandler={onOkHandler}
-          text={"Respon berhasil dikirim!"}
-        />
-      )}
-
       {loading && <LoadingOverlay />}
 
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">

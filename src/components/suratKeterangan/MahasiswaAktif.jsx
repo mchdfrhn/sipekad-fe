@@ -3,8 +3,10 @@ import { pengajuanMahasiswaAktif } from "../../utils/constant";
 import { useState } from "react";
 import { requestPengajuan } from "../../utils/action";
 import { useToast } from "@/utils/hooks/useToast";
+import { useNavigate } from "react-router";
 
 const MahasiswaAktif = () => {
+  const navigate = useNavigate();
   const { showToast } = useToast();
   const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
@@ -17,16 +19,21 @@ const MahasiswaAktif = () => {
       "Mahasiswa Aktif",
       message,
       file,
-      null, // setDisplayModal
-      null, // displayModal
+      null,
+      null,
       setIsLoading,
-      null, // setErr
+      null,
     );
 
     if (result && result.status === "success") {
       showToast("Pengajuan berhasil dikirim", "success");
       setMessage("");
       setFile(null);
+      if (result.pengajuanId) {
+        navigate(`/dashboard/pengajuan-${result.pengajuanId}`);
+      } else {
+        navigate("/dashboard");
+      }
     } else {
       showToast(result?.message || "Gagal mengirim pengajuan", "error");
     }

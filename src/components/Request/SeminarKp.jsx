@@ -5,6 +5,7 @@ import { useState } from "react";
 import { requestPengajuan } from "../../utils/action";
 import { useToast } from "@/utils/hooks/useToast";
 import BackLink from "../ui/BackLink";
+import { useNavigate } from "react-router";
 
 const ChildrenSempro = () => {
   return (
@@ -22,6 +23,7 @@ const ChildrenSempro = () => {
 };
 
 const SeminarKp = () => {
+  const navigate = useNavigate();
   const { showToast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
@@ -44,6 +46,11 @@ const SeminarKp = () => {
       showToast("Pengajuan berhasil dikirim", "success");
       setMessage("");
       setFile(null);
+      if (result.pengajuanId) {
+        navigate(`/dashboard/pengajuan-${result.pengajuanId}`);
+      } else {
+        navigate("/dashboard");
+      }
     } else {
       showToast(result?.message || "Gagal mengirim pengajuan", "error");
     }

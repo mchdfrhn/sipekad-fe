@@ -4,8 +4,10 @@ import { useState } from "react";
 import { requestPengajuan } from "../../utils/action";
 import { useToast } from "@/utils/hooks/useToast";
 import BackLink from "../ui/BackLink.jsx";
+import { useNavigate } from "react-router";
 
 const TranskripNilai = () => {
+  const navigate = useNavigate();
   const { showToast } = useToast();
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -26,6 +28,11 @@ const TranskripNilai = () => {
     if (result && result.status === "success") {
       showToast("Pengajuan berhasil dikirim", "success");
       setMessage("");
+      if (result.pengajuanId) {
+        navigate(`/dashboard/pengajuan-${result.pengajuanId}`);
+      } else {
+        navigate("/dashboard");
+      }
     } else {
       showToast(result?.message || "Gagal mengirim pengajuan", "error");
     }
