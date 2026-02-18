@@ -58,180 +58,197 @@ import DosenSkripsi from "../components/Penugasan/DosenSkripsi";
 import UserBio from "../components/User/UserBio";
 import FormUpdateUser from "../components/dashboardUser/FormUpdateUser";
 
+import PublicRoute from "../components/Auth/PublicRoute";
+import ProtectedRoute from "../components/Auth/ProtectedRoute";
+
 const Router = createBrowserRouter([
   {
     path: "/",
     Component: App,
     children: [
       {
-        index: true,
-        Component: Login,
-      },
-    ],
-  },
-  {
-    path: "/dashboard",
-    Component: Dashboard,
-    children: [
-      {
-        index: true,
-        Component: DashboardHome,
-      },
-      {
-        path: ":id",
-        Component: RequestDetailUser,
-      },
-      {
-        path: "user",
-        Component: DashboardUser,
+        element: <PublicRoute />,
         children: [
           {
             index: true,
-            Component: UserBio,
+            Component: Login,
+          },
+          {
+            path: "login",
+            Component: Login,
           },
         ],
       },
       {
-        path: "settings",
-        Component: Settings,
-      },
-      {
-        path: "request",
-        Component: DashboardRequest,
+        element: <ProtectedRoute />,
         children: [
           {
-            index: true,
-            Component: Request,
-          },
-          {
-            path: "suratketerangan",
-            Component: SuratKeterangan,
+            path: "/dashboard",
+            Component: Dashboard,
             children: [
               {
                 index: true,
-                Component: ListKeterangan,
+                Component: DashboardHome,
               },
               {
-                path: "cuti",
-                Component: KeteranganCuti,
+                path: ":id",
+                Component: RequestDetailUser,
               },
               {
-                path: "mahasiswaaktif",
-                Component: MahasiswaAktif,
+                path: "user",
+                Component: DashboardUser,
+                children: [
+                  {
+                    index: true,
+                    Component: UserBio,
+                  },
+                ],
               },
               {
-                path: "keteranganlulus",
-                Component: KeteranganLulus,
+                path: "settings",
+                Component: Settings,
               },
               {
-                path: "pengundurandiri",
-                Component: PengunduranDiri,
+                path: "request",
+                Component: DashboardRequest,
+                children: [
+                  {
+                    index: true,
+                    Component: Request,
+                  },
+                  {
+                    path: "suratketerangan",
+                    Component: SuratKeterangan,
+                    children: [
+                      {
+                        index: true,
+                        Component: ListKeterangan,
+                      },
+                      {
+                        path: "cuti",
+                        Component: KeteranganCuti,
+                      },
+                      {
+                        path: "mahasiswaaktif",
+                        Component: MahasiswaAktif,
+                      },
+                      {
+                        path: "keteranganlulus",
+                        Component: KeteranganLulus,
+                      },
+                      {
+                        path: "pengundurandiri",
+                        Component: PengunduranDiri,
+                      },
+                    ],
+                  },
+                  {
+                    path: "suratpengajuan",
+                    Component: SuratPengajuan,
+                    children: [
+                      {
+                        index: true,
+                        Component: ListPengajuan,
+                      },
+                      {
+                        path: "kerjapraktik",
+                        Component: KerjaPraktik,
+                      },
+                      {
+                        path: "judulskripsi",
+                        Component: JudulSkripsi,
+                      },
+                      {
+                        path: "pengantar-kerja-praktik",
+                        Component: PengantarKerjaPraktik,
+                      },
+                    ],
+                  },
+                  {
+                    path: "suratpenugasan",
+                    Component: SuratPenjugasan,
+                    children: [
+                      {
+                        index: true,
+                        Component: ListPenugasan,
+                      },
+                      {
+                        path: "dosenkerjapraktik",
+                        Component: DosenKerjaPraktik,
+                      },
+                      {
+                        path: "dosentugasakhir",
+                        Component: DosenSkripsi,
+                      },
+                    ],
+                  },
+                  {
+                    path: "transkripnilai",
+                    Component: TranskripNilai,
+                  },
+                  {
+                    path: "yudisium",
+                    Component: Yudisium,
+                  },
+                  {
+                    path: "pengajuansempro",
+                    Component: SuratSempro,
+                  },
+                  {
+                    path: "seminarkp",
+                    Component: SeminarKp,
+                  },
+                  {
+                    path: "skripsi",
+                    Component: Skripsi,
+                  },
+                ],
               },
             ],
           },
           {
-            path: "suratpengajuan",
-            Component: SuratPengajuan,
+            path: "/admin",
+            Component: LayoutAdmin,
             children: [
               {
                 index: true,
-                Component: ListPengajuan,
+                Component: MainAdmin,
               },
               {
-                path: "kerjapraktik",
-                Component: KerjaPraktik,
+                path: "user",
+                Component: LayoutUser,
+                children: [
+                  {
+                    index: true,
+                    Component: User,
+                  },
+                  {
+                    path: ":id",
+                    Component: UserDetail,
+                  },
+                ],
               },
               {
-                path: "judulskripsi",
-                Component: JudulSkripsi,
+                path: "pengajuan",
+                Component: RequestLayout,
+                children: [
+                  {
+                    index: true,
+                    Component: RequestAdmin,
+                  },
+                  {
+                    path: ":id",
+                    Component: RequestDetail,
+                  },
+                ],
               },
               {
-                path: "pengantar-kerja-praktik",
-                Component: PengantarKerjaPraktik,
+                path: "settings",
+                Component: Settings,
               },
             ],
           },
-          {
-            path: "suratpenugasan",
-            Component: SuratPenjugasan,
-            children: [
-              {
-                index: true,
-                Component: ListPenugasan,
-              },
-              {
-                path: "dosenkerjapraktik",
-                Component: DosenKerjaPraktik,
-              },
-              {
-                path: "dosentugasakhir",
-                Component: DosenSkripsi,
-              },
-            ],
-          },
-          {
-            path: "transkripnilai",
-            Component: TranskripNilai,
-          },
-          {
-            path: "yudisium",
-            Component: Yudisium,
-          },
-          {
-            path: "pengajuansempro",
-            Component: SuratSempro,
-          },
-          {
-            path: "seminarkp",
-            Component: SeminarKp,
-          },
-          {
-            path: "skripsi",
-            Component: Skripsi,
-          },
         ],
-      },
-    ],
-  },
-  {
-    path: "/admin",
-    Component: LayoutAdmin,
-    children: [
-      {
-        index: true,
-        Component: MainAdmin,
-      },
-      {
-        path: "user",
-        Component: LayoutUser,
-        children: [
-          {
-            index: true,
-            Component: User,
-          },
-          {
-            path: ":id",
-            Component: UserDetail,
-          },
-        ],
-      },
-      {
-        path: "pengajuan",
-        Component: RequestLayout,
-        children: [
-          {
-            index: true,
-            Component: RequestAdmin,
-          },
-          {
-            path: ":id",
-            Component: RequestDetail,
-          },
-        ],
-      },
-      {
-        path: "settings",
-        Component: Settings,
       },
     ],
   },

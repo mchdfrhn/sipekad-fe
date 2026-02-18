@@ -219,6 +219,7 @@ export const loginFlow = async (data, updateUserData, navigate, setLoading) => {
     localStorage.setItem("tokenKey", result.accessToken);
     updateUserData(result.user);
     localStorage.setItem("user", JSON.stringify(result.user));
+    localStorage.setItem("loginTimestamp", Date.now().toString());
     if (result.user.role === "admin") {
       navigate("/admin");
     } else {

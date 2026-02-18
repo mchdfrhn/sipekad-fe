@@ -180,7 +180,7 @@ const Login = () => {
             alt="Background"
             className="h-full w-full object-cover scale-110"
           />
-          <div className="absolute inset-0 bg-gradient-to-br from-[#4318FF]/80 to-[#707EFE]/40 backdrop-blur-[2px]"></div>
+          <div className="absolute inset-0 bg-linear-to-br from-[#4318FF]/80 to-[#707EFE]/40 backdrop-blur-[2px]"></div>
         </div>
 
         <Motion.div
