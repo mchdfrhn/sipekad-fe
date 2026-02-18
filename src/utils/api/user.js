@@ -1,10 +1,17 @@
-import Axios from "axios";
-import BASE_URL from ".";
 import axios from "axios";
+import BASE_URL from ".";
+
+const handleApiError = (err) => {
+  console.error("API Error:", err);
+  return {
+    status: "fail",
+    message: err.response?.data?.message || "Terjadi kesalahan pada server",
+  };
+};
 
 const getUser = async (token) => {
   try {
-    const response = await Axios.get(`${BASE_URL}/profile`, {
+    const response = await axios.get(`${BASE_URL}/profile`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -13,7 +20,7 @@ const getUser = async (token) => {
 
     return response.data;
   } catch (err) {
-    console.log(err);
+    return handleApiError(err);
   }
 };
 
@@ -28,7 +35,7 @@ const updateProfile = async (
   const token = localStorage.getItem("tokenKey");
   const { id } = user;
   try {
-    const response = await Axios.put(
+    const response = await axios.put(
       `${BASE_URL}/users/${id}`,
       {
         username,
@@ -53,11 +60,7 @@ const updateProfile = async (
     }
     return response.data;
   } catch (err) {
-    console.error(err);
-    return {
-      status: "fail",
-      message: err.response?.data?.message || "Internal server error",
-    };
+    return handleApiError(err);
   }
 };
 
@@ -80,38 +83,29 @@ const getAllUserForAdmin = async (
   }
 
   try {
-    const result = await Axios.get(url, {
+    const result = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
 
-    const users = await result.data;
-    return users;
+    return result.data;
   } catch (err) {
-    return {
-      success: false,
-      error: err.response.data,
-    };
+    return handleApiError(err);
   }
 };
 
 const getUserDetail = async (token, userId) => {
   try {
-    const result = await Axios.get(`${BASE_URL}/users/${userId}`, {
+    const result = await axios.get(`${BASE_URL}/users/${userId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
 
-    const users = await result.data;
-    console.log(users);
-    return users;
+    return result.data;
   } catch (err) {
-    return {
-      success: false,
-      error: err.response.data,
-    };
+    return handleApiError(err);
   }
 };
 
@@ -142,7 +136,7 @@ export const addUser = async (
 
     return result.data;
   } catch (err) {
-    return err.response.data;
+    return handleApiError(err);
   }
 };
 
@@ -156,7 +150,7 @@ export const deleteUser = async (token, userId) => {
 
     return result.data;
   } catch (err) {
-    return err.response.data;
+    return handleApiError(err);
   }
 };
 
@@ -186,7 +180,7 @@ export const updateUserForAdmin = async (
 
     return result.data;
   } catch (err) {
-    return err.response.data;
+    return handleApiError(err);
   }
 };
 
@@ -200,13 +194,14 @@ export const changePassword = async (
       { currentPassword, newPassword },
       {
         headers: {
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       },
     );
     return result.data;
   } catch (err) {
-    return err.response.data;
+    return handleApiError(err);
   }
 };
 

@@ -271,10 +271,12 @@ const Login = () => {
               Support Center
             </p>
             <a
-              href="#"
+              href="https://grass-pie-19890898.figma.site"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-lg font-bold text-white hover:text-blue-100 transition-colors"
             >
-              help.sipekad.ac.id
+              help.sipekad
             </a>
           </Motion.div>
         </Motion.div>
