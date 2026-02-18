@@ -4,8 +4,10 @@ import Pengajuan from "../ui/Pengajuan";
 import { requestPengajuan } from "../../utils/action";
 import { useState } from "react";
 import { useToast } from "@/utils/hooks/useToast";
+import { useNavigate } from "react-router";
 
 const PengantarKerjaPraktik = () => {
+  const navigate = useNavigate();
   const { showToast } = useToast();
   const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
@@ -29,6 +31,11 @@ const PengantarKerjaPraktik = () => {
       showToast("Pengajuan berhasil dikirim", "success");
       setMessage("");
       setFile(null);
+      if (result.pengajuanId) {
+        navigate(`/dashboard/pengajuan-${result.pengajuanId}`);
+      } else {
+        navigate("/dashboard");
+      }
     } else {
       showToast(result?.message || "Gagal mengirim pengajuan", "error");
     }
