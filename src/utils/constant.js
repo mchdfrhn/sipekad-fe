@@ -53,7 +53,7 @@ const kategoriPermintaan = [
     icon: Presentation,
   },
   {
-    content: "Pengajuan Seminar Kp",
+    content: "Pengajuan Seminar KP",
     path: "/dashboard/request/seminarkp",
     color: "button-teal",
     icon: UserCheck,
@@ -333,7 +333,7 @@ const sidangSkripsi = {
     "Pengajuan anda akan ditinjau oleh admin",
     "Berkas akan dikirim melalui aplikasi ini, karena itu silahkan cek secara berkala",
   ],
-  title: "Sidang skripsi",
+  title: "Sidang Skripsi",
   url: "/sempro/sempro.pdf",
   fileName: "Seminar_kerja_praktik.pdf",
 };
