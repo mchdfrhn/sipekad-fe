@@ -164,7 +164,7 @@ const User = () => {
             onClick={() => setShowForm(!showForm)}
             className="bg-[#4318FF] hover:bg-[#3311CC] text-white rounded-full px-4 py-3 text-sm font-bold shadow-[0_4px_14px_0_rgba(67,24,255,0.39)] hover:shadow-[0_6px_20px_rgba(67,24,255,0.23)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 mr-2"
           >
-            <Plus className="mr-2 h-4 w-4" /> Tambah User
+            <Plus className="mr-2 h-4 w-4" /> Tambah Pengguna
           </Button>,
           document.getElementById("header-actions"),
         )}
@@ -366,9 +366,9 @@ const User = () => {
           isOpen={alertDelete}
           onClose={() => setAlertDelete(false)}
           onConfirm={confirmDelete}
-          title="Delete User"
-          description="Are you sure you want to delete this user? This action cannot be undone and will remove all associated data."
-          confirmText="Delete User"
+          title="Hapus Pengguna"
+          description="Apakah Anda yakin ingin menghapus pengguna ini? Tindakan ini tidak dapat dibatalkan dan akan menghapus semua data yang terkait."
+          confirmText="Hapus Pengguna"
           variant="danger"
         />
       </div>

@@ -82,6 +82,25 @@ const ActivityItem = ({
   const statusLabel = status?.toLowerCase() || "";
   const colorClass = statusColors[statusLabel] || "text-blue-500";
 
+  // Helper to translate status for display
+  const translateStatus = (s) => {
+    switch (s?.toLowerCase()) {
+      case "completed":
+      case "sukses":
+        return "Selesai";
+      case "canceled":
+      case "ditolak":
+        return "Ditolak";
+      case "pending":
+        return "Pending";
+      case "proses":
+      case "diproses":
+        return "Diproses";
+      default:
+        return s;
+    }
+  };
+
   return (
     <div className="flex items-center gap-4 mb-5 last:mb-0">
       <Avatar className="h-10 w-10">
@@ -92,14 +111,17 @@ const ActivityItem = ({
         <p className="text-sm font-medium text-[#2B3674] leading-relaxed">
           {type === "response" ? (
             <>
-              Responded to <span className="font-bold">{request_type}</span> for{" "}
+              <span className="font-bold">{admin_name}</span> merespon pengajuan{" "}
+              <span className="font-bold">{request_type}</span> dari{" "}
               {requester_name}
             </>
           ) : (
             <>
-              Status of <span className="font-bold">{request_type}</span>{" "}
-              {requester_name} updated to{" "}
-              <span className={`font-bold ${colorClass}`}>{status}</span>
+              Status pengajuan <span className="font-bold">{request_type}</span>{" "}
+              {requester_name} diperbarui menjadi{" "}
+              <span className={`font-bold ${colorClass}`}>
+                {translateStatus(status)}
+              </span>
             </>
           )}
         </p>
@@ -145,9 +167,7 @@ const RightPanel = () => {
       {/* Notifications */}
       <Card className="rounded-[20px] border-none shadow-sm">
         <CardHeader className="flex flex-row items-center justify-between pb-2">
-          <CardTitle className="text-[#2B3674] font-bold">
-            Notifications
-          </CardTitle>
+          <CardTitle className="text-[#2B3674] font-bold">Notifikasi</CardTitle>
           <div className="bg-blue-50 p-2 rounded-full cursor-pointer hover:bg-blue-100 transition-colors">
             <Settings className="h-5 w-5 text-[#4318FF]" />
           </div>
@@ -171,7 +191,7 @@ const RightPanel = () => {
               ))
           ) : (
             <p className="text-sm text-gray-400 text-center py-8">
-              No recent notifications
+              Tidak ada notifikasi baru
             </p>
           )}
         </CardContent>
@@ -181,7 +201,7 @@ const RightPanel = () => {
       <Card className="rounded-[20px] border-none shadow-sm">
         <CardHeader>
           <CardTitle className="text-[#2B3674] font-bold">
-            Recent Activity
+            Aktivitas Terbaru
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -200,7 +220,7 @@ const RightPanel = () => {
             ))
           ) : (
             <p className="text-sm text-gray-400 text-center py-8">
-              No recent activities
+              Tidak ada aktivitas terbaru
             </p>
           )}
         </CardContent>

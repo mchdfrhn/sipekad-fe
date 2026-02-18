@@ -80,7 +80,7 @@ const UserDetail = () => {
           className="flex items-center gap-2 px-4 py-3 mr-2 bg-[#4318FF] text-white rounded-full text-sm shadow-[0_4px_14px_0_rgba(67,24,255,0.39)] hover:shadow-[0_6px_20px_rgba(67,24,255,0.23)] hover:scale-[1.02] transition-all duration-300 font-bold"
         >
           <Pen className="h-4 w-4" />
-          <span>Update User</span>
+          <span>Perbarui Pengguna</span>
         </button>
       </div>
 
@@ -129,7 +129,7 @@ const UserDetail = () => {
             </div>
             <div>
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1 leading-none">
-                Email Address
+                Alamat Email
               </p>
               <p className="text-sm font-semibold text-[#2B3674]">
                 {userDetail?.email || "-"}
@@ -137,7 +137,7 @@ const UserDetail = () => {
             </div>
             <div>
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1 leading-none">
-                Phone Number
+                Nomor Telepon
               </p>
               <p className="text-sm font-semibold text-[#2B3674]">
                 {userDetail?.phone || "-"}

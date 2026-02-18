@@ -77,7 +77,7 @@ const UpdateUserForm = ({ userDetail, shwoForm, setShowForm }) => {
           <div className="flex flex-col gap-4 bg-white shadow-2xl p-8 h-[90vh] md:h-auto max-h-[90vh] overflow-y-auto rounded-[30px] fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[100] w-[90%] max-w-[500px] border border-gray-100">
             <div className="flex justify-between items-center mb-2">
               <h2 className="text-xl font-extrabold text-[#2B3674] tracking-tight">
-                Update User Information
+                Perbarui Informasi Pengguna
               </h2>
               <button
                 onClick={() => setShowForm(!shwoForm)}
@@ -96,7 +96,7 @@ const UpdateUserForm = ({ userDetail, shwoForm, setShowForm }) => {
                   className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1"
                   htmlFor="fullName"
                 >
-                  Full Name
+                  Nama Lengkap
                 </label>
                 <input
                   className="px-4 py-3 bg-[#F4F7FE] text-[#2B3674] font-semibold border-none focus:ring-2 focus:ring-[#4318FF] outline-none rounded-2xl transition-all duration-200"
@@ -104,7 +104,7 @@ const UpdateUserForm = ({ userDetail, shwoForm, setShowForm }) => {
                   type="text"
                   value={fullName}
                   id="fullName"
-                  placeholder="Enter full name"
+                  placeholder="Masukkan nama lengkap"
                 />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -120,7 +120,7 @@ const UpdateUserForm = ({ userDetail, shwoForm, setShowForm }) => {
                   type="text"
                   value={username}
                   id="username"
-                  placeholder="Enter username"
+                  placeholder="Masukkan username"
                 />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -136,7 +136,7 @@ const UpdateUserForm = ({ userDetail, shwoForm, setShowForm }) => {
                   type="text"
                   value={nim}
                   id="nim"
-                  placeholder="Enter NIM/ID"
+                  placeholder="Masukkan NIM/ID"
                 />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -152,7 +152,7 @@ const UpdateUserForm = ({ userDetail, shwoForm, setShowForm }) => {
                   type="text"
                   value={nik}
                   id="nik"
-                  placeholder="Enter NIK"
+                  placeholder="Masukkan NIK"
                 />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -163,7 +163,7 @@ const UpdateUserForm = ({ userDetail, shwoForm, setShowForm }) => {
                   value={prodi}
                   onChange={setProdi}
                   options={prodiOptions}
-                  placeholder="Select Program Studi"
+                  placeholder="Pilih Program Studi"
                 />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -171,7 +171,7 @@ const UpdateUserForm = ({ userDetail, shwoForm, setShowForm }) => {
                   className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1"
                   htmlFor="email"
                 >
-                  Email Address
+                  Alamat Email
                 </label>
                 <input
                   className="px-4 py-3 bg-[#F4F7FE] text-[#2B3674] font-semibold border-none focus:ring-2 focus:ring-[#4318FF] outline-none rounded-2xl transition-all duration-200"
@@ -179,7 +179,7 @@ const UpdateUserForm = ({ userDetail, shwoForm, setShowForm }) => {
                   type="email"
                   value={email}
                   id="email"
-                  placeholder="Enter email"
+                  placeholder="Masukkan alamat email"
                 />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -187,7 +187,7 @@ const UpdateUserForm = ({ userDetail, shwoForm, setShowForm }) => {
                   className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1"
                   htmlFor="phone"
                 >
-                  Phone Number
+                  Nomor Telepon
                 </label>
                 <input
                   className="px-4 py-3 bg-[#F4F7FE] text-[#2B3674] font-semibold border-none focus:ring-2 focus:ring-[#4318FF] outline-none rounded-2xl transition-all duration-200"
@@ -195,14 +195,14 @@ const UpdateUserForm = ({ userDetail, shwoForm, setShowForm }) => {
                   type="text"
                   value={phone}
                   id="phone"
-                  placeholder="Enter phone number"
+                  placeholder="Masukkan nomor telepon"
                 />
               </div>
               <button
                 className="mt-4 bg-[#4318FF] text-white py-3 rounded-2xl text-sm font-bold shadow-[0_4px_14px_0_rgba(67,24,255,0.39)] hover:shadow-[0_6px_20px_rgba(67,24,255,0.23)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer"
                 type="submit"
               >
-                Update Information
+                Perbarui Informasi
               </button>
             </form>
             <p className="text-xs font-semibold text-red-500">{errMessage}</p>

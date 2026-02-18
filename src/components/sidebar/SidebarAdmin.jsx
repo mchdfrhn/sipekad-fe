@@ -20,7 +20,7 @@ const SidebarAdmin = ({ className }) => {
     },
     {
       path: "/admin/user",
-      name: "User Management",
+      name: "Manajemen Pengguna",
       icon: User,
     },
   ];
@@ -110,7 +110,7 @@ const SidebarAdmin = ({ className }) => {
           <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-white shadow-sm group-hover:scale-110 transition-transform">
             <Info size={18} />
           </div>
-          <span className="text-sm tracking-wide">Report Bug</span>
+          <span className="text-sm tracking-wide">Lapor Bug</span>
         </a>
       </div>
     </div>

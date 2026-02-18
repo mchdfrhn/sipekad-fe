@@ -65,7 +65,7 @@ const StatsCard = ({
               <span className="text-xs font-bold text-green-500 flex items-center">
                 +2.4%
               </span>
-              <span className="text-xs text-[#A3AED0]">since last month</span>
+              <span className="text-xs text-[#A3AED0]">sejak bulan lalu</span>
             </div>
           )}
         </div>

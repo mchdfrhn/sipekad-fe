@@ -277,7 +277,7 @@ const RequestDetail = () => {
                       }}
                       className="flex-1 sm:flex-none gap-2 text-gray-600"
                     >
-                      <Eye size={16} /> Preview
+                      <Eye size={16} /> Pratinjau
                     </Button>
                     <Button
                       size="sm"
@@ -289,7 +289,7 @@ const RequestDetail = () => {
                       }
                       className="flex-1 sm:flex-none gap-2 bg-[#4318FF] hover:bg-[#3311CC]"
                     >
-                      <Download size={16} /> Download
+                      <Download size={16} /> Unduh
                     </Button>
                   </div>
                 </div>
@@ -514,7 +514,7 @@ const RequestDetail = () => {
                               }}
                               className="h-7 text-xs flex-1 gap-2 mt-2 bg-white"
                             >
-                              <Eye size={12} /> Preview
+                              <Eye size={12} /> Pratinjau
                             </Button>
                             <Button
                               size="sm"
@@ -526,7 +526,7 @@ const RequestDetail = () => {
                               }
                               className="h-7 text-xs flex-1 gap-2 mt-2 bg-white text-[#4318FF] border border-[#4318FF] hover:bg-blue-50"
                             >
-                              <Download size={12} /> Download
+                              <Download size={12} /> Unduh
                             </Button>
                           </div>
                         )}

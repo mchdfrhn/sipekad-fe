@@ -35,18 +35,16 @@ const AddUserForm = ({
   const [role] = useState("user"); // Default to user as requested
 
   const validateForm = () => {
-    if (!username || username.length < 3)
-      return "Username must be at least 3 characters";
-    if (!password || password.length < 6)
-      return "Password must be at least 6 characters";
+    if (!username || username.length < 3) return "Username minimal 3 karakter";
+    if (!password || password.length < 6) return "Password minimal 6 karakter";
     if (!fullName || fullName.length < 3)
-      return "Full Name must be at least 3 characters";
+      return "Nama Lengkap minimal 3 karakter";
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
-      return "Please enter a valid email address";
-    if (!nim) return "NIM / ID is required";
-    if (!nik || nik.length < 16) return "NIK must be 16 characters";
-    if (!selectedProdi) return "Please select a Program Studi";
-    if (!phone || phone.length < 10) return "Please enter a valid phone number";
+      return "Masukkan alamat email yang valid";
+    if (!nim) return "NIM / ID wajib diisi";
+    if (!nik || nik.length < 16) return "NIK harus 16 karakter";
+    if (!selectedProdi) return "Pilih Program Studi";
+    if (!phone || phone.length < 10) return "Masukkan nomor telepon yang valid";
     return null;
   };
 
@@ -106,7 +104,7 @@ const AddUserForm = ({
           <div className="flex flex-col gap-4 bg-white shadow-2xl p-8 h-[90vh] md:h-auto max-h-[95vh] overflow-y-auto rounded-[30px] fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-100 w-[90%] max-w-[500px] border border-gray-100">
             <div className="flex justify-between items-center mb-2">
               <h2 className="text-xl font-extrabold text-[#2B3674] tracking-tight">
-                Add New Student
+                Tambah Pengguna Baru
               </h2>
               <button
                 onClick={() => setShowForm(!showForm)}
@@ -118,14 +116,14 @@ const AddUserForm = ({
             <form onSubmit={submitHandler} className="flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
                 <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1">
-                  Full Name
+                  Nama Lengkap
                 </label>
                 <input
                   onChange={(e) => onChangeHandler(e, setFullName)}
                   value={fullName}
                   className="px-4 py-3 bg-[#F4F7FE] text-[#2B3674] font-semibold border-none focus:ring-2 focus:ring-[#4318FF] outline-none rounded-2xl transition-all duration-200"
                   type="text"
-                  placeholder="Enter full name"
+                  placeholder="Masukkan nama lengkap"
                 />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -137,7 +135,7 @@ const AddUserForm = ({
                   value={username}
                   className="px-4 py-3 bg-[#F4F7FE] text-[#2B3674] font-semibold border-none focus:ring-2 focus:ring-[#4318FF] outline-none rounded-2xl transition-all duration-200"
                   type="text"
-                  placeholder="Enter username"
+                  placeholder="Masukkan username"
                 />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -150,7 +148,7 @@ const AddUserForm = ({
                     onChange={(e) => onChangeHandler(e, setPassword)}
                     className="px-4 py-3 w-full bg-[#F4F7FE] text-[#2B3674] font-semibold border-none focus:ring-2 focus:ring-[#4318FF] outline-none rounded-2xl transition-all duration-200"
                     type={!hiddenPassword ? "password" : "text"}
-                    placeholder="Enter password"
+                    placeholder="Masukkan password"
                   />
                   <div
                     onClick={() => setHiddenPassword(!hiddenPassword)}
@@ -173,7 +171,7 @@ const AddUserForm = ({
                   onChange={(e) => onChangeHandler(e, setNim)}
                   className="px-4 py-3 bg-[#F4F7FE] text-[#2B3674] font-semibold border-none focus:ring-2 focus:ring-[#4318FF] outline-none rounded-2xl transition-all duration-200"
                   type="text"
-                  placeholder="Enter NIM/ID"
+                  placeholder="Masukkan NIM/ID"
                 />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -185,7 +183,7 @@ const AddUserForm = ({
                   onChange={(e) => onChangeHandler(e, setNik)}
                   className="px-4 py-3 bg-[#F4F7FE] text-[#2B3674] font-semibold border-none focus:ring-2 focus:ring-[#4318FF] outline-none rounded-2xl transition-all duration-200"
                   type="text"
-                  placeholder="Enter NIK"
+                  placeholder="Masukkan NIK"
                 />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -196,24 +194,24 @@ const AddUserForm = ({
                   value={selectedProdi}
                   onChange={setSelectedProdi}
                   options={prodiOptions}
-                  placeholder="Select Program Studi"
+                  placeholder="Pilih Program Studi"
                 />
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1">
-                  Email Address
+                  Alamat Email
                 </label>
                 <input
                   onChange={(e) => onChangeHandler(e, setEmail)}
                   value={email}
                   className="px-4 py-3 bg-[#F4F7FE] text-[#2B3674] font-semibold border-none focus:ring-2 focus:ring-[#4318FF] outline-none rounded-2xl transition-all duration-200"
                   type="email"
-                  placeholder="Enter email address"
+                  placeholder="Masukkan alamat email"
                 />
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1">
-                  Phone Number
+                  Nomor Telepon
                 </label>
                 <div className="flex items-center bg-[#F4F7FE] rounded-2xl overflow-hidden focus-within:ring-2 focus-within:ring-[#4318FF] transition-all duration-200">
                   <p className="px-4 py-3 text-gray-500 bg-gray-100 font-bold border-r border-gray-200">
@@ -232,7 +230,7 @@ const AddUserForm = ({
                 className="mt-4 bg-[#4318FF] text-white py-3 rounded-2xl text-sm font-bold shadow-[0_4px_14px_0_rgba(67,24,255,0.39)] hover:shadow-[0_6px_20px_rgba(67,24,255,0.23)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer"
                 type="submit"
               >
-                Add Student
+                Tambah Pengguna
               </button>
             </form>
             <p className="text-center text-xs font-bold text-red-500 mt-2">

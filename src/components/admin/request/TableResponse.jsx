@@ -85,7 +85,9 @@ const TableResponse = ({ dataKey, response }) => {
             className="w-full max-w-4xl bg-white rounded-xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]"
           >
             <div className="p-4 border-b flex justify-between items-center bg-white z-10">
-              <h3 className="font-bold text-lg text-gray-800">Preview File</h3>
+              <h3 className="font-bold text-lg text-gray-800">
+                Pratinjau File
+              </h3>
               <Button
                 variant="ghost"
                 size="sm"

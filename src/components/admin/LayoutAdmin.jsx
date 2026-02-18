@@ -240,7 +240,7 @@ const LayoutAdmin = () => {
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#2B3674]" />
                 <input
                   type="text"
-                  placeholder="Search..."
+                  placeholder="Cari..."
                   value={searchValue}
                   onChange={handleSearchChange}
                   className="pl-8 bg-transparent border-none outline-none text-sm text-[#2B3674] placeholder-gray-400 w-40 focus:w-60 transition-all font-medium"
@@ -295,12 +295,10 @@ const LayoutAdmin = () => {
                 className="w-[350px] rounded-2xl shadow-xl border-none bg-white p-0 overflow-hidden z-[9999]"
               >
                 <div className="bg-[#4318FF] px-6 py-4 flex items-center justify-between">
-                  <h3 className="text-white font-bold text-lg">
-                    Notifications
-                  </h3>
+                  <h3 className="text-white font-bold text-lg">Notifikasi</h3>
                   {unreadCount > 0 && (
                     <span className="bg-white/20 text-white text-[10px] px-2 py-0.5 rounded-full backdrop-blur-sm border border-white/30">
-                      {unreadCount} New
+                      {unreadCount} Baru
                     </span>
                   )}
                 </div>
@@ -335,7 +333,7 @@ const LayoutAdmin = () => {
                   ) : (
                     <div className="py-12 flex flex-col items-center justify-center text-gray-400">
                       <Bell className="h-10 w-10 mb-3 opacity-20" />
-                      <p className="text-sm">No notifications yet</p>
+                      <p className="text-sm">Belum ada notifikasi</p>
                     </div>
                   )}
                 </div>
@@ -346,7 +344,7 @@ const LayoutAdmin = () => {
                       className="w-full text-[#4318FF] hover:text-[#4318FF] hover:bg-blue-50 text-xs font-bold rounded-xl"
                       onClick={() => navigate("/admin/pengajuan")}
                     >
-                      View All Notifications
+                      Lihat Semua Notifikasi
                     </Button>
                   </div>
                 )}
@@ -403,7 +401,7 @@ const LayoutAdmin = () => {
                     onClick={() => navigate("/admin/settings")}
                   >
                     <Settings className="mr-3 h-4 w-4 text-gray-400 group-focus:text-[#4318FF]" />
-                    <span>Profile Settings</span>
+                    <span>Pengaturan Profil</span>
                   </DropdownMenuItem>
                   <a
                     href={`https://wa.me/${import.meta.env.VITE_WHATSAPP_NUMBER}`}
@@ -413,7 +411,7 @@ const LayoutAdmin = () => {
                   >
                     <DropdownMenuItem className="cursor-pointer font-bold text-gray-600 focus:bg-indigo-50 focus:text-[#4318FF] rounded-xl px-4 py-2.5 transition-colors">
                       <HelpCircle className="mr-3 h-4 w-4 text-gray-400 group-focus:text-[#4318FF]" />
-                      <span>Contact Support</span>
+                      <span>Hubungi Layanan</span>
                     </DropdownMenuItem>
                   </a>
                   <DropdownMenuSeparator className="my-1 bg-gray-100" />
@@ -422,7 +420,7 @@ const LayoutAdmin = () => {
                     onClick={logoutHandler}
                   >
                     <LogOut className="mr-3 h-4 w-4" />
-                    <span>Log out</span>
+                    <span>Keluar</span>
                   </DropdownMenuItem>
                 </div>
               </DropdownMenuContent>
