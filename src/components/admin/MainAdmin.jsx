@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import { getSummeryData } from "../../utils/api/dashboardValue";
 import DistribusiPengajuan from "../chart/DistribusiPengajuan";
 import StraightAnglePieChart from "../chart/PieChart";
@@ -9,7 +10,26 @@ import { FileText, CheckCircle, XCircle, Clock } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const MainAdmin = () => {
+  const navigate = useNavigate();
   const [summery, setSummery] = useState([]);
+
+  // Map each card index to its filter value for /admin/pengajuan page
+  // index 0=Total(all), 1=Pending, 2=Canceled, 3=Completed
+  const filterMap = [
+    null, // Total — no filter
+    "pending", // Diproses
+    "canceled", // Ditolak
+    "completed", // Sukses
+  ];
+
+  const handleCardClick = (index) => {
+    const filter = filterMap[index];
+    if (filter) {
+      navigate(`/admin/pengajuan?status=${filter}`);
+    } else {
+      navigate("/admin/pengajuan");
+    }
+  };
 
   useEffect(() => {
     getSummeryData(setSummery);
@@ -64,6 +84,7 @@ const MainAdmin = () => {
               value={data.value}
               icon={Icon}
               variant={variant}
+              onClick={() => handleCardClick(index)}
             />
           );
         })}

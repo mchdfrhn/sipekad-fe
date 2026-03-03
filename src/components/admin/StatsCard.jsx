@@ -8,6 +8,7 @@ const StatsCard = ({
   className,
   description,
   variant = "default",
+  onClick,
 }) => {
   const variants = {
     default: "bg-[#F4F7FE] text-[#4318FF]", // Light Blue/Purple tint
@@ -28,8 +29,10 @@ const StatsCard = ({
 
   return (
     <Card
+      onClick={onClick}
       className={cn(
         "border-none shadow-sm card-shadow rounded-[20px] transition-all duration-300 hover:shadow-md",
+        onClick && "cursor-pointer hover:scale-[1.02] active:scale-[0.99]",
         cardBackgrounds[variant] || cardBackgrounds.default,
         className,
       )}
