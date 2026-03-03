@@ -21,8 +21,11 @@ const RequestAdmin = () => {
   const searchTerm = searchParams.get("q") || "";
   const [loading, setLoading] = useState(true);
 
+  // Read initial status filter from URL params (e.g. coming from dashboard card click)
+  const initialStatus = searchParams.get("status") || "default";
+
   // Filter States
-  const [filterStatus, setFilterStatus] = useState("default");
+  const [filterStatus, setFilterStatus] = useState(initialStatus);
   const [filterType, setFilterType] = useState("default");
 
   const getRequests = useCallback(
