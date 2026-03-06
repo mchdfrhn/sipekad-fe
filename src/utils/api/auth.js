@@ -34,4 +34,16 @@ const logout = async (token) => {
   }
 };
 
-export { login, logout };
+const register = async (data) => {
+  try {
+    const response = await Axios.post(`${BASE_URL}/auth/register`, data);
+    return response.data;
+  } catch (err) {
+    return {
+      status: "error",
+      message: err.response?.data?.message || "Internal server error",
+    };
+  }
+};
+
+export { login, logout, register };
