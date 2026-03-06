@@ -6,7 +6,7 @@ import {
   Lock,
   User as UserIcon,
 } from "lucide-react";
-import { useNavigate } from "react-router";
+import { useNavigate, Link } from "react-router";
 import { useUser } from "../../utils/hooks/userContext";
 import { useToast } from "../../utils/hooks/useToast";
 import { loginFlow } from "../../utils/action";
@@ -161,6 +161,15 @@ const Login = () => {
                 "Sign In"
               )}
             </Button>
+            
+            <div className="flex justify-center mt-2">
+              <p className="text-xs text-gray-400 font-medium">
+                Don't have an account?{" "}
+                <Link to="/register" className="text-[#4318FF] font-bold hover:underline">
+                  Register Now
+                </Link>
+              </p>
+            </div>
           </form>
 
           <div className="mt-8 text-center md:hidden">

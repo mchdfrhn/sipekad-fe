@@ -130,6 +130,15 @@ const LayoutDashboard = () => {
     }
   };
 
+  const handleNotificationClick = (notif) => {
+    handleMarkAsRead(notif.id);
+    if (user.role === "admin") {
+      navigate(`/admin/pengajuan/${notif.id}`);
+    } else {
+      navigate(`/dashboard/${notif.id}`);
+    }
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       const mainContent = document.getElementById("main-content-area");
@@ -305,7 +314,7 @@ const LayoutDashboard = () => {
                     notifications.map((notif) => (
                       <DropdownMenuItem
                         key={notif.id}
-                        onClick={() => handleMarkAsRead(notif.id)}
+                        onClick={() => handleNotificationClick(notif)}
                         className={cn(
                           "cursor-pointer flex flex-col items-start gap-1 rounded-xl px-4 py-3 mb-1 transition-all",
                           notif.is_read
@@ -314,9 +323,11 @@ const LayoutDashboard = () => {
                         )}
                       >
                         <div className="flex justify-between w-full">
-                          <span className="text-xs font-black uppercase tracking-wider">
-                            {notif.request_type}
-                          </span>
+                          {user.role === "admin" && notif.type === "request" ? null : (
+                            <span className="text-xs font-black uppercase tracking-wider">
+                              {notif.request_type}
+                            </span>
+                          )}
                           <span className="text-[10px] text-gray-400 font-medium">
                             {new Date(notif.time).toLocaleDateString("id-ID", {
                               hour: "2-digit",
@@ -325,7 +336,9 @@ const LayoutDashboard = () => {
                           </span>
                         </div>
                         <p className="text-sm font-bold leading-tight">
-                          {notif.title}
+                          {user.role === "admin" && notif.type === "request"
+                            ? `Request: ${notif.request_type}! ${notif.title}`
+                            : notif.title}
                         </p>
                         {!notif.is_read && (
                           <span className="text-[10px] text-[#4318FF] font-bold mt-1">
@@ -424,7 +437,13 @@ const LayoutDashboard = () => {
 
         {/* Scrollable Content */}
         <main className="flex-1 p-4 lg:p-6 lg:pt-0 pb-20">
-          <Outlet />
+          <Outlet
+            context={{
+              notifications,
+              handleNotificationClick,
+              user,
+            }}
+          />
         </main>
       </div>
     </div>

@@ -20,7 +20,6 @@ const NotificationItem = ({
   variant = "blue",
   onClick,
   is_read,
-  icon: Icon,
 }) => {
   const bgColors = {
     blue: "bg-blue-50 text-blue-500",
@@ -40,14 +39,23 @@ const NotificationItem = ({
         <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-[#4318FF] rounded-full" />
       )}
       <div className={`p-2 rounded-xl shrink-0 ${bgColors[variant]}`}>
-        <Icon className="h-5 w-5" />
+        <Bell className="h-5 w-5" />
       </div>
       <div className="min-w-0 pr-4">
         <h4
           className={`text-sm text-[#2B3674] group-hover:text-[#4318FF] transition-colors ${!is_read ? "font-bold" : "font-medium"}`}
         >
-          {title}{" "}
-          <span className="text-gray-500 font-medium">{request_type}</span>
+          {title.startsWith("from ") ? (
+            <>
+              Request: <span className="font-bold">{request_type}</span>!{" "}
+              {title}
+            </>
+          ) : (
+            <>
+              {title}{" "}
+              <span className="text-gray-500 font-medium">{request_type}</span>
+            </>
+          )}
         </h4>
         <p className="text-xs text-gray-400 mt-1">{time}</p>
       </div>

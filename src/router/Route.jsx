@@ -4,6 +4,7 @@ import App from "../App";
 
 // Auth
 import Login from "../components/Auth/Login";
+import Register from "../components/Auth/Register";
 
 // Dashboard
 import LayoutDashboard from "../components/Dashboard/LayoutDashboard";
@@ -76,6 +77,10 @@ const Router = createBrowserRouter([
           {
             path: "login",
             Component: Login,
+          },
+          {
+            path: "register",
+            Component: Register,
           },
         ],
       },

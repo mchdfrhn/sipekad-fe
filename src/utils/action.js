@@ -8,7 +8,23 @@ import {
   getAllUserForAdmin,
   updateUserForAdmin,
 } from "./api/user.js";
-import { login } from "./api/auth.js";
+import { login, register } from "./api/auth.js";
+
+export const registerFlow = async (data, navigate, setLoading) => {
+  const result = await register(data);
+  setLoading(false);
+  if (result.status === "success") {
+    navigate("/login");
+    return { status: "success", message: result.message };
+  }
+
+  return { 
+    status: "error", 
+    message: typeof result.message === "object" 
+      ? Object.values(result.message).flat()[0] 
+      : (result.message || "Registrasi gagal dilakukan")
+  };
+};
 
 export const requestPengajuan = async (
   type,
