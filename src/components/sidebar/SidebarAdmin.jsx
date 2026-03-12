@@ -1,4 +1,4 @@
-import { LayoutDashboard, User, Send, Info, Settings } from "lucide-react";
+import { LayoutDashboard, User, Send, Info, Settings, Database } from "lucide-react";
 import { Link, useLocation } from "react-router";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
@@ -22,6 +22,12 @@ const SidebarAdmin = ({ className }) => {
       path: "/admin/user",
       name: "Manajemen Pengguna",
       icon: User,
+    },
+    {
+      path: "/admin/backup",
+      name: "Backup Sistem",
+      icon: Database,
+      noFill: true,
     },
   ];
 
@@ -81,7 +87,7 @@ const SidebarAdmin = ({ className }) => {
                         ? "text-[#4318FF] drop-shadow-[0_0_8px_rgba(67,24,255,0.2)]"
                         : "text-[#A3AED0] group-hover:text-[#4318FF]",
                     )}
-                    fill={isActive ? "currentColor" : "none"}
+                    fill={isActive && !link.noFill ? "currentColor" : "none"}
                   />
                   <span
                     className={cn(
