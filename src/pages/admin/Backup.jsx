@@ -151,7 +151,7 @@ const Backup = () => {
     <div className="space-y-8 pb-10">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-[#2B3674]">System Backup</h2>
+          {/* <h2 className="text-2xl font-bold text-[#2B3674]">System Backup</h2> */}
           <p className="text-[#A3AED0] text-sm mt-1">
             Manage your S3 backups, schedule weekly jobs, and view history.
           </p>
