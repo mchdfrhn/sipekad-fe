@@ -22,6 +22,7 @@ import LayoutUser from "../components/admin/LayoutUser";
 import UserDetail from "../components/admin/user/UserDetail";
 import RequestAdmin from "../components/admin/request/Requests";
 import RequestDetail from "../components/admin/request/RequestDetail";
+import Backup from "../pages/admin/Backup";
 
 // Request
 import Request from "../components/Request/Request";
@@ -250,6 +251,10 @@ const Router = createBrowserRouter([
               {
                 path: "settings",
                 Component: Settings,
+              },
+              {
+                path: "backup",
+                Component: Backup,
               },
             ],
           },
