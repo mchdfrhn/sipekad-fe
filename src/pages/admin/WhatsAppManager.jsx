@@ -155,7 +155,6 @@ const WhatsAppManager = () => {
     <div className="space-y-6 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight text-[#2B3674]">WhatsApp Bot Control</h2>
           <p className="text-gray-500">Kelola notifikasi WhatsApp dan pantau status koneksi bot.</p>
         </div>
         <div className="flex items-center gap-2">
