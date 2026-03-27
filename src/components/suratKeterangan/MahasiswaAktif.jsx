@@ -30,7 +30,7 @@ const MahasiswaAktif = () => {
       setMessage("");
       setFile(null);
       if (result.pengajuanId) {
-        navigate(`/dashboard/pengajuan-${result.pengajuanId}`);
+        navigate(`/dashboard/${result.pengajuanId}`);
       } else {
         navigate("/dashboard");
       }
