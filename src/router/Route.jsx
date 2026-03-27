@@ -23,6 +23,7 @@ import UserDetail from "../components/admin/user/UserDetail";
 import RequestAdmin from "../components/admin/request/Requests";
 import RequestDetail from "../components/admin/request/RequestDetail";
 import Backup from "../pages/admin/Backup";
+import WhatsAppManager from "../pages/admin/WhatsAppManager";
 
 // Request
 import Request from "../components/Request/Request";
@@ -255,6 +256,10 @@ const Router = createBrowserRouter([
               {
                 path: "backup",
                 Component: Backup,
+              },
+              {
+                path: "whatsapp",
+                Component: WhatsAppManager,
               },
             ],
           },

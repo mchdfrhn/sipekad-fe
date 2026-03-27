@@ -1,4 +1,4 @@
-import { LayoutDashboard, User, Send, Info, Settings, Database } from "lucide-react";
+import { LayoutDashboard, User, Send, Info, Settings, Database, MessageSquare } from "lucide-react";
 import { Link, useLocation } from "react-router";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
@@ -28,6 +28,11 @@ const SidebarAdmin = ({ className }) => {
       name: "Backup Sistem",
       icon: Database,
       noFill: true,
+    },
+    {
+      path: "/admin/whatsapp",
+      name: "WhatsApp Bot",
+      icon: MessageSquare,
     },
   ];
 
