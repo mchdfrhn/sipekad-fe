@@ -29,7 +29,7 @@ const TranskripNilai = () => {
       showToast("Pengajuan berhasil dikirim", "success");
       setMessage("");
       if (result.pengajuanId) {
-        navigate(`/dashboard/pengajuan-${result.pengajuanId}`);
+        navigate(`/dashboard/${result.pengajuanId}`);
       } else {
         navigate("/dashboard");
       }

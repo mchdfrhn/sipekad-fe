@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Database,
   HardDrive,
@@ -23,6 +23,7 @@ import {
   updateBackupConfig,
   downloadBackup,
   deleteBackup,
+  getBackupProgress,
 } from "../../utils/api/backup";
 import { useToast } from "../../utils/hooks/useToast";
 import {
@@ -57,6 +58,8 @@ const Backup = () => {
     is_active: true,
     backup_type: "database",
   });
+  const [backupProgress, setBackupProgress] = useState({ percent: 0, message: "" });
+  const pollIntervalRef = useRef(null);
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -79,17 +82,44 @@ const Backup = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
+    };
+  }, []);
+
   const handleManualBackup = async () => {
     setIsTriggering(true);
+    setBackupProgress({ percent: 0, message: "Initiating background task..." });
     const result = await triggerBackup(backupType);
-    if (result.status === "success") {
-      showToast("Backup process started in background", "success");
-      // Refresh after a delay
-      setTimeout(fetchData, 5000);
+    if (result.status === "success" || result.status === "fail" && result.message === "A backup process is already running.") {
+      if (result.status === "success") {
+        showToast("Backup process started in background", "success");
+      }
+      
+      // Start polling
+      pollIntervalRef.current = setInterval(async () => {
+        const progressRes = await getBackupProgress();
+        if (progressRes) {
+          setBackupProgress({ percent: progressRes.percent, message: progressRes.message });
+          
+          if (progressRes.status === "completed") {
+            clearInterval(pollIntervalRef.current);
+            setIsTriggering(false);
+            setBackupProgress({ percent: 100, message: "Backup completed successfully!" });
+            showToast("Backup generated successfully", "success");
+            fetchData();
+          } else if (progressRes.status === "failed") {
+            clearInterval(pollIntervalRef.current);
+            setIsTriggering(false);
+            showToast(progressRes.message, "error");
+          }
+        }
+      }, 1000);
     } else {
       showToast(result.message, "error");
+      setIsTriggering(false);
     }
-    setIsTriggering(false);
   };
 
   const handleDownload = async (filename) => {
@@ -207,28 +237,47 @@ const Backup = () => {
               </CardTitle>
               <CardDescription>Trigger an immediate backup task.</CardDescription>
             </CardHeader>
-            <CardContent className="flex flex-col md:flex-row items-end gap-4">
-              <div className="flex-1 space-y-2 w-full">
-                <Label className="text-sm font-bold text-[#2B3674] ml-1">Backup Type</Label>
-                <CustomSelect
-                  value={backupType}
-                  onChange={setBackupType}
-                  options={typeOptions}
-                  className="w-full"
-                />
-              </div>
-              <Button
-                onClick={handleManualBackup}
-                disabled={isTriggering}
-                className="w-full md:w-fit rounded-xl px-8 h-11 bg-[#4318FF] hover:bg-[#3311db] font-bold shadow-lg shadow-indigo-500/20"
-              >
-                {isTriggering ? (
-                  <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
-                ) : (
-                  <Play className="w-4 h-4 mr-2" />
+            <CardContent>
+              <div className="w-full flex flex-col gap-4">
+                <div className="flex flex-col md:flex-row items-end gap-4">
+                  <div className="flex-1 space-y-2 w-full">
+                    <Label className="text-sm font-bold text-[#2B3674] ml-1">Backup Type</Label>
+                    <CustomSelect
+                      value={backupType}
+                      onChange={setBackupType}
+                      options={typeOptions}
+                      className="w-full"
+                    />
+                  </div>
+                  <Button
+                    onClick={handleManualBackup}
+                    disabled={isTriggering}
+                    className="w-full md:w-fit rounded-xl px-8 h-11 bg-[#4318FF] hover:bg-[#3311db] font-bold shadow-lg shadow-indigo-500/20"
+                  >
+                    {isTriggering ? (
+                      <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                    ) : (
+                      <Play className="w-4 h-4 mr-2" />
+                    )}
+                    Generate Backup Now
+                  </Button>
+                </div>
+                
+                {/* Progress Bar UI */}
+                {isTriggering && (
+                  <div className="w-full bg-gray-100 rounded-full h-6 overflow-hidden shadow-inner flex items-center relative transition-all">
+                    <div
+                      className="bg-indigo-500 h-full transition-all duration-300 ease-out relative"
+                      style={{ width: `${backupProgress.percent}%` }}
+                    >
+                      <div className="absolute inset-0 bg-white/20 w-full animate-pulse"></div>
+                    </div>
+                    <span className="absolute w-full flex justify-center text-xs font-bold z-10 text-[#2B3674]">
+                      {backupProgress.message || `Generating... ${backupProgress.percent}%`}
+                    </span>
+                  </div>
                 )}
-                Generate Backup Now
-              </Button>
+              </div>
             </CardContent>
           </Card>
 

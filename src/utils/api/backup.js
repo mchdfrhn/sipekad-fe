@@ -39,6 +39,17 @@ export const getBackupHistory = async () => {
   }
 };
 
+export const getBackupProgress = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/backups/progress`, {
+      headers: getHeaders(),
+    });
+    return response.data;
+  } catch (err) {
+    return handleApiError(err);
+  }
+};
+
 export const triggerBackup = async (type = "database") => {
   try {
     const response = await axios.post(
