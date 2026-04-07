@@ -6,6 +6,9 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 
+# Copy .env file so Vite can bake in VITE_* variables at build time
+COPY .env ./
+
 # Copy the rest of the application and build
 COPY . .
 RUN npm run build
@@ -15,15 +18,12 @@ FROM nginx:stable-alpine
 # Copy the build output to Nginx's html folder
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Add a simple nginx configuration to handle React Router (SPA)
-RUN echo 'server { \
-    listen 80; \
-    location / { \
-        root /usr/share/nginx/html; \
-        index index.html index.htm; \
-        try_files $uri /index.html; \
-    } \
-}' > /etc/nginx/conf.d/default.conf
+# Copy the Nginx template for dynamic port support (Zeabur uses $PORT)
+# Official nginx image will run envsubst on files in /etc/nginx/templates/*.template
+COPY nginx.conf.template /etc/nginx/templates/default.conf.template
+
+# Default port if $PORT is not provided
+ENV PORT=80
 
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
