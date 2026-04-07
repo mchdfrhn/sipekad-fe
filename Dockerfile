@@ -6,8 +6,13 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 
-# Copy .env file so Vite can bake in VITE_* variables at build time
-COPY .env ./
+# Accept build arguments for environment variables
+# These must start with VITE_ to be picked up by Vite
+ARG VITE_API_BASE_URL
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+
+# Copy .env file only if it exists (using wildcard to prevent build crash)
+COPY .env* ./
 
 # Copy the rest of the application and build
 COPY . .
