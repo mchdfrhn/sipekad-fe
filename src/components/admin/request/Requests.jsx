@@ -110,32 +110,34 @@ const RequestAdmin = () => {
               <ArrowLeft className="h-4 w-4" />
             </Button>
 
-            {generatePaginationPages(page, totalPage).map((pageNumber, index) => {
-              if (pageNumber === "..") {
+            {generatePaginationPages(page, totalPage).map(
+              (pageNumber, index) => {
+                if (pageNumber === "..") {
+                  return (
+                    <span
+                      key={`dots-${index}`}
+                      className="px-2 text-gray-400 font-bold"
+                    >
+                      ..
+                    </span>
+                  );
+                }
                 return (
-                  <span
-                    key={`dots-${index}`}
-                    className="px-2 text-gray-400 font-bold"
+                  <Button
+                    key={pageNumber}
+                    variant={page === pageNumber ? "default" : "ghost"}
+                    onClick={() => handlePageChange(pageNumber)}
+                    className={`h-8 w-8 rounded-full p-0 text-xs font-bold ${
+                      page === pageNumber
+                        ? "bg-[#4318FF] text-white hover:bg-[#3311CC]"
+                        : "text-gray-500 hover:bg-gray-100"
+                    }`}
                   >
-                    ..
-                  </span>
+                    {pageNumber}
+                  </Button>
                 );
-              }
-              return (
-                <Button
-                  key={pageNumber}
-                  variant={page === pageNumber ? "default" : "ghost"}
-                  onClick={() => handlePageChange(pageNumber)}
-                  className={`h-8 w-8 rounded-full p-0 text-xs font-bold ${
-                    page === pageNumber
-                      ? "bg-[#4318FF] text-white hover:bg-[#3311CC]"
-                      : "text-gray-500 hover:bg-gray-100"
-                  }`}
-                >
-                  {pageNumber}
-                </Button>
-              );
-            })}
+              },
+            )}
 
             <Button
               variant="ghost"
@@ -381,7 +383,7 @@ export const TablePengajuan = ({
                         <Button
                           variant="ghost"
                           size="icon"
-                         className={`h-7 w-7 md:h-8 md:w-8 rounded-xl transition-all ${
+                          className={`h-7 w-7 md:h-8 md:w-8 rounded-xl transition-all ${
                             value.status === "pending"
                               ? "bg-green-50 text-green-600 hover:bg-green-100"
                               : "bg-blue-50 text-blue-600 hover:bg-blue-100"

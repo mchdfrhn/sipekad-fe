@@ -244,7 +244,7 @@ const LayoutAdmin = () => {
             className="flex items-center gap-3 bg-white p-2.5 rounded-full shadow-sm shrink-0"
           >
             {/* Header Actions Portal Target */}
-            <div id="header-actions"></div>
+            <div id="header-actions" className="flex items-center gap-2"></div>
 
             {/* Search Pill - Conditionally Rendered */}
             {!isDashboard && (

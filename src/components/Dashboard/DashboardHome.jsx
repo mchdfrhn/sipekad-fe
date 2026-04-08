@@ -157,7 +157,9 @@ const DashboardHome = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="px-4 pb-4">
-            <DistribusiPengajuan />
+            <div className="h-[300px] w-full min-h-[300px]">
+              <DistribusiPengajuan days={7} />
+            </div>
           </CardContent>
         </Card>
       </Motion.div>

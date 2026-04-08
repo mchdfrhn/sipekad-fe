@@ -5,9 +5,8 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  ResponsiveContainer,
 } from "recharts";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { getTopTypePengajuan } from "../../utils/api/dashboardValue";
 
 const CustomTooltip = ({ active, payload, label }) => {
@@ -23,18 +22,77 @@ const CustomTooltip = ({ active, payload, label }) => {
   }
   return null;
 };
+// Global flag for refresh detection
+let isAppLoaded = false;
 
 const SimpleBarChart = () => {
-  const [data, setData] = useState([]);
+  const cachedData = sessionStorage.getItem("cache_bar_chart");
+
+  const [data, setData] = useState(() => {
+    return cachedData ? JSON.parse(cachedData) : [];
+  });
+  
+  const [hasMounted, setHasMounted] = useState(false);
+  const [chartWidth, setChartWidth] = useState(0);
+  const containerRef = useRef(null);
 
   useEffect(() => {
-    getTopTypePengajuan(null, setData);
-  }, []);
+    let timer;
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.contentRect.width > 50) {
+          // Always update width for responsiveness
+          setChartWidth(entry.contentRect.width);
+          
+          clearTimeout(timer);
+          timer = setTimeout(() => {
+            setHasMounted(true);
+            isAppLoaded = true;
+            sessionStorage.setItem("dashboard_stabilized", "true");
+          }, isAppLoaded ? 150 : 800);
+        }
+      }
+    });
+
+    if (containerRef.current) observer.observe(containerRef.current);
+
+    getTopTypePengajuan(null, (apiData) => {
+      const updateData = () => {
+        if (JSON.stringify(apiData) !== JSON.stringify(data)) {
+          setData(apiData);
+          sessionStorage.setItem("cache_bar_chart", JSON.stringify(apiData));
+        }
+      };
+
+      if (cachedData) {
+        setTimeout(updateData, 2000);
+      } else {
+        updateData();
+      }
+    });
+    
+    return () => {
+      observer.disconnect();
+      clearTimeout(timer);
+    };
+  }, [cachedData, data]);
+
+  if (!hasMounted || data.length === 0) {
+    return (
+      <div ref={containerRef} className="w-full h-full min-h-[250px] flex items-center justify-center bg-gray-50/10 rounded-2xl animate-pulse">
+        <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">
+          Memuat Data...
+        </p>
+      </div>
+    );
+  }
 
   return (
-    <div className="w-full h-full min-h-[250px]">
-      <ResponsiveContainer width="100%" height="100%" minHeight={250}>
+    <div ref={containerRef} className="w-full h-full min-h-[250px]">
+      {hasMounted && data.length > 0 && (
         <BarChart
+          width={chartWidth || 400}
+          height={250}
           data={data}
           margin={{
             top: 20,
@@ -72,11 +130,11 @@ const SimpleBarChart = () => {
             background={{ fill: "#E9EDF7", radius: [20, 20, 0, 0] }}
             isAnimationActive={true}
             animationDuration={2000}
-            animationBegin={400}
+            animationBegin={isAppLoaded ? 50 : 800}
             animationEasing="ease-in-out"
           />
         </BarChart>
-      </ResponsiveContainer>
+      )}
     </div>
   );
 };
