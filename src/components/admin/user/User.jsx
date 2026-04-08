@@ -166,9 +166,9 @@ const User = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setShowForm(!showForm)}
-            className="bg-[#4318FF] hover:bg-[#3311CC] text-white rounded-full px-4 py-3 text-sm font-bold shadow-[0_4px_14px_0_rgba(67,24,255,0.39)] hover:shadow-[0_6px_20px_rgba(67,24,255,0.23)] transition-all duration-300 mr-2"
+            className="flex items-center gap-2 bg-[#4318FF] hover:bg-[#3311CC] text-white rounded-full px-5 py-2.5 text-sm font-bold shadow-[0_4px_14px_0_rgba(67,24,255,0.39)] hover:shadow-[0_6px_20px_rgba(67,24,255,0.23)] transition-all duration-300 whitespace-nowrap"
           >
-            <Plus className="mr-2 h-4 w-4" /> Tambah Pengguna
+            <Plus className="h-4 w-4" /> Add User
           </Motion.button>,
           document.getElementById("header-actions"),
         )}
@@ -194,7 +194,10 @@ const User = () => {
                     {headers.map((header) => {
                       if (header === "Prodi") {
                         return (
-                          <th key={header} className="px-4 md:px-6 py-3 text-left">
+                          <th
+                            key={header}
+                            className="px-4 md:px-6 py-3 text-left"
+                          >
                             <DropdownMenu>
                               <DropdownMenuTrigger className="flex items-center gap-2 text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-wider hover:text-[#4318FF] focus:outline-none transition-colors cursor-pointer">
                                 {header} <Filter className="h-3 w-3" />
@@ -223,7 +226,11 @@ const User = () => {
                           </th>
                         );
                       }
-                      const isMobileHidden = ["NIM", "Email", "No. Telepon"].includes(header);
+                      const isMobileHidden = [
+                        "NIM",
+                        "Email",
+                        "No. Telepon",
+                      ].includes(header);
                       return (
                         <th
                           key={header}
@@ -349,32 +356,34 @@ const User = () => {
                   <ArrowLeft className="h-4 w-4" />
                 </Button>
 
-                {generatePaginationPages(page, totalPage).map((pageNumber, index) => {
-                  if (pageNumber === "..") {
+                {generatePaginationPages(page, totalPage).map(
+                  (pageNumber, index) => {
+                    if (pageNumber === "..") {
+                      return (
+                        <span
+                          key={`dots-${index}`}
+                          className="px-2 text-gray-400 font-bold"
+                        >
+                          ..
+                        </span>
+                      );
+                    }
                     return (
-                      <span
-                        key={`dots-${index}`}
-                        className="px-2 text-gray-400 font-bold"
+                      <Button
+                        key={pageNumber}
+                        variant={page === pageNumber ? "default" : "ghost"}
+                        onClick={() => handlePageChange(pageNumber)}
+                        className={`h-8 w-8 rounded-full p-0 text-xs font-bold ${
+                          page === pageNumber
+                            ? "bg-[#4318FF] text-white hover:bg-[#3311CC]"
+                            : "text-gray-500 hover:bg-gray-100"
+                        }`}
                       >
-                        ..
-                      </span>
+                        {pageNumber}
+                      </Button>
                     );
-                  }
-                  return (
-                    <Button
-                      key={pageNumber}
-                      variant={page === pageNumber ? "default" : "ghost"}
-                      onClick={() => handlePageChange(pageNumber)}
-                      className={`h-8 w-8 rounded-full p-0 text-xs font-bold ${
-                        page === pageNumber
-                          ? "bg-[#4318FF] text-white hover:bg-[#3311CC]"
-                          : "text-gray-500 hover:bg-gray-100"
-                      }`}
-                    >
-                      {pageNumber}
-                    </Button>
-                  );
-                })}
+                  },
+                )}
 
                 <Button
                   variant="ghost"

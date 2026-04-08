@@ -244,7 +244,7 @@ const LayoutDashboard = () => {
             className="flex items-center gap-3 bg-white p-2.5 rounded-full shadow-sm shrink-0"
           >
             {/* Header Actions Portal Target */}
-            <div id="header-actions"></div>
+            <div id="header-actions" className="flex items-center gap-2"></div>
 
             {/* Search Pill - Conditionally Rendered */}
             {!isDashboard && (
@@ -252,7 +252,7 @@ const LayoutDashboard = () => {
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#2B3674]" />
                 <input
                   type="text"
-                  placeholder="Search..."
+                  placeholder="Cari..."
                   value={searchValue}
                   onChange={handleSearchChange}
                   className="pl-8 bg-transparent border-none outline-none text-sm text-[#2B3674] placeholder-gray-400 w-40 focus:w-60 transition-all font-medium"
@@ -287,7 +287,7 @@ const LayoutDashboard = () => {
 
             {/* Buat Pengajuan Baru Button */}
             <Link to={"/dashboard/request"} className="hidden sm:block">
-              <Button className="bg-[#4318FF] hover:bg-[#3311CC] text-white rounded-full px-4 py-3 text-sm font-bold shadow-[0_4px_14px_0_rgba(67,24,255,0.39)] hover:shadow-[0_6px_20px_rgba(67,24,255,0.23)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex items-center gap-2">
+              <Button className="bg-[#4318FF] hover:bg-[#3311CC] text-white rounded-full px-5 py-2.5 text-sm font-bold shadow-[0_4px_14px_0_rgba(67,24,255,0.39)] hover:shadow-[0_6px_20px_rgba(67,24,255,0.23)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex items-center gap-2 whitespace-nowrap">
                 <Plus className="h-4 w-4" />
                 <span>Buat Pengajuan</span>
               </Button>

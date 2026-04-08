@@ -92,7 +92,8 @@ const DashboardHome = () => {
         visible: {
           opacity: 1,
           transition: {
-            staggerChildren: 0.1,
+            staggerChildren: 0.2, // Increased for a more deliberate feel
+            delayChildren: 0.1,
           },
         },
       }}
@@ -135,8 +136,14 @@ const DashboardHome = () => {
       {/* Charts Section */}
       <Motion.div
         variants={{
-          hidden: { opacity: 0, y: 20 },
-          visible: { opacity: 1, y: 0 },
+          hidden: { opacity: 0 },
+          visible: { 
+            opacity: 1, 
+            transition: {
+              duration: 1,
+              ease: "easeOut"
+            }
+          },
         }}
         className="grid gap-6"
       >
@@ -150,7 +157,9 @@ const DashboardHome = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="px-4 pb-4">
-            <DistribusiPengajuan />
+            <div className="h-[300px] w-full min-h-[300px]">
+              <DistribusiPengajuan days={7} />
+            </div>
           </CardContent>
         </Card>
       </Motion.div>

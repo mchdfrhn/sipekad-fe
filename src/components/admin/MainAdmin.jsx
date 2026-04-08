@@ -99,9 +99,9 @@ const MainAdmin = () => {
             <CardHeader>
               <CardTitle>Distribusi Pengajuan</CardTitle>
             </CardHeader>
-            <CardContent className="pl-0">
-              <div className="h-[300px] w-full">
-                <DistribusiPengajuan />
+            <CardContent className="px-4 pb-4">
+              <div className="h-[300px] w-full min-h-[300px]">
+                <DistribusiPengajuan days={30} />
               </div>
             </CardContent>
           </Card>
@@ -113,8 +113,8 @@ const MainAdmin = () => {
               <CardHeader>
                 <CardTitle>Grafik Mingguan</CardTitle>
               </CardHeader>
-              <CardContent className="pl-0">
-                <div className="h-[250px] w-full">
+              <CardContent className="px-4 pb-4">
+                <div className="h-[250px] w-full min-h-[250px]">
                   <SimpleBarChart />
                 </div>
               </CardContent>
@@ -125,8 +125,8 @@ const MainAdmin = () => {
               <CardHeader>
                 <CardTitle>Statistik Status</CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="h-[250px] w-full flex items-center justify-center">
+              <CardContent className="px-4 pb-4">
+                <div className="h-[250px] w-full min-h-[250px] flex items-center justify-center">
                   <StraightAnglePieChart />
                 </div>
               </CardContent>
