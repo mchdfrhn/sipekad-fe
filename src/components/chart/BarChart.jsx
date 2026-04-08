@@ -70,6 +70,10 @@ const SimpleBarChart = () => {
             fill="#4318FF"
             radius={[20, 20, 0, 0]}
             background={{ fill: "#E9EDF7", radius: [20, 20, 0, 0] }}
+            isAnimationActive={true}
+            animationDuration={2000}
+            animationBegin={400}
+            animationEasing="ease-in-out"
           />
         </BarChart>
       </ResponsiveContainer>

@@ -53,6 +53,9 @@ export default function StraightAnglePieChart() {
               dataKey="value"
               stroke="none"
               cornerRadius={10}
+              isAnimationActive={true}
+              animationDuration={2000}
+              animationBegin={400}
             >
               {data.map((entry, index) => (
                 <Cell key={`slice-${index}`} fill={getColor(entry.name)} />

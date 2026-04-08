@@ -102,6 +102,7 @@ const DistribusiPengajuan = () => {
     <div className="w-full h-full min-h-[300px]">
       <ResponsiveContainer width="100%" height="100%" minHeight={300}>
         <AreaChart
+          key={dataPengajuan.length > 0 ? "loaded" : "loading"}
           data={dataPengajuan}
           margin={{
             top: 10,
@@ -143,6 +144,10 @@ const DistribusiPengajuan = () => {
             strokeWidth={3}
             fillOpacity={1}
             fill="url(#colorUv)"
+            isAnimationActive={true}
+            animationDuration={1500}
+            animationBegin={0}
+            animationEasing="ease-in-out"
           />
         </AreaChart>
       </ResponsiveContainer>
