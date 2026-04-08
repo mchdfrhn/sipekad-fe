@@ -2,12 +2,18 @@ import { Link } from "react-router";
 import { Send, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TableSkeleton } from "@/components/ui/Loading";
+import { motion as Motion } from "motion/react";
 
 const TableRiwayatUser = ({ historyRequest, page, limit = 10, isLoading }) => {
-  const dataKey = ["No", "Jenis Surat", "Pesan", "Tanggal", "Status", "Aksi"];
+  const dataKey = ["No", "Jenis Surat", "Tanggal", "Status"];
 
   return (
-    <div className="w-full overflow-x-auto mt-4 bg-white rounded-[20px] shadow-lg p-6 relative min-h-[500px]">
+    <Motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="w-full overflow-x-hidden mt-4 bg-white rounded-[20px] shadow-lg p-4 md:p-6 relative min-h-[500px]"
+    >
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-bold text-[#2B3674]">Riwayat Pengajuan</h2>
       </div>
@@ -15,23 +21,17 @@ const TableRiwayatUser = ({ historyRequest, page, limit = 10, isLoading }) => {
       <table className="w-full">
         <thead>
           <tr className="border-b border-gray-100">
-            <th className="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            <th className="px-4 py-3 text-left text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-wider whitespace-nowrap">
               No
             </th>
-            <th className="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            <th className="px-4 py-3 text-left text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-wider whitespace-nowrap">
               Jenis Surat
             </th>
-            <th className="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider whitespace-nowrap">
-              Pesan
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            <th className="px-4 py-3 text-left text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-wider whitespace-nowrap">
               Tanggal
             </th>
-            <th className="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            <th className="px-4 py-3 text-center text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-wider whitespace-nowrap">
               Status
-            </th>
-            <th className="px-6 py-3 text-center text-xs font-bold text-gray-400 uppercase tracking-wider whitespace-nowrap">
-              Aksi
             </th>
           </tr>
         </thead>
@@ -58,52 +58,45 @@ const TableRiwayatUser = ({ historyRequest, page, limit = 10, isLoading }) => {
           ) : (
             <>
               {historyRequest.map((value, index) => (
-                <tr
+                <Motion.tr
                   key={index}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.05, duration: 0.3 }}
                   className={`group transition-colors border-b border-gray-50 last:border-0 hover:bg-indigo-50/50 ${
                     index % 2 === 0 ? "bg-white" : "bg-indigo-50/20"
                   }`}
                 >
-                  <td className="px-6 py-2.5 whitespace-nowrap">
-                    <span className="text-sm font-bold text-[#2B3674]">
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    <span className="text-xs md:text-sm font-bold text-[#2B3674]">
                       {index + 1 + (page - 1) * limit}
                     </span>
                   </td>
 
-                  <td className="px-6 py-2.5">
-                    <span className="text-sm font-bold text-[#2B3674]">
+                  <td className="px-4 py-3">
+                    <Link to={`/dashboard/${value.id}`} className="text-xs md:text-sm font-bold text-indigo-600 hover:text-indigo-800 hover:underline transition-all">
                       {value.type}
-                    </span>
+                    </Link>
                   </td>
 
-                  <td className="px-6 py-2.5 max-w-[300px]">
-                    <span
-                      className="text-sm text-gray-500 block truncate"
-                      title={value.message}
-                    >
-                      {value.message}
-                    </span>
-                  </td>
-
-                  <td className="px-6 py-2.5">
-                    <span className="text-sm font-bold text-[#2B3674]">
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    <span className="text-xs md:text-sm font-bold text-[#2B3674]">
                       {new Date(value.updated_at).toLocaleDateString("id-ID", {
                         day: "numeric",
-                        month: "short",
-                        year: "numeric",
+                        month: "2-digit",
                       })}
                     </span>
                   </td>
 
-                  <td className="px-6 py-2.5">
+                  <td className="px-4 py-3 text-center">
                     <span
-                      className={`inline-flex items-center px-3 py-1 rounded-lg text-[11px] font-bold capitalize
+                      className={`inline-flex items-center px-2 py-0.5 rounded-full text-[9px] md:text-[11px] font-bold capitalize
                         ${
                           value.status === "completed"
-                            ? "bg-green-50 text-green-600"
+                            ? "bg-green-50 text-green-600 border border-green-100"
                             : value.status === "pending"
-                              ? "bg-orange-50 text-orange-600"
-                              : "bg-red-50 text-red-600"
+                              ? "bg-orange-50 text-orange-600 border border-orange-100"
+                              : "bg-red-50 text-red-600 border border-red-100"
                         }`}
                     >
                       {value.status === "completed"
@@ -113,34 +106,20 @@ const TableRiwayatUser = ({ historyRequest, page, limit = 10, isLoading }) => {
                           : "Ditolak"}
                     </span>
                   </td>
-
-                  <td className="px-6 py-2.5">
-                    <div className="flex justify-center">
-                      <Link to={`/dashboard/${value.id}`}>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 rounded-xl bg-blue-50 text-blue-600 hover:bg-blue-100 transition-all"
-                        >
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                      </Link>
-                    </div>
-                  </td>
-                </tr>
+                </Motion.tr>
               ))}
               {/* Fill remaining space with empty rows to maintain height consistency */}
               {limit - historyRequest.length > 0 &&
                 [...Array(limit - historyRequest.length)].map((_, i) => (
                   <tr key={`empty-${i}`} className="h-[48px]">
-                    <td colSpan={6}>&nbsp;</td>
+                    <td colSpan={dataKey.length}>&nbsp;</td>
                   </tr>
                 ))}
             </>
           )}
         </tbody>
       </table>
-    </div>
+    </Motion.div>
   );
 };
 

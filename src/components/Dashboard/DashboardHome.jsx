@@ -21,6 +21,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { generatePaginationPages } from "../../utils/helpers";
+import { motion as Motion } from "motion/react";
 
 const DashboardHome = () => {
   const { showToast } = useToast();
@@ -82,9 +84,28 @@ const DashboardHome = () => {
   ).length;
 
   return (
-    <div className="space-y-6">
+    <Motion.div
+      initial="hidden"
+      animate="visible"
+      variants={{
+        hidden: { opacity: 0 },
+        visible: {
+          opacity: 1,
+          transition: {
+            staggerChildren: 0.1,
+          },
+        },
+      }}
+      className="space-y-6"
+    >
       {/* Stats Cards */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <Motion.div
+        variants={{
+          hidden: { opacity: 0, y: 20 },
+          visible: { opacity: 1, y: 0 },
+        }}
+        className="grid gap-6 md:grid-cols-2 lg:grid-cols-4"
+      >
         <StatsCard
           title="Total Pengajuan"
           value={totalRequest} // This might be incorrect if paginated, but keeping logic same as before
@@ -109,10 +130,16 @@ const DashboardHome = () => {
           icon={CheckCircle}
           variant="green"
         />
-      </div>
+      </Motion.div>
 
       {/* Charts Section */}
-      <div className="grid gap-6">
+      <Motion.div
+        variants={{
+          hidden: { opacity: 0, y: 20 },
+          visible: { opacity: 1, y: 0 },
+        }}
+        className="grid gap-6"
+      >
         <Card className="rounded-[30px] border-none shadow-sm overflow-hidden bg-white">
           <CardHeader className="px-8 pt-8 pb-0">
             <CardTitle className="text-lg font-bold text-[#2B3674]">
@@ -126,15 +153,22 @@ const DashboardHome = () => {
             <DistribusiPengajuan />
           </CardContent>
         </Card>
-      </div>
+      </Motion.div>
 
       {/* Recent Request Table */}
-      <TableRiwayatUser
-        historyRequest={historRequest}
-        page={page}
-        limit={10}
-        isLoading={loading}
-      />
+      <Motion.div
+        variants={{
+          hidden: { opacity: 0, y: 20 },
+          visible: { opacity: 1, y: 0 },
+        }}
+      >
+        <TableRiwayatUser
+          historyRequest={historRequest}
+          page={page}
+          limit={10}
+          isLoading={loading}
+        />
+      </Motion.div>
 
       {/* Pagination */}
       {totalPage > 1 && (
@@ -149,8 +183,17 @@ const DashboardHome = () => {
             <ArrowLeft className="h-4 w-4" />
           </Button>
 
-          {[...Array(totalPage)].map((_, index) => {
-            const pageNumber = index + 1;
+          {generatePaginationPages(page, totalPage).map((pageNumber, index) => {
+            if (pageNumber === "..") {
+              return (
+                <span
+                  key={`dots-${index}`}
+                  className="px-2 text-gray-400 font-bold"
+                >
+                  ..
+                </span>
+              );
+            }
             return (
               <Button
                 key={pageNumber}
@@ -178,7 +221,7 @@ const DashboardHome = () => {
           </Button>
         </div>
       )}
-    </div>
+    </Motion.div>
   );
 };
 

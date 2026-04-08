@@ -106,9 +106,10 @@ const AddUserForm = ({
             className="fixed inset-0 w-screen h-screen bg-[#111c44]/30 backdrop-blur-[2px] z-99"
           ></motion.div>
           <motion.div
-            initial={{ opacity: 0, scale: 0.8, x: "-50%", y: "-50%" }}
+            initial={{ opacity: 0, scale: 0.9, x: "-50%", y: "-48%" }}
             animate={{ opacity: 1, scale: 1, x: "-50%", y: "-50%" }}
-            exit={{ opacity: 0, scale: 0.8, x: "-50%", y: "-50%" }}
+            exit={{ opacity: 0, scale: 0.9, x: "-50%", y: "-48%" }}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
             className="flex flex-col gap-4 bg-white shadow-2xl p-8 h-[90vh] md:h-auto max-h-[95vh] overflow-y-auto rounded-[30px] fixed top-1/2 left-1/2 z-100 w-[90%] max-w-[500px] border border-gray-100"
           >
             <div className="flex justify-between items-center mb-2">

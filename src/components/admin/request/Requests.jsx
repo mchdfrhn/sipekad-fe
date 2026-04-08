@@ -1,7 +1,9 @@
 import { ArrowLeft, ArrowRight, Send, Eye, Filter } from "lucide-react";
+import { motion as Motion } from "motion/react";
 import { useEffect, useState, useCallback } from "react";
 import { getAllRequestForAdmin } from "../../../utils/api/request";
 import { Link, useSearchParams } from "react-router";
+import { generatePaginationPages } from "@/utils/helpers";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { LoadingOverlay } from "@/components/ui/Loading";
@@ -11,6 +13,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const RequestAdmin = () => {
   const [requests, setRequests] = useState([]);
@@ -75,7 +78,12 @@ const RequestAdmin = () => {
   }, [getRequests]);
 
   return (
-    <Card className="border-0 shadow-lg rounded-[20px] bg-white h-full flex flex-col relative overflow-hidden">
+    <Motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="border-0 shadow-lg rounded-[20px] bg-white h-full flex flex-col relative overflow-hidden"
+    >
       <CardContent className="p-0 pb-6 flex-1 flex flex-col justify-between relative">
         {loading && <LoadingOverlay />}
         <TablePengajuan
@@ -102,8 +110,17 @@ const RequestAdmin = () => {
               <ArrowLeft className="h-4 w-4" />
             </Button>
 
-            {[...Array(totalPage)].map((_, index) => {
-              const pageNumber = index + 1;
+            {generatePaginationPages(page, totalPage).map((pageNumber, index) => {
+              if (pageNumber === "..") {
+                return (
+                  <span
+                    key={`dots-${index}`}
+                    className="px-2 text-gray-400 font-bold"
+                  >
+                    ..
+                  </span>
+                );
+              }
               return (
                 <Button
                   key={pageNumber}
@@ -132,7 +149,7 @@ const RequestAdmin = () => {
           </div>
         )}
       </CardContent>
-    </Card>
+    </Motion.div>
   );
 };
 
@@ -188,7 +205,12 @@ export const TablePengajuan = ({
   ];
 
   return (
-    <div className="w-full overflow-x-auto mt-4">
+    <Motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="w-full overflow-x-auto mt-4 px-4 md:px-0"
+    >
       <table className="w-full">
         <thead>
           <tr className="border-b border-gray-100">
@@ -221,10 +243,10 @@ export const TablePengajuan = ({
                 </DropdownMenuContent>
               </DropdownMenu>
             </th>
-            <th className="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider whitespace-nowrap">
               Pesan
             </th>
-            <th className="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            <th className="hidden lg:table-cell px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider whitespace-nowrap">
               Tanggal
             </th>
             <th className="px-6 py-3 text-left whitespace-nowrap">
@@ -272,27 +294,36 @@ export const TablePengajuan = ({
           ) : (
             <>
               {requests.map((value, index) => (
-                <tr
+                <Motion.tr
                   key={index}
-                  className={`group transition-colors border-b border-gray-50 last:border-0 hover:bg-indigo-50/50 ${
-                    index % 2 === 0 ? "bg-white" : "bg-indigo-50/20"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.05, duration: 0.3 }}
+                  className={`group transition-colors border-b border-gray-50 last:border-0 hover:bg-blue-50/50 ${
+                    index % 2 === 0 ? "bg-white" : "bg-gray-50/50"
                   }`}
                 >
-                  <td className="px-6 py-2.5 whitespace-nowrap">
-                    <span className="text-sm font-bold text-[#2B3674]">
+                  <td className="px-4 md:px-6 py-2.5 whitespace-nowrap">
+                    <span className="text-xs md:text-sm font-bold text-[#2B3674]">
                       {(page - 1) * limit + index + 1}
                     </span>
                   </td>
 
                   {!dontDisplayUsername && (
-                    <td className="px-6 py-2.5">
+                    <td className="px-4 md:px-6 py-2.5">
                       <div className="flex items-center gap-3">
-                        <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-[#4318FF] font-bold text-xs">
-                          {value.full_name?.charAt(0) || "U"}
-                        </div>
+                        <Avatar className="h-6 w-6 md:h-8 md:w-8 shrink-0 border border-indigo-100">
+                          <AvatarImage
+                            src={value.url_photo}
+                            className="object-cover"
+                          />
+                          <AvatarFallback className="bg-blue-100 text-[#4318FF] font-bold text-xs">
+                            {value.full_name?.charAt(0) || "U"}
+                          </AvatarFallback>
+                        </Avatar>
                         <Link
                           to={`/admin/user/${value.user_id}`}
-                          className="text-sm font-bold text-[#2B3674] hover:text-[#4318FF] transition-colors"
+                          className="text-xs md:text-sm font-bold text-[#2B3674] hover:text-[#4318FF] transition-colors truncate max-w-[120px] md:max-w-none block"
                         >
                           {value.full_name}
                         </Link>
@@ -300,13 +331,13 @@ export const TablePengajuan = ({
                     </td>
                   )}
 
-                  <td className="px-6 py-2.5">
-                    <span className="text-sm font-bold text-[#2B3674]">
+                  <td className="px-4 md:px-6 py-2.5">
+                    <span className="text-xs md:text-sm font-bold text-[#2B3674]">
                       {value.type}
                     </span>
                   </td>
 
-                  <td className="px-6 py-2.5 max-w-[300px]">
+                  <td className="hidden md:table-cell px-6 py-2.5 max-w-[300px]">
                     <span
                       className="text-sm text-gray-500 block truncate"
                       title={value.message}
@@ -315,8 +346,8 @@ export const TablePengajuan = ({
                     </span>
                   </td>
 
-                  <td className="px-6 py-2.5">
-                    <span className="text-sm font-bold text-[#2B3674]">
+                  <td className="hidden lg:table-cell px-6 py-2.5">
+                    <span className="text-xs md:text-sm font-bold text-[#2B3674]">
                       {new Date(value.updated_at).toLocaleDateString("id-ID", {
                         day: "numeric",
                         month: "short",
@@ -325,9 +356,9 @@ export const TablePengajuan = ({
                     </span>
                   </td>
 
-                  <td className="px-6 py-2.5">
+                  <td className="px-4 md:px-6 py-2.5 text-center">
                     <span
-                      className={`inline-flex items-center px-3 py-1 rounded-lg text-[11px] font-bold capitalize
+                      className={`inline-flex items-center px-3 py-1 rounded-lg text-[10px] md:text-[11px] font-bold capitalize
                         ${
                           value.status === "completed"
                             ? "bg-green-50 text-green-600"
@@ -344,13 +375,13 @@ export const TablePengajuan = ({
                     </span>
                   </td>
 
-                  <td className="px-6 py-2.5">
+                  <td className="px-4 md:px-6 py-2.5">
                     <div className="flex justify-center">
                       <Link to={`/admin/pengajuan/${value.id}`}>
                         <Button
                           variant="ghost"
                           size="icon"
-                          className={`h-8 w-8 rounded-xl transition-all ${
+                         className={`h-7 w-7 md:h-8 md:w-8 rounded-xl transition-all ${
                             value.status === "pending"
                               ? "bg-green-50 text-green-600 hover:bg-green-100"
                               : "bg-blue-50 text-blue-600 hover:bg-blue-100"
@@ -365,7 +396,7 @@ export const TablePengajuan = ({
                       </Link>
                     </div>
                   </td>
-                </tr>
+                </Motion.tr>
               ))}
               {/* Render Empty Rows to maintain height */}
               {emptyRows > 0 &&
@@ -374,18 +405,19 @@ export const TablePengajuan = ({
                     key={`empty-${i}`}
                     className="border-b border-gray-50 last:border-0 h-[48px]"
                   >
-                    {dataKey.map((_, j) => (
-                      <td key={j} className="px-6 py-2.5 whitespace-nowrap">
-                        &nbsp;
-                      </td>
-                    ))}
+                    <td
+                      colSpan={dataKey.length}
+                      className="px-4 md:px-6 py-2.5 whitespace-nowrap"
+                    >
+                      &nbsp;
+                    </td>
                   </tr>
                 ))}
             </>
           )}
         </tbody>
       </table>
-    </div>
+    </Motion.div>
   );
 };
 

@@ -2,6 +2,7 @@ import { LayoutDashboard, LogOut, User, Send, Menu, X } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router";
 import Alert from "../ui/Alert";
 import { useState } from "react";
+import { motion as Motion } from "motion/react";
 
 const Sidebar = ({ activeSidebar, setActiveSideBar, links }) => {
   const navigate = useNavigate();
@@ -26,8 +27,11 @@ const Sidebar = ({ activeSidebar, setActiveSideBar, links }) => {
       >
         <Menu />
       </button>
-      <aside
-        className={`bg-white w-58 pt-12 shadow-md h-screen z-40 fixed left-0 ${activeSidebar && "-translate-x-full"} md:translate-x-0 transition-transform duration-300 ease-in-out`}
+      <Motion.aside
+        initial={{ x: "-100%" }}
+        animate={{ x: activeSidebar ? "-100%" : "0%" }}
+        transition={{ type: "spring", damping: 25, stiffness: 200 }}
+        className={`bg-white w-58 pt-12 shadow-md h-screen z-40 fixed left-0 md:translate-x-0 transition-transform duration-300 ease-in-out`}
       >
         {isDisplay && (
           <Alert
@@ -36,22 +40,45 @@ const Sidebar = ({ activeSidebar, setActiveSideBar, links }) => {
             onYesHundler={logoutHandler}
           />
         )}
-        <div className="flex items-center px-8 mb-8">
+        <Motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+          className="flex items-center px-8 mb-8"
+        >
           <img
             src="/sttimage.png"
             alt="stt-logo"
             loading="lazy"
             className="w-40"
           />
-        </div>
-        <ul className="">
+        </Motion.div>
+        <Motion.ul
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: { staggerChildren: 0.05 },
+            },
+          }}
+          className=""
+        >
           {links.map((link) => {
             const isActive = pathname === link.path;
 
             return (
-              <li className="cursor-pointer mb-2 relative" key={link.name}>
+              <Motion.li
+                variants={{
+                  hidden: { opacity: 0, x: -20 },
+                  visible: { opacity: 1, x: 0 },
+                }}
+                className="cursor-pointer mb-2 relative"
+                key={link.name}
+              >
                 <Link
-                  onClick={() => setActiveSideBar(!activeSidebar)}
+                  onClick={() => setActiveSideBar(true)}
                   to={link.path}
                   className={`flex items-center gap-3 px-8 py-3 text-sm font-medium transition-all duration-200 
                     ${
@@ -75,10 +102,14 @@ const Sidebar = ({ activeSidebar, setActiveSideBar, links }) => {
                   </div>
                   <p>{link.name}</p>
                 </Link>
-              </li>
+              </Motion.li>
             );
           })}
-          <li
+          <Motion.li
+            variants={{
+              hidden: { opacity: 0, x: -20 },
+              visible: { opacity: 1, x: 0 },
+            }}
             onClick={() => setIsDisplay(!isDisplay)}
             className="mt-8 group w-full cursor-pointer relative"
           >
@@ -90,9 +121,9 @@ const Sidebar = ({ activeSidebar, setActiveSideBar, links }) => {
               </div>
               <p>Logout</p>
             </button>
-          </li>
-        </ul>
-      </aside>
+          </Motion.li>
+        </Motion.ul>
+      </Motion.aside>
     </>
   );
 };

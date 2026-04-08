@@ -3,13 +3,7 @@ import { Link } from "react-router";
 import { motion as Motion } from "motion/react";
 
 const TableRiwayat = ({ historyRequest }) => {
-  const propertyTable = [
-    "antrian",
-    "tanggal Pengajuan",
-    "tipe",
-    "Pesan",
-    "status",
-  ];
+  const propertyTable = ["No", "Jenis", "Tanggal", "Status"];
   return (
     <>
       <h1 className="text-xl font-semibold text-slate-800">
@@ -40,10 +34,10 @@ const TableRiwayat = ({ historyRequest }) => {
           <table className="w-full">
             <thead>
               <tr>
-                {propertyTable.map((prop) => (
+                {propertyTable.map((prop, index) => (
                   <th
                     key={prop}
-                    className="px-3 md:px-6 py-2 md:py-4 text-left text-sm font-semibold uppercase tracking-wide hidden md:table-cell"
+                    className={`px-3 md:px-6 py-2 md:py-4 text-left text-xs md:text-sm font-semibold uppercase tracking-wide ${index === 0 ? "w-12 text-center" : ""}`}
                   >
                     {prop}
                   </th>
@@ -54,35 +48,35 @@ const TableRiwayat = ({ historyRequest }) => {
               {historyRequest.map((value, index) => (
                 <tr
                   key={index}
-                  className={`flex flex-row ${index % 2 === 0 && "bg-gray-500/20"} items-center justify-between hover:shadow-md cursor-pointer transition-all transition-duration gap-2 md:table-row md:mb-0 md:border-b-4 border-gray-600 md:border-none md:p-0`}
+                  className={`${index % 2 === 0 ? "bg-gray-50/50" : "bg-white"} hover:bg-indigo-50/30 transition-colors border-b border-gray-100 last:border-0`}
                 >
-                  <td className="md:px-6 hidden py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">
-                    <Link to={`/dashboard/${value.id}`}>{value.queue}</Link>
+                  <td className="px-3 md:px-6 py-3 text-left text-xs md:text-base font-medium text-gray-600 w-12 text-center">
+                    {value.queue}
                   </td>
-                  <td className="md:px-6 py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">
-                    <Link to={`/dashboard/${value.id}`}>
-                      {new Date(value.created_at).toLocaleDateString("id-ID", {
-                        year: "numeric",
-                        month: "2-digit",
-                        day: "2-digit",
-                      })}
+                  <td className="px-3 md:px-6 py-3 text-left text-xs md:text-base font-bold text-indigo-600">
+                    <Link to={`/dashboard/${value.id}`} className="hover:underline">
+                      {value.type}
                     </Link>
                   </td>
-                  <td className="md:px-6 py-2 md:py-4 text-left text-xs md:text-[16px] font-medium tracking-wide md:table-cell">
-                    <Link to={`/dashboard/${value.id}`}>{value.type}</Link>
+                  <td className="px-3 md:px-6 py-3 text-left text-xs md:text-base font-medium text-gray-600">
+                    {new Date(value.created_at).toLocaleDateString("id-ID", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "2-digit",
+                    })}
                   </td>
-                  <td className="md:px-6 hidden py-2 md:py-4 text-left text-xs md:text-[16px] font-medium text-wrap md:table-cell">
-                    <Link to={`/dashboard/${value.id}`}>{value.message}</Link>
-                  </td>
-                  <td className="md:table-cell">
-                    <Link
-                      className="flex justify-center"
-                      to={`/dashboard/${value.id}`}
-                    >
+                  <td className="px-3 md:px-6 py-3 text-center">
+                    <div className="flex justify-center">
                       <span
-                        className={`size-2 md:size-3 block rounded-md ${value.status === "completed" && "bg-green-500"} ${value.status === "pending" && "bg-yellow-400"} ${value.status === "canceled" && "bg-red-500"}`}
-                      ></span>
-                    </Link>
+                        className={`size-2 md:size-3 rounded-full shadow-sm ring-2 ring-white ${
+                          value.status === "completed"
+                            ? "bg-green-500"
+                            : value.status === "pending"
+                              ? "bg-yellow-400"
+                              : "bg-red-500"
+                        }`}
+                      />
+                    </div>
                   </td>
                 </tr>
               ))}

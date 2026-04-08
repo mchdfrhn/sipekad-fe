@@ -5,6 +5,7 @@ import { updateUserForAdminAction } from "../../../utils/action";
 import { STUDENT_PRODI } from "../../../utils/constant";
 import CustomSelect from "../../ui/CustomSelect";
 import { useToast } from "@/utils/hooks/useToast";
+import { motion, AnimatePresence } from "motion/react";
 
 const prodiOptions = Object.values(STUDENT_PRODI).map((val) => ({
   label: val,
@@ -67,14 +68,23 @@ const UpdateUserForm = ({ userDetail, shwoForm, setShowForm }) => {
   };
 
   return (
-    <>
+    <AnimatePresence>
       {shwoForm && (
         <>
-          <div
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             onClick={() => setShowForm(!shwoForm)}
             className="fixed inset-0 w-screen h-screen bg-[#111c44]/30 backdrop-blur-[2px] z-99"
-          ></div>
-          <div className="flex flex-col gap-4 bg-white shadow-2xl p-8 h-[90vh] md:h-auto max-h-[90vh] overflow-y-auto rounded-[30px] fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[100] w-[90%] max-w-[500px] border border-gray-100">
+          ></motion.div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, x: "-50%", y: "-48%" }}
+            animate={{ opacity: 1, scale: 1, x: "-50%", y: "-50%" }}
+            exit={{ opacity: 0, scale: 0.9, x: "-50%", y: "-48%" }}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            className="flex flex-col gap-4 bg-white shadow-2xl p-8 h-[90vh] md:h-auto max-h-[90vh] overflow-y-auto rounded-[30px] fixed top-1/2 left-1/2 z-[100] w-[90%] max-w-[500px] border border-gray-100"
+          >
             <div className="flex justify-between items-center mb-2">
               <h2 className="text-xl font-extrabold text-[#2B3674] tracking-tight">
                 Perbarui Informasi Pengguna
@@ -206,10 +216,10 @@ const UpdateUserForm = ({ userDetail, shwoForm, setShowForm }) => {
               </button>
             </form>
             <p className="text-xs font-semibold text-red-500">{errMessage}</p>
-          </div>
+          </motion.div>
         </>
       )}
-    </>
+    </AnimatePresence>
   );
 };
 
