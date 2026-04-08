@@ -1,23 +1,57 @@
-
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { generatePaginationPages } from "../../utils/helpers";
+import { Button } from "./button";
 
 const ButtonPagination = ({ page, handlePageChange, totalPage }) => {
+  if (totalPage <= 1) return null;
+
   return (
-     <div className="flex gap-4 justify-end mt-4">
-        <button onClick={() => handlePageChange(page - 1)} className="size-8 rounded-full flex justify-center items-center bg-white shadow-md cursor-pointer disabled:text-gray-400" disabled={ page === 1 }><ArrowLeft /></button>
-        {
-          [...Array(totalPage)].map((_, index) => {
-            const pageNumber = index + 1;
-            return(
-              <div className="flex gap-2">
-                <button onClick={() => handlePageChange(pageNumber)} className="size-8 flex justify-center items-center rounded-full bg-white shadow-md">{ pageNumber }</button>
-              </div>
-            )
-          })
+    <div className="flex justify-end items-center gap-2 mt-6">
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() => handlePageChange(page - 1)}
+        disabled={page === 1}
+        className="rounded-full hover:bg-gray-100 disabled:opacity-50 h-8 w-8"
+      >
+        <ArrowLeft className="h-4 w-4" />
+      </Button>
+
+      {generatePaginationPages(page, totalPage).map((pageNumber, index) => {
+        if (pageNumber === "..") {
+          return (
+            <span key={`dots-${index}`} className="px-2 text-gray-400 font-bold">
+              ..
+            </span>
+          );
         }
-        <button onClick={() => handlePageChange(page + 1)} className="size-8 rounded-full flex justify-center items-center bg-white shadow-md cursor-pointer disabled:text-gray-400" disabled={ page === totalPage }><ArrowRight /></button>
-      </div>
-  )
-}
+        return (
+          <Button
+            key={pageNumber}
+            variant={page === pageNumber ? "default" : "ghost"}
+            onClick={() => handlePageChange(pageNumber)}
+            className={`h-8 w-8 rounded-full p-0 text-xs font-bold ${
+              page === pageNumber
+                ? "bg-[#4318FF] text-white hover:bg-[#3311CC]"
+                : "text-gray-500 hover:bg-gray-100"
+            }`}
+          >
+            {pageNumber}
+          </Button>
+        );
+      })}
+
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() => handlePageChange(page + 1)}
+        disabled={page === totalPage}
+        className="rounded-full hover:bg-gray-100 disabled:opacity-50 h-8 w-8"
+      >
+        <ArrowRight className="h-4 w-4" />
+      </Button>
+    </div>
+  );
+};
 
 export default ButtonPagination;

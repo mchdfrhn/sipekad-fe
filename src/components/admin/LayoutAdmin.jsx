@@ -45,10 +45,12 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import { motion as Motion, AnimatePresence } from "motion/react";
 import { useState, useEffect, useRef } from "react";
 import Alert from "../ui/Alert";
 
 const LayoutAdmin = () => {
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const { userData: user } = useUser();
@@ -199,12 +201,17 @@ const LayoutAdmin = () => {
               : "bg-transparent"
           }`}
         >
-          <div className="flex flex-col justify-center">
+          <Motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+            className="flex flex-col justify-center min-w-0 overflow-hidden"
+          >
             <Breadcrumb>
               <BreadcrumbList>
                 {breadcrumbs.map((crumb, index) => (
                   <div key={index} className="flex items-center">
-                    <BreadcrumbItem>
+                    <BreadcrumbItem className={index === breadcrumbs.length - 1 ? "" : "hidden md:flex"}>
                       {index === breadcrumbs.length - 1 ? (
                         <BreadcrumbPage className="text-sm font-bold text-[#2B3674] capitalize">
                           {crumb.label}
@@ -218,19 +225,24 @@ const LayoutAdmin = () => {
                         </BreadcrumbLink>
                       )}
                     </BreadcrumbItem>
-                    {index < breadcrumbs.length - 1 && <BreadcrumbSeparator />}
+                    {index < breadcrumbs.length - 1 && <BreadcrumbSeparator className="hidden md:flex" />}
                   </div>
                 ))}
               </BreadcrumbList>
             </Breadcrumb>
-            <h1 className="text-2xl font-bold text-[#2B3674] capitalize mt-1">
+            <h1 className="hidden md:block text-2xl font-bold text-[#2B3674] capitalize mt-1">
               {breadcrumbs[breadcrumbs.length - 1]?.label === "Admin"
                 ? "Dashboard"
                 : breadcrumbs[breadcrumbs.length - 1]?.label || "Dashboard"}
             </h1>
-          </div>
+          </Motion.div>
 
-          <div className="flex items-center gap-3 bg-white p-2.5 rounded-full shadow-sm">
+          <Motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+            className="flex items-center gap-3 bg-white p-2.5 rounded-full shadow-sm shrink-0"
+          >
             {/* Header Actions Portal Target */}
             <div id="header-actions"></div>
 
@@ -257,7 +269,7 @@ const LayoutAdmin = () => {
             )}
 
             {/* Mobile Sidebar Toggle */}
-            <Sheet>
+            <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
               <SheetTrigger asChild>
                 <Button
                   variant="ghost"
@@ -269,17 +281,17 @@ const LayoutAdmin = () => {
                 </Button>
               </SheetTrigger>
               <SheetContent side="left" className="p-0 border-r-0">
-                <SidebarAdmin />
+                <SidebarAdmin onClose={() => setIsSheetOpen(false)} />
               </SheetContent>
             </Sheet>
 
             {/* Notification Bell with Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="relative rounded-full text-gray-400 hover:text-[#4318FF] transition-colors"
+                <Motion.button
+                  whileHover={{ rotate: 15 }}
+                  whileTap={{ scale: 0.9 }}
+                  className="relative p-2 rounded-full text-gray-400 hover:text-[#4318FF] transition-colors"
                 >
                   <Bell className="h-5 w-5" />
                   {unreadCount > 0 && (
@@ -288,7 +300,7 @@ const LayoutAdmin = () => {
                       <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500 border-2 border-white"></span>
                     </span>
                   )}
-                </Button>
+                </Motion.button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="end"
@@ -352,36 +364,40 @@ const LayoutAdmin = () => {
             </DropdownMenu>
 
             {/* Info Icon */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-full text-gray-400 hover:text-[#4318FF]"
+            <Motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              className="p-2 rounded-full text-gray-400 hover:text-[#4318FF] transition-colors"
             >
               <Info className="h-5 w-5" />
-            </Button>
+            </Motion.button>
 
             {/* Profile Pill */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <div className="flex items-center gap-3 cursor-pointer p-1 pr-4 hover:bg-gray-50 rounded-full transition-colors">
-                  <Avatar className="h-10 w-10 border-2 border-white shadow-sm">
-                    <AvatarImage
-                      src={user.url_photo}
-                      className="object-cover"
-                    />
-                    <AvatarFallback className="bg-blue-100 text-[#4318FF] font-bold text-xs">
-                      {getInitials(user.full_name)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="hidden md:block text-left">
-                    <p className="text-sm font-bold text-[#2B3674] leading-tight">
-                      {user.full_name}
-                    </p>
-                    <p className="text-[10px] font-medium text-gray-400 uppercase">
-                      Admin
-                    </p>
-                  </div>
+              <Motion.div
+                whileHover={{ scale: 1.02, backgroundColor: "#F9FAFB" }}
+                whileTap={{ scale: 0.98 }}
+                className="flex items-center gap-3 cursor-pointer p-1 pr-4 rounded-full transition-colors"
+              >
+                <Avatar className="h-10 w-10 border-2 border-white shadow-sm">
+                  <AvatarImage
+                    src={user.url_photo}
+                    className="object-cover"
+                  />
+                  <AvatarFallback className="bg-blue-100 text-[#4318FF] font-bold text-xs">
+                    {getInitials(user.full_name)}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="hidden md:block text-left">
+                  <p className="text-sm font-bold text-[#2B3674] leading-tight text-nowrap">
+                    {user.full_name}
+                  </p>
+                  <p className="text-[10px] font-medium text-gray-400 uppercase">
+                    Admin
+                  </p>
                 </div>
+              </Motion.div>
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="end"
@@ -425,11 +441,16 @@ const LayoutAdmin = () => {
                 </div>
               </DropdownMenuContent>
             </DropdownMenu>
-          </div>
+          </Motion.div>
         </header>
 
         {/* Scrollable Content */}
-        <main className="flex-1 p-4 lg:p-6 lg:pt-0 pb-20">
+        <Motion.main
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="flex-1 p-4 lg:p-6 lg:pt-0 pb-20"
+        >
           <Outlet
             context={{
               notifications,
@@ -437,7 +458,7 @@ const LayoutAdmin = () => {
               handleNotificationClick,
             }}
           />
-        </main>
+        </Motion.main>
       </div>
     </div>
   );

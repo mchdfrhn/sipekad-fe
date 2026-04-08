@@ -7,6 +7,7 @@ import {
   Search,
   Filter,
 } from "lucide-react";
+import { motion as Motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { getAllUserForAdmin } from "../../../utils/api/user";
 import { Link, useSearchParams } from "react-router";
@@ -26,6 +27,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { STUDENT_PRODI } from "@/utils/constant";
 import { useToast } from "@/utils/hooks/useToast";
+import { generatePaginationPages } from "@/utils/helpers";
 
 const User = () => {
   const { showToast } = useToast();
@@ -160,29 +162,41 @@ const User = () => {
       {domReady &&
         document.getElementById("header-actions") &&
         createPortal(
-          <Button
+          <Motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => setShowForm(!showForm)}
-            className="bg-[#4318FF] hover:bg-[#3311CC] text-white rounded-full px-4 py-3 text-sm font-bold shadow-[0_4px_14px_0_rgba(67,24,255,0.39)] hover:shadow-[0_6px_20px_rgba(67,24,255,0.23)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 mr-2"
+            className="bg-[#4318FF] hover:bg-[#3311CC] text-white rounded-full px-4 py-3 text-sm font-bold shadow-[0_4px_14px_0_rgba(67,24,255,0.39)] hover:shadow-[0_6px_20px_rgba(67,24,255,0.23)] transition-all duration-300 mr-2"
           >
             <Plus className="mr-2 h-4 w-4" /> Tambah Pengguna
-          </Button>,
+          </Motion.button>,
           document.getElementById("header-actions"),
         )}
 
-      <div className="flex flex-col h-full gap-4">
+      <Motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="flex flex-col h-full gap-4"
+      >
         <Card className="border-0 shadow-lg rounded-[20px] bg-white flex-1 flex flex-col">
           <CardContent className="p-0 pb-6 flex-1 flex flex-col justify-between relative">
             {loading && <LoadingOverlay />}
-            <div className="w-full overflow-x-auto">
+            <Motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="w-full overflow-x-auto"
+            >
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-gray-100">
                     {headers.map((header) => {
                       if (header === "Prodi") {
                         return (
-                          <th key={header} className="px-6 py-3 text-left">
+                          <th key={header} className="px-4 md:px-6 py-3 text-left">
                             <DropdownMenu>
-                              <DropdownMenuTrigger className="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-wider hover:text-[#4318FF] focus:outline-none transition-colors cursor-pointer">
+                              <DropdownMenuTrigger className="flex items-center gap-2 text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-wider hover:text-[#4318FF] focus:outline-none transition-colors cursor-pointer">
                                 {header} <Filter className="h-3 w-3" />
                               </DropdownMenuTrigger>
                               <DropdownMenuContent
@@ -209,10 +223,11 @@ const User = () => {
                           </th>
                         );
                       }
+                      const isMobileHidden = ["NIM", "Email", "No. Telepon"].includes(header);
                       return (
                         <th
                           key={header}
-                          className="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider whitespace-nowrap"
+                          className={`px-4 md:px-6 py-3 text-left text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-wider whitespace-nowrap ${isMobileHidden ? "hidden md:table-cell" : ""}`}
                         >
                           {header}
                         </th>
@@ -233,21 +248,24 @@ const User = () => {
                   ) : (
                     <>
                       {users.map((value, index) => (
-                        <tr
+                        <Motion.tr
                           key={value.id}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: index * 0.05, duration: 0.3 }}
                           className={`group transition-colors border-b border-gray-50 last:border-0 hover:bg-blue-50/50 ${
                             index % 2 === 0 ? "bg-white" : "bg-gray-50/50"
                           }`}
                         >
-                          <td className="px-6 py-2.5 whitespace-nowrap">
-                            <span className="text-sm font-bold text-[#2B3674]">
+                          <td className="px-4 md:px-6 py-2.5 whitespace-nowrap">
+                            <span className="text-xs md:text-sm font-bold text-[#2B3674]">
                               {(page - 1) * limit + index + 1}
                             </span>
                           </td>
-                          <td className="px-6 py-2.5 whitespace-nowrap">
+                          <td className="px-4 md:px-6 py-2.5 whitespace-nowrap">
                             <div className="flex items-center gap-3">
                               <Link to={`/admin/user/${value.id}`}>
-                                <Avatar className="h-8 w-8">
+                                <Avatar className="h-6 w-6 md:h-8 md:w-8">
                                   <AvatarImage
                                     src={value?.url_photo}
                                     className="object-cover"
@@ -259,43 +277,43 @@ const User = () => {
                               </Link>
                               <Link
                                 to={`/admin/user/${value.id}`}
-                                className="text-sm font-bold text-[#2B3674] hover:text-[#4318FF]"
+                                className="text-xs md:text-sm font-bold text-[#2B3674] hover:text-[#4318FF] truncate max-w-[120px] md:max-w-none block"
                               >
                                 {value.full_name}
                               </Link>
                             </div>
                           </td>
-                          <td className="px-6 py-2.5 whitespace-nowrap">
+                          <td className="hidden md:table-cell px-6 py-2.5 whitespace-nowrap">
                             <span className="text-sm font-bold text-[#2B3674]">
                               {value.nim}
                             </span>
                           </td>
-                          <td className="px-6 py-2.5 whitespace-nowrap">
-                            <span className="text-sm font-bold text-[#2B3674] capitalize">
+                          <td className="px-4 md:px-6 py-2.5 whitespace-nowrap">
+                            <span className="text-xs md:text-sm font-bold text-[#2B3674] capitalize">
                               {value.prodi || "-"}
                             </span>
                           </td>
-                          <td className="px-6 py-2.5 whitespace-nowrap">
+                          <td className="hidden lg:table-cell px-6 py-2.5 whitespace-nowrap">
                             <span className="text-sm text-gray-600">
                               {value.email}
                             </span>
                           </td>
-                          <td className="px-6 py-2.5 whitespace-nowrap">
+                          <td className="hidden lg:table-cell px-6 py-2.5 whitespace-nowrap">
                             <span className="text-sm text-gray-600">
                               {value.phone}
                             </span>
                           </td>
-                          <td className="px-6 py-2.5 whitespace-nowrap">
+                          <td className="px-4 md:px-6 py-2.5 whitespace-nowrap">
                             <Button
                               variant="ghost"
                               size="icon"
                               onClick={() => handleDeleteClick(value.id)}
-                              className="h-8 w-8 text-red-500 bg-red-50 hover:bg-red-100 hover:text-red-700 rounded-lg"
+                              className="h-7 w-7 md:h-8 md:w-8 text-red-500 bg-red-50 hover:bg-red-100 hover:text-red-700 rounded-lg"
                             >
                               <Trash className="h-4 w-4" />
                             </Button>
                           </td>
-                        </tr>
+                        </Motion.tr>
                       ))}
                       {/* Render Empty Rows to maintain height */}
                       {limit - users.length > 0 &&
@@ -316,7 +334,7 @@ const User = () => {
                   )}
                 </tbody>
               </table>
-            </div>
+            </Motion.div>
 
             {/* Pagination */}
             {totalPage > 1 && (
@@ -331,8 +349,17 @@ const User = () => {
                   <ArrowLeft className="h-4 w-4" />
                 </Button>
 
-                {[...Array(totalPage)].map((_, index) => {
-                  const pageNumber = index + 1;
+                {generatePaginationPages(page, totalPage).map((pageNumber, index) => {
+                  if (pageNumber === "..") {
+                    return (
+                      <span
+                        key={`dots-${index}`}
+                        className="px-2 text-gray-400 font-bold"
+                      >
+                        ..
+                      </span>
+                    );
+                  }
                   return (
                     <Button
                       key={pageNumber}
@@ -371,7 +398,7 @@ const User = () => {
           confirmText="Hapus Pengguna"
           variant="danger"
         />
-      </div>
+      </Motion.div>
     </>
   );
 };
