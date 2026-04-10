@@ -171,7 +171,7 @@ const Login = () => {
                   </button>
                 </div>
                 <div className="flex justify-end pr-1 mt-1">
-                  <a href="#" className="text-sm font-semibold text-[#4318FF] hover:underline">Forgot password?</a>
+                  <Link to="/forgot-password" disable={isLoading} className="text-sm font-semibold text-[#4318FF] hover:underline">Forgot password?</Link>
                 </div>
               </div>
 
