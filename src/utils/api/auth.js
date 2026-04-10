@@ -46,4 +46,57 @@ const register = async (data) => {
   }
 };
 
-export { login, logout, register };
+const forgotPassword = async (username) => {
+  try {
+    const response = await Axios.post(`${BASE_URL}/auth/forgot-password`, { username });
+    return response.data;
+  } catch (err) {
+    return {
+      status: "error",
+      message: err.response?.data?.message || "Internal server error",
+    };
+  }
+};
+
+const resetPassword = async (data) => {
+  try {
+    const response = await Axios.post(`${BASE_URL}/auth/reset-password`, data);
+    return response.data;
+  } catch (err) {
+    return {
+      status: "error",
+      message: err.response?.data?.message || "Internal server error",
+    };
+  }
+};
+
+const impersonateUser = async (userId, token) => {
+  try {
+    const response = await Axios.post(
+      `${BASE_URL}/auth/impersonate/${userId}`,
+      null,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data;
+  } catch (err) {
+    return {
+      status: "error",
+      message: err.response?.data?.message || "Internal server error",
+    };
+  }
+};
+
+
+export {
+  login,
+  logout,
+  register,
+  forgotPassword,
+  resetPassword,
+  impersonateUser,
+};
+

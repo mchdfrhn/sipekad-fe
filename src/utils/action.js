@@ -7,8 +7,9 @@ import {
   deleteUser,
   getAllUserForAdmin,
   updateUserForAdmin,
+  resetPasswordApi,
 } from "./api/user.js";
-import { login, register } from "./api/auth.js";
+import { login, register, forgotPassword, resetPassword } from "./api/auth.js";
 
 export const registerFlow = async (data, navigate, setLoading) => {
   const result = await register(data);
@@ -254,8 +255,38 @@ export const loginFlow = async (data, updateUserData, navigate, setLoading) => {
   }
 
   setLoading(false);
-  if (result.status === "error") {
-    return { status: "error", message: "Email atau password salah" };
+  return { status: "error", message: result.message || "Email atau password salah" };
+};
+
+export const resetPasswordAction = async (userId) => {
+  try {
+    const token = localStorage.getItem("tokenKey");
+    const result = await resetPasswordApi(token, userId);
+    return result;
+  } catch (error) {
+    return {
+      status: "fail",
+      message: error.message || "Internal server error",
+    };
   }
-  return { status: "error", message: result.message || "An error occurred" };
+};
+
+export const forgotPasswordFlow = async (username, setLoading) => {
+  const result = await forgotPassword(username);
+  setLoading(false);
+  if (result.status === "success" || result.status === "error") {
+    // We return the result to show the message via toast in the component
+    return result;
+  }
+  return { status: "error", message: "Terjadi kesalahan sistem" };
+};
+
+export const resetPasswordFlow = async (data, navigate, setLoading) => {
+  const result = await resetPassword(data);
+  setLoading(false);
+  if (result.status === "success") {
+    setTimeout(() => navigate("/login"), 2000);
+    return { status: "success", message: result.message };
+  }
+  return { status: "error", message: result.message || "Gagal mengubah password" };
 };

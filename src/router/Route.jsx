@@ -5,6 +5,8 @@ import App from "../App";
 // Auth
 import Login from "../components/Auth/Login";
 import Register from "../components/Auth/Register";
+import ForgotPassword from "../components/Auth/ForgotPassword";
+import ResetPassword from "../components/Auth/ResetPassword";
 
 // Dashboard
 import LayoutDashboard from "../components/Dashboard/LayoutDashboard";
@@ -83,6 +85,14 @@ const Router = createBrowserRouter([
           {
             path: "register",
             Component: Register,
+          },
+          {
+            path: "forgot-password",
+            Component: ForgotPassword,
+          },
+          {
+            path: "reset-password",
+            Component: ResetPassword,
           },
         ],
       },

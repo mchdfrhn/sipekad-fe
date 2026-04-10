@@ -27,7 +27,10 @@ import {
   LogOut,
   X,
   Plus,
+  ShieldCheck,
+  ArrowLeft,
 } from "lucide-react";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -46,7 +49,8 @@ const LayoutDashboard = () => {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { userData: user } = useUser();
+  const { userData: user, stopImpersonating, isAdminImpersonating } = useUser();
+
   const [searchParams, setSearchParams] = useSearchParams();
   const breadcrumbs = formatPathToBreadcrumb(pathname);
   const [scrolled, setScrolled] = useState(false);
@@ -168,6 +172,13 @@ const LayoutDashboard = () => {
     localStorage.removeItem("user");
   };
 
+  const handleBackToAdmin = () => {
+    if (stopImpersonating()) {
+      navigate("/admin/user");
+    }
+  };
+
+
   const getInitials = (name) => {
     if (!name) return "U";
     return name
@@ -195,7 +206,34 @@ const LayoutDashboard = () => {
         id="main-content-area"
         className="flex flex-col flex-1 h-full overflow-y-auto no-scrollbar relative"
       >
+        {/* Impersonation Banner */}
+        <AnimatePresence>
+          {isAdminImpersonating() && (
+            <Motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="bg-emerald-600 text-white px-6 py-2 flex items-center justify-between sticky top-0 z-[40] shadow-md"
+            >
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="h-4 w-4" />
+                <p className="text-sm font-bold">
+                  Anda sedang login sebagai <span className="underline">{user.full_name}</span> (Mode Impersonasi)
+                </p>
+              </div>
+              <button
+                onClick={handleBackToAdmin}
+                className="flex items-center gap-1.5 bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full text-xs font-bold transition-all border border-white/30"
+              >
+                <ArrowLeft className="h-3 w-3" />
+                Kembali ke Admin
+              </button>
+            </Motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Sticky Header */}
+
         <header
           className={`sticky top-0 z-30 flex items-center justify-between px-6 py-4 transition-all duration-300 ${
             scrolled

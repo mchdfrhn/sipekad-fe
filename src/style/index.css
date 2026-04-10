@@ -23,7 +23,16 @@
     font-family: var(--font-jakarta);
     @apply bg-[#F4F7FE] text-[#2B3674];
   }
+
+  a, button, [role="button"], .cursor-pointer {
+    cursor: pointer;
+  }
+
+  button:disabled, [disabled] {
+    cursor: not-allowed;
+  }
 }
+
 
 @layer components {
   /* Glassmorphism Utility */

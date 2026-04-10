@@ -205,4 +205,22 @@ export const changePassword = async (
   }
 };
 
+export const resetPasswordApi = async (token, userId) => {
+  try {
+    const result = await axios.put(
+      `${BASE_URL}/users/${userId}/reset-password`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    return result.data;
+  } catch (err) {
+    return handleApiError(err);
+  }
+};
+
 export { getUser, updateProfile, getAllUserForAdmin, getUserDetail };

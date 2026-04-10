@@ -38,6 +38,45 @@ export const UserProvider = ({ children }) => {
     localStorage.removeItem("user");
     localStorage.removeItem("tokenKey");
     localStorage.removeItem("loginTimestamp");
+    localStorage.removeItem("adminSession"); // Clear admin session on full logout
+  }, []);
+
+  const impersonate = useCallback((targetUserData, token) => {
+    // Save current admin context
+    const currentAdminSession = {
+      user: JSON.parse(localStorage.getItem("user")),
+      tokenKey: localStorage.getItem("tokenKey"),
+      loginTimestamp: localStorage.getItem("loginTimestamp"),
+    };
+    localStorage.setItem("adminSession", JSON.stringify(currentAdminSession));
+
+    // Set target user context
+    setUserData(targetUserData);
+    localStorage.setItem("user", JSON.stringify(targetUserData));
+    localStorage.setItem("tokenKey", token);
+    localStorage.setItem("loginTimestamp", Date.now().toString());
+  }, []);
+
+  const stopImpersonating = useCallback(() => {
+    const adminSession = localStorage.getItem("adminSession");
+    if (adminSession) {
+      const { user, tokenKey, loginTimestamp } = JSON.parse(adminSession);
+
+      // Restore admin context
+      setUserData(user);
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("tokenKey", tokenKey);
+      localStorage.setItem("loginTimestamp", loginTimestamp);
+
+      // Remove admin session storage
+      localStorage.removeItem("adminSession");
+      return true;
+    }
+    return false;
+  }, []);
+
+  const isAdminImpersonating = useCallback(() => {
+    return !!localStorage.getItem("adminSession");
   }, []);
 
   const isSessionValid = useCallback(() => {
@@ -50,9 +89,26 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   const contextValue = useMemo(
-    () => ({ userData, updateUserData, logout, isSessionValid }),
-    [userData, updateUserData, logout, isSessionValid],
+    () => ({
+      userData,
+      updateUserData,
+      logout,
+      isSessionValid,
+      impersonate,
+      stopImpersonating,
+      isAdminImpersonating,
+    }),
+    [
+      userData,
+      updateUserData,
+      logout,
+      isSessionValid,
+      impersonate,
+      stopImpersonating,
+      isAdminImpersonating,
+    ],
   );
+
 
   return (
     <UserContext.Provider value={contextValue}>{children}</UserContext.Provider>
