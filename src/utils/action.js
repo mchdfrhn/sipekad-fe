@@ -254,8 +254,5 @@ export const loginFlow = async (data, updateUserData, navigate, setLoading) => {
   }
 
   setLoading(false);
-  if (result.status === "error") {
-    return { status: "error", message: "Email atau password salah" };
-  }
-  return { status: "error", message: result.message || "An error occurred" };
+  return { status: "error", message: result.message || "Email atau password salah" };
 };
