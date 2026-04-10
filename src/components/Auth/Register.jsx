@@ -70,262 +70,234 @@ const Register = () => {
   };
 
   return (
-    <div className="flex min-h-screen w-full overflow-hidden bg-[#F4F7FE]">
-      {/* Left Side - Form Section */}
-      <div className="flex w-full flex-col justify-center items-center px-6 md:w-[50%] lg:px-12 py-12">
-        <Motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="w-full max-w-[500px] bg-white p-8 md:p-12 rounded-[30px] shadow-xl shadow-blue-900/5"
-        >
-          {/* Header / Title */}
-          <div className="mb-10">
-            <h1 className="text-3xl font-bold text-[#2B3674] mb-2 tracking-tight">
-              Register
-            </h1>
-            <p className="text-gray-400 text-sm">
-              Create your account to access the system
-            </p>
-          </div>
-
-          {/* Form */}
-          <form onSubmit={onSubmitHandler} className="flex flex-col gap-4">
-            {/* NIM Input */}
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="nim" className="text-sm font-bold text-[#2B3674] ml-1">
-                NIM<span className="text-[#4318FF]">*</span>
-              </Label>
-              <div className="relative group">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#4318FF] transition-colors">
-                  <UserIcon size={18} />
-                </div>
-                <Input
-                  id="nim"
-                  onChange={handleChange}
-                  value={formData.nim}
-                  type="text"
-                  placeholder="Nomor Induk Mahasiswa"
-                  className="pl-12 pr-6 h-11 rounded-2xl border-gray-200 bg-white text-sm placeholder:text-gray-300 focus:border-[#4318FF] focus:ring-0 transition-all font-medium"
-                />
-              </div>
-            </div>
-
-            {/* Full Name Input */}
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="full_name" className="text-sm font-bold text-[#2B3674] ml-1">
-                Nama Lengkap<span className="text-[#4318FF]">*</span>
-              </Label>
-              <div className="relative group">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#4318FF] transition-colors">
-                  <UserIcon size={18} />
-                </div>
-                <Input
-                  id="full_name"
-                  onChange={handleChange}
-                  value={formData.full_name}
-                  type="text"
-                  placeholder="NAMA LENGKAP"
-                  className="pl-12 pr-6 h-11 rounded-2xl border-gray-200 bg-white text-sm placeholder:text-gray-300 focus:border-[#4318FF] focus:ring-0 transition-all font-medium"
-                />
-              </div>
-            </div>
-
-            {/* NIK Input */}
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="nik" className="text-sm font-bold text-[#2B3674] ml-1">
-                NIK (Sebagai Password)<span className="text-[#4318FF]">*</span>
-              </Label>
-              <div className="relative group">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#4318FF] transition-colors">
-                  <Lock size={18} />
-                </div>
-                <Input
-                  id="nik"
-                  onChange={handleChange}
-                  value={formData.nik}
-                  type={hiddenPassword ? "text" : "password"}
-                  placeholder="Nomor Induk Kependudukan"
-                  className="pl-12 pr-12 h-11 rounded-2xl border-gray-200 bg-white text-sm placeholder:text-gray-300 focus:border-[#4318FF] focus:ring-0 transition-all font-medium"
-                />
-                <div
-                  onClick={() => setHiddenPassword(!hiddenPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-gray-400 hover:text-gray-600 transition-colors"
-                >
-                  {hiddenPassword ? <Eye size={18} /> : <EyeOff size={18} />}
-                </div>
-              </div>
-            </div>
-
-            {/* Email Input */}
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="email" className="text-sm font-bold text-[#2B3674] ml-1">
-                Email<span className="text-[#4318FF]">*</span>
-              </Label>
-              <div className="relative group">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#4318FF] transition-colors">
-                  <Mail size={18} />
-                </div>
-                <Input
-                  id="email"
-                  onChange={handleChange}
-                  value={formData.email}
-                  type="email"
-                  placeholder="example@mail.com"
-                  className="pl-12 pr-6 h-11 rounded-2xl border-gray-200 bg-white text-sm placeholder:text-gray-300 focus:border-[#4318FF] focus:ring-0 transition-all font-medium"
-                />
-              </div>
-            </div>
-
-            {/* Phone Input */}
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="phone" className="text-sm font-bold text-[#2B3674] ml-1">
-                Nomor HP<span className="text-[#4318FF]">*</span>
-              </Label>
-              <div className="relative group">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#4318FF] transition-colors">
-                  <Phone size={18} />
-                </div>
-                <Input
-                  id="phone"
-                  onChange={handleChange}
-                  value={formData.phone}
-                  type="text"
-                  placeholder="08123456789"
-                  className="pl-12 pr-6 h-11 rounded-2xl border-gray-200 bg-white text-sm placeholder:text-gray-300 focus:border-[#4318FF] focus:ring-0 transition-all font-medium"
-                />
-              </div>
-            </div>
-
-            {/* Prodi Select */}
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="prodi" className="text-sm font-bold text-[#2B3674] ml-1">
-                Program Studi<span className="text-[#4318FF]">*</span>
-              </Label>
-              <div className="relative group">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 z-10 group-focus-within:text-[#4318FF] transition-colors pointer-events-none">
-                  <Briefcase size={18} />
-                </div>
-                <CustomSelect
-                  value={formData.prodi}
-                  onChange={handleProdiChange}
-                  options={Object.values(STUDENT_PRODI).map((prodi) => ({
-                    label: prodi,
-                    value: prodi,
-                  }))}
-                  placeholder="Pilih Program Studi"
-                  className="pl-8"
-                />
-              </div>
-            </div>
-
-            {/* Register Button */}
-            <Button
-              className="w-full h-11 text-sm font-bold rounded-2xl bg-[#4318FF] hover:bg-[#3311db] shadow-lg shadow-blue-700/20 active:scale-[0.98] transition-all mt-4"
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <div className="flex items-center gap-2">
-                  <LoaderCircle className="animate-spin h-5 w-5" />
-                  <span>Registering...</span>
-                </div>
-              ) : (
-                "Register"
-              )}
-            </Button>
-            
-            <div className="flex justify-center mt-2">
-              <p className="text-xs text-gray-400 font-medium">
-                Already have an account?{" "}
-                <Link to="/login" className="text-[#4318FF] font-bold hover:underline">
-                  Sign In
-                </Link>
-              </p>
-            </div>
-          </form>
-        </Motion.div>
-      </div>
-
-      {/* Right Side - Premium Visuals */}
-      <div className="relative hidden w-[50%] overflow-hidden md:flex flex-col items-center justify-center rounded-bl-[120px] shadow-2xl">
-        {/* Background Image with Overlay */}
-        <div className="absolute inset-0 z-0">
+    <div className="relative min-h-screen w-full bg-white overflow-x-hidden flex flex-col font-jakarta">
+      {/* Top Left Header Logo */}
+      <header className="fixed top-0 left-0 w-full p-6 md:p-10 z-50">
+        <div className="max-w-[1440px] mx-auto">
           <img
-            src="/assets/login-bg-3d.png"
-            alt="Background"
-            className="h-full w-full object-cover scale-110"
+            src="/sttimage.png"
+            alt="Logo STT"
+            className="h-10 md:h-12 w-auto drop-shadow-sm"
           />
-          <div className="absolute inset-0 bg-linear-to-br from-[#4318FF]/80 to-[#707EFE]/40 backdrop-blur-[2px]"></div>
+        </div>
+      </header>
+
+      {/* Main Grid Content */}
+      <main className="flex-1 max-w-[1440px] mx-auto w-full flex flex-col md:flex-row items-center justify-center px-6 pt-16 pb-10 md:py-0 gap-16 md:gap-0">
+        
+        {/* Left Section - Typography & Visuals (Hidden on Mobile) */}
+        <div className="hidden md:flex w-1/2 flex-col justify-center items-start pl-20">
+          <Motion.div
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            className="w-full max-w-[600px]"
+          >
+            <h1 className="text-[54px] md:text-[72px] font-black text-[#2B3674] leading-[1] tracking-tighter mb-6">
+              Daftar Akun <br />
+              <span className="text-[#4318FF]">SIPEKAD</span>
+            </h1>
+            <p className="text-[#A3AED0] text-lg md:text-2xl font-semibold mb-10 leading-relaxed max-w-[450px]">
+              Sistem Pengajuan Akademik. Silakan lengkapi data diri Anda untuk memulai.
+            </p>
+            
+            <div className="flex flex-col gap-1 mb-12">
+              <p className="text-gray-500 font-medium">Sudah memiliki akun?</p>
+              <Link to="/login" className="text-[#4318FF] font-bold text-xl hover:underline">
+                Masuk di sini!
+              </Link>
+            </div>
+
+            {/* Playful 3D Character Illustration below text */}
+            <div className="relative w-full max-w-[320px] md:max-w-[440px]">
+              <Motion.div
+                animate={{
+                  y: [0, -25, 0],
+                }}
+                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                className="relative z-10 w-full"
+              >
+                <img
+                  src="/assets/3d-student.png"
+                  alt="Student Animation"
+                  className="w-full h-auto drop-shadow-[0_45px_45px_rgba(67,24,255,0.12)]"
+                />
+              </Motion.div>
+              
+              {/* Floating Academic Cap */}
+              <Motion.div
+                animate={{
+                  y: [0, -20, 0],
+                  rotate: [0, 15, 0],
+                }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                className="absolute top-0 -right-4 w-28 md:w-40 z-20"
+              >
+                <img src="/assets/3d-cap.png" alt="Cap" className="w-full h-auto drop-shadow-2xl" />
+              </Motion.div>
+            </div>
+          </Motion.div>
         </div>
 
-        <Motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="relative z-10 flex flex-col items-center px-12 text-center"
-        >
-          {/* Logo Container */}
+        {/* Right Section - Register Form */}
+        <div className="w-full md:w-1/2 flex justify-center items-center">
           <Motion.div
-            initial={{ y: -20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
-            className="mb-8 bg-white/20 p-5 rounded-[40px] backdrop-blur-2xl border border-white/30 shadow-2xl"
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="w-full max-w-[540px] bg-white rounded-[40px] p-8 md:p-12 shadow-[0_20px_50px_rgba(67,24,255,0.06)] border border-gray-50 md:my-10"
           >
-            <img
-              src="/sttimage.png"
-              alt="Logo STT"
-              className="h-24 w-auto drop-shadow-2xl"
-            />
-          </Motion.div>
+            <div className="mb-8">
+              <h2 className="text-3xl font-bold text-[#2B3674] mb-2 tracking-tight">Create Account</h2>
+              <p className="text-[#A3AED0] font-medium text-sm">Fill in your information to register</p>
+            </div>
 
-          <Motion.div
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.5, duration: 0.5 }}
-          >
-            <h1 className="text-6xl font-black text-white tracking-tighter mb-1 drop-shadow-md">
-              SIPEKAD
-            </h1>
-            <p className="text-white/90 text-xl font-medium tracking-wide mb-12">
-              Sistem Pengajuan Akademik
-            </p>
-          </Motion.div>
+            <form onSubmit={onSubmitHandler} className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="text-xs font-bold text-[#2B3674] ml-1">NIM *</Label>
+                  <div className="relative group">
+                    <UserIcon className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#A3AED0] group-focus-within:text-[#4318FF] transition-colors" />
+                    <Input
+                      id="nim"
+                      type="text"
+                      placeholder="NIM"
+                      value={formData.nim}
+                      onChange={handleChange}
+                      className="h-12 pl-12 rounded-2xl bg-[#F4F7FE] border-none placeholder:text-[#A3AED0] focus:ring-2 focus:ring-[#4318FF]/20 transition-all text-sm font-medium"
+                    />
+                  </div>
+                </div>
 
-          {/* Statistics or Info in Register Page */}
-          <div className="grid grid-cols-2 gap-4 w-full max-w-[500px] mb-12">
-            {[
-              {
-                icon: <Files size={20} />,
-                title: "Easy Step",
-                desc: "Quick registration",
-              },
-              {
-                icon: <Lock size={20} />,
-                title: "Safe Data",
-                desc: "Privacy protected",
-              },
-            ].map((feature, idx) => (
-              <Motion.div
-                key={idx}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.6 + idx * 0.1 }}
-                className="flex items-center gap-3 bg-white/10 backdrop-blur-md border border-white/10 p-4 rounded-2xl text-left hover:bg-white/20 transition-all cursor-default"
-              >
-                <div className="bg-white/20 p-2 rounded-xl text-white">
-                  {feature.icon}
+                <div className="space-y-2">
+                  <Label className="text-xs font-bold text-[#2B3674] ml-1">Nama Lengkap *</Label>
+                  <div className="relative group">
+                    <UserIcon className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#A3AED0] group-focus-within:text-[#4318FF] transition-colors" />
+                    <Input
+                      id="full_name"
+                      type="text"
+                      placeholder="Nama Lengkap"
+                      value={formData.full_name}
+                      onChange={handleChange}
+                      className="h-12 pl-12 rounded-2xl bg-[#F4F7FE] border-none placeholder:text-[#A3AED0] focus:ring-2 focus:ring-[#4318FF]/20 transition-all text-sm font-medium"
+                    />
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-white font-bold text-xs">
-                    {feature.title}
-                  </h3>
-                  <p className="text-white/60 text-[10px]">{feature.desc}</p>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-xs font-bold text-[#2B3674] ml-1">NIK (Digunakan sebagai Password) *</Label>
+                <div className="relative group">
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#A3AED0] group-focus-within:text-[#4318FF] transition-colors" />
+                  <Input
+                    id="nik"
+                    type={hiddenPassword ? "text" : "password"}
+                    placeholder="Masukkan NIK"
+                    value={formData.nik}
+                    onChange={handleChange}
+                    className="h-12 pl-12 pr-12 rounded-2xl bg-[#F4F7FE] border-none placeholder:text-[#A3AED0] focus:ring-2 focus:ring-[#4318FF]/20 transition-all text-sm font-medium"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setHiddenPassword(!hiddenPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 p-2 hover:bg-gray-100 rounded-full transition-colors text-[#A3AED0]"
+                  >
+                    {hiddenPassword ? <Eye size={16} /> : <EyeOff size={16} />}
+                  </button>
                 </div>
-              </Motion.div>
-            ))}
-          </div>
-        </Motion.div>
-      </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="text-xs font-bold text-[#2B3674] ml-1">Email *</Label>
+                  <div className="relative group">
+                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#A3AED0] group-focus-within:text-[#4318FF] transition-colors" />
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="example@mail.com"
+                      value={formData.email}
+                      onChange={handleChange}
+                      className="h-12 pl-12 rounded-2xl bg-[#F4F7FE] border-none placeholder:text-[#A3AED0] focus:ring-2 focus:ring-[#4318FF]/20 transition-all text-sm font-medium"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-xs font-bold text-[#2B3674] ml-1">Nomor HP *</Label>
+                  <div className="relative group">
+                    <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#A3AED0] group-focus-within:text-[#4318FF] transition-colors" />
+                    <Input
+                      id="phone"
+                      type="text"
+                      placeholder="08..."
+                      value={formData.phone}
+                      onChange={handleChange}
+                      className="h-12 pl-12 rounded-2xl bg-[#F4F7FE] border-none placeholder:text-[#A3AED0] focus:ring-2 focus:ring-[#4318FF]/20 transition-all text-sm font-medium"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-xs font-bold text-[#2B3674] ml-1">Program Studi *</Label>
+                <div className="relative group">
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#A3AED0] group-focus-within:text-[#4318FF] transition-colors z-10 pointer-events-none">
+                    <Briefcase size={16} />
+                  </div>
+                  <CustomSelect
+                    value={formData.prodi}
+                    onChange={handleProdiChange}
+                    options={Object.values(STUDENT_PRODI).map((prodi) => ({
+                      label: prodi,
+                      value: prodi,
+                    }))}
+                    placeholder="Pilih Program Studi"
+                    className="h-12 pl-8 rounded-2xl bg-[#F4F7FE] border-none focus:ring-2 focus:ring-[#4318FF]/20 transition-all text-sm font-medium"
+                  />
+                </div>
+              </div>
+
+              <div className="pt-4">
+                <Button
+                  disabled={isLoading}
+                  className="w-full h-12 bg-[#4318FF] hover:bg-[#3311db] text-white rounded-2xl text-base font-bold shadow-xl shadow-[#4318FF]/25 active:scale-[0.98] transition-all"
+                >
+                  {isLoading ? (
+                    <div className="flex items-center gap-2">
+                      <LoaderCircle className="animate-spin" />
+                      <span>Registering...</span>
+                    </div>
+                  ) : (
+                    "Daftar Sekarang"
+                  )}
+                </Button>
+              </div>
+
+              <div className="flex justify-center mt-6">
+                <p className="text-sm font-medium text-gray-500">
+                  Sudah memiliki akun?{" "}
+                  <Link to="/login" className="text-[#4318FF] font-black hover:underline">
+                    Masuk di sini!
+                  </Link>
+                </p>
+              </div>
+            </form>
+          </Motion.div>
+        </div>
+      </main>
+
+      {/* Background Decorative Blobs */}
+      <Motion.div
+        animate={{ rotate: 360 }}
+        transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
+        className="fixed -top-40 -left-40 w-96 h-96 bg-[#4318FF]/5 rounded-full blur-3xl -z-1"
+      />
+      <Motion.div
+        animate={{ rotate: -360 }}
+        transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+        className="fixed -bottom-40 -right-40 w-96 h-96 bg-blue-400/5 rounded-full blur-3xl -z-1"
+      />
     </div>
   );
 };
