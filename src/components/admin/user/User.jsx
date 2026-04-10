@@ -6,13 +6,14 @@ import {
   Plus,
   Search,
   Filter,
+  Lock,
 } from "lucide-react";
 import { motion as Motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { getAllUserForAdmin } from "../../../utils/api/user";
 import { Link, useSearchParams } from "react-router";
 import AddUserForm from "./AddUserForm";
-import { deleteUserForAdmin } from "../../../utils/action";
+import { deleteUserForAdmin, resetPasswordAction } from "../../../utils/action";
 import ConfirmDialog from "../../ui/ConfirmDialog";
 import { LoadingOverlay, TableSkeleton } from "@/components/ui/Loading";
 import { Card, CardContent } from "@/components/ui/card";
@@ -43,6 +44,28 @@ const User = () => {
   const [searchParams] = useSearchParams();
   const searchTerm = searchParams.get("q") || "";
   const [loading, setLoading] = useState(true);
+  const [alertReset, setAlertReset] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
+
+  const handleResetClick = (id) => {
+    setSelectedUserId(id);
+    setAlertReset(true);
+  };
+
+  const confirmReset = async () => {
+    if (selectedUserId) {
+      setIsResetting(true);
+      const result = await resetPasswordAction(selectedUserId);
+      if (result && result.status === "success") {
+        showToast(result.message, "success");
+      } else {
+        showToast(result.message || "Gagal mereset password", "error");
+      }
+      setAlertReset(false);
+      setSelectedUserId(null);
+      setIsResetting(false);
+    }
+  };
 
   const handlePageChange = async (p) => {
     setLoading(true);
@@ -311,14 +334,25 @@ const User = () => {
                             </span>
                           </td>
                           <td className="px-4 md:px-6 py-2.5 whitespace-nowrap">
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => handleDeleteClick(value.id)}
-                              className="h-7 w-7 md:h-8 md:w-8 text-red-500 bg-red-50 hover:bg-red-100 hover:text-red-700 rounded-lg"
-                            >
-                              <Trash className="h-4 w-4" />
-                            </Button>
+                            <div className="flex items-center gap-2">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => handleResetClick(value.id)}
+                                className="h-7 w-7 md:h-8 md:w-8 text-amber-500 bg-amber-50 hover:bg-amber-100 hover:text-amber-700 rounded-lg"
+                                title="Reset Password"
+                              >
+                                <Lock className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => handleDeleteClick(value.id)}
+                                className="h-7 w-7 md:h-8 md:w-8 text-red-500 bg-red-50 hover:bg-red-100 hover:text-red-700 rounded-lg"
+                              >
+                                <Trash className="h-4 w-4" />
+                              </Button>
+                            </div>
                           </td>
                         </Motion.tr>
                       ))}
@@ -407,9 +441,19 @@ const User = () => {
           confirmText="Hapus Pengguna"
           variant="danger"
         />
+        <ConfirmDialog
+          isOpen={alertReset}
+          onClose={() => setAlertReset(false)}
+          onConfirm={confirmReset}
+          title="Reset Password"
+          description="Apakah Anda yakin ingin mereset password pengguna ini? Password akan dikembalikan ke NIK user."
+          confirmText="Reset Password"
+          variant="warning"
+        />
       </Motion.div>
     </>
   );
 };
+
 
 export default User;

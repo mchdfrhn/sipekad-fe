@@ -12,14 +12,18 @@ import {
   Users,
   CheckCircle,
   XCircle,
+  RefreshCw,
 } from "lucide-react";
 import StatsCard from "../StatsCard";
-import { filterStatusForUserDetail } from "../../../utils/action";
+import { filterStatusForUserDetail, resetPasswordAction } from "../../../utils/action";
 import { getSummeryDataByUserId } from "../../../utils/api/dashboardValue";
 import UpdateUserForm from "./UpdateUserForm";
 import ButtonPagination from "../../ui/ButtonPagination";
+import { useToast } from "@/utils/hooks/useToast";
+import ConfirmDialog from "../../ui/ConfirmDialog";
 
 const UserDetail = () => {
+  const { showToast } = useToast();
   const [userDetail, setUserDetail] = useState(null);
   const [request, setRequest] = useState([]);
   const [page, setPage] = useState(1);
@@ -27,6 +31,8 @@ const UserDetail = () => {
   const [summery, setSummery] = useState([]);
   const { id: userId } = useParams();
   const [showForm, setShowForm] = useState(false);
+  const [alertReset, setAlertReset] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
 
   const getDetailUser = async (userId, p = 1) => {
     const token = localStorage.getItem("tokenKey");
@@ -62,6 +68,18 @@ const UserDetail = () => {
       userId,
     );
   };
+  const confirmReset = async () => {
+    setIsResetting(true);
+    const result = await resetPasswordAction(userId);
+    if (result.status === "success") {
+      showToast(result.message, "success");
+    } else {
+      showToast(result.message || "Gagal mereset password", "error");
+    }
+    setIsResetting(false);
+    setAlertReset(false);
+  };
+
   return (
     <>
       <UpdateUserForm
@@ -76,13 +94,23 @@ const UserDetail = () => {
         >
           <ArrowLeft className="h-6 w-6" />
         </Link>
-        <button
-          onClick={() => setShowForm(!showForm)}
-          className="flex items-center gap-2 px-4 py-3 mr-2 bg-[#4318FF] text-white rounded-full text-sm shadow-[0_4px_14px_0_rgba(67,24,255,0.39)] hover:shadow-[0_6px_20px_rgba(67,24,255,0.23)] hover:scale-[1.02] transition-all duration-300 font-bold"
-        >
-          <Pen className="h-4 w-4" />
-          <span>Perbarui Pengguna</span>
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setAlertReset(true)}
+            disabled={isResetting}
+            className="flex items-center gap-2 px-4 py-3 bg-white text-[#2B3674] border border-gray-100 rounded-full text-sm shadow-sm hover:bg-gray-50 hover:scale-[1.02] transition-all duration-300 font-bold disabled:opacity-50"
+          >
+            <RefreshCw className={`h-4 w-4 ${isResetting ? "animate-spin" : ""}`} />
+            <span>Reset Password</span>
+          </button>
+          <button
+            onClick={() => setShowForm(!showForm)}
+            className="flex items-center gap-2 px-4 py-3 mr-2 bg-[#4318FF] text-white rounded-full text-sm shadow-[0_4px_14px_0_rgba(67,24,255,0.39)] hover:shadow-[0_6px_20px_rgba(67,24,255,0.23)] hover:scale-[1.02] transition-all duration-300 font-bold"
+          >
+            <Pen className="h-4 w-4" />
+            <span>Perbarui Pengguna</span>
+          </button>
+        </div>
       </div>
 
       <div className="bg-white rounded-[20px] shadow-sm border border-gray-100 overflow-hidden mb-6 p-6">
@@ -194,8 +222,18 @@ const UserDetail = () => {
         totalPage={totalPage}
         handlePageChange={handlePageChange}
       />
+      <ConfirmDialog
+        isOpen={alertReset}
+        onClose={() => setAlertReset(false)}
+        onConfirm={confirmReset}
+        title="Reset Password"
+        description="Apakah Anda yakin ingin mereset password pengguna ini? Password akan dikembalikan ke NIK user."
+        confirmText="Reset Password"
+        variant="warning"
+      />
     </>
   );
 };
+
 
 export default UserDetail;

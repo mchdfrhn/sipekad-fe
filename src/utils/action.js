@@ -7,6 +7,7 @@ import {
   deleteUser,
   getAllUserForAdmin,
   updateUserForAdmin,
+  resetPasswordApi,
 } from "./api/user.js";
 import { login, register } from "./api/auth.js";
 
@@ -256,3 +257,17 @@ export const loginFlow = async (data, updateUserData, navigate, setLoading) => {
   setLoading(false);
   return { status: "error", message: result.message || "Email atau password salah" };
 };
+
+export const resetPasswordAction = async (userId) => {
+  try {
+    const token = localStorage.getItem("tokenKey");
+    const result = await resetPasswordApi(token, userId);
+    return result;
+  } catch (error) {
+    return {
+      status: "fail",
+      message: error.message || "Internal server error",
+    };
+  }
+};
+
