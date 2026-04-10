@@ -70,4 +70,33 @@ const resetPassword = async (data) => {
   }
 };
 
-export { login, logout, register, forgotPassword, resetPassword };
+const impersonateUser = async (userId, token) => {
+  try {
+    const response = await Axios.post(
+      `${BASE_URL}/auth/impersonate/${userId}`,
+      null,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data;
+  } catch (err) {
+    return {
+      status: "error",
+      message: err.response?.data?.message || "Internal server error",
+    };
+  }
+};
+
+
+export {
+  login,
+  logout,
+  register,
+  forgotPassword,
+  resetPassword,
+  impersonateUser,
+};
+

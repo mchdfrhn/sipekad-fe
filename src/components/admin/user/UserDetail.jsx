@@ -1,6 +1,6 @@
 import { getUserDetail } from "../../../utils/api/user";
 import { getRequest } from "../../../utils/api/request";
-import { useParams, Link } from "react-router";
+import { useParams, Link, useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import { TablePengajuan } from "../request/Requests";
 import {
@@ -13,6 +13,7 @@ import {
   CheckCircle,
   XCircle,
   RefreshCw,
+  UserCheck,
 } from "lucide-react";
 import StatsCard from "../StatsCard";
 import { filterStatusForUserDetail, resetPasswordAction } from "../../../utils/action";
@@ -21,6 +22,9 @@ import UpdateUserForm from "./UpdateUserForm";
 import ButtonPagination from "../../ui/ButtonPagination";
 import { useToast } from "@/utils/hooks/useToast";
 import ConfirmDialog from "../../ui/ConfirmDialog";
+import { useUser } from "@/utils/hooks/userContext";
+import { impersonateUser } from "@/utils/api/auth";
+
 
 const UserDetail = () => {
   const { showToast } = useToast();
@@ -33,6 +37,10 @@ const UserDetail = () => {
   const [showForm, setShowForm] = useState(false);
   const [alertReset, setAlertReset] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
+  const [isImpersonating, setIsImpersonating] = useState(false);
+  const { impersonate } = useUser();
+  const navigate = useNavigate();
+
 
   const getDetailUser = async (userId, p = 1) => {
     const token = localStorage.getItem("tokenKey");
@@ -80,6 +88,22 @@ const UserDetail = () => {
     setAlertReset(false);
   };
 
+  const handleImpersonate = async () => {
+    setIsImpersonating(true);
+    const token = localStorage.getItem("tokenKey");
+    const result = await impersonateUser(userId, token);
+
+    if (result.status === "success") {
+      impersonate(result.user, result.accessToken);
+      showToast(`Berhasil login sebagai ${result.user.full_name}`, "success");
+      navigate("/dashboard");
+    } else {
+      showToast(result.message || "Gagal melakukan impersonasi", "error");
+    }
+    setIsImpersonating(false);
+  };
+
+
   return (
     <>
       <UpdateUserForm
@@ -104,12 +128,21 @@ const UserDetail = () => {
             <span>Reset Password</span>
           </button>
           <button
+            onClick={handleImpersonate}
+            disabled={isImpersonating}
+            className="flex items-center gap-2 px-4 py-3 bg-emerald-500 text-white rounded-full text-sm shadow-[0_4px_14px_0_rgba(16,185,129,0.39)] hover:shadow-[0_6px_20px_rgba(16,185,129,0.23)] hover:scale-[1.02] transition-all duration-300 font-bold disabled:opacity-50"
+          >
+            <UserCheck className={`h-4 w-4 ${isImpersonating ? "animate-pulse" : ""}`} />
+            <span>Login sebagai User</span>
+          </button>
+          <button
             onClick={() => setShowForm(!showForm)}
             className="flex items-center gap-2 px-4 py-3 mr-2 bg-[#4318FF] text-white rounded-full text-sm shadow-[0_4px_14px_0_rgba(67,24,255,0.39)] hover:shadow-[0_6px_20px_rgba(67,24,255,0.23)] hover:scale-[1.02] transition-all duration-300 font-bold"
           >
             <Pen className="h-4 w-4" />
             <span>Perbarui Pengguna</span>
           </button>
+
         </div>
       </div>
 
