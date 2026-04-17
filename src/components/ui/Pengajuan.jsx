@@ -17,6 +17,7 @@ const Pengajuan = ({
   setMessage,
   placeholder,
   setFile,
+  file,
   isLoading,
 }) => {
   const [showPreview, setShowPreview] = useState(false);
@@ -111,16 +112,20 @@ const Pengajuan = ({
                       onChange={(e) => setFile(e.target.files[0])}
                       className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                     />
-                    <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 border-2 border-dashed border-gray-200 rounded-2xl group-hover:border-[#4318FF] group-hover:bg-indigo-50/30 transition-all">
+                    <div
+                      className={`flex items-center gap-3 px-4 py-3 bg-gray-50 border-2 border-dashed ${file ? "border-[#4318FF] bg-indigo-50/30" : "border-gray-200"} rounded-2xl group-hover:border-[#4318FF] group-hover:bg-indigo-50/30 transition-all`}
+                    >
                       <div className="p-2 bg-white rounded-xl shadow-sm">
                         <Upload className="h-5 w-5 text-[#4318FF]" />
                       </div>
-                      <div className="flex flex-col">
-                        <span className="text-xs font-bold text-[#2B3674]">
-                          Pilih File
+                      <div className="flex flex-col truncate">
+                        <span className="text-xs font-bold text-[#2B3674] truncate">
+                          {file ? file.name : "Pilih File"}
                         </span>
                         <span className="text-[10px] text-gray-400 font-medium">
-                          Format PDF, Maks 5MB
+                          {file
+                            ? `${(file.size / 1024 / 1024).toFixed(2)} MB`
+                            : "Format PDF, Maks 5MB"}
                         </span>
                       </div>
                     </div>

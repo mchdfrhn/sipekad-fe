@@ -51,6 +51,7 @@ const Yudisium = () => {
         url={url}
         fileName={fileName}
         setFile={setFile}
+        file={file}
         isLoading={isLoading}
       />
     </>
