@@ -49,6 +49,7 @@ const DosenKerjaPraktik = () => {
         syarat={syarat}
         title={title}
         setFile={setFile}
+        file={file}
         isLoading={isLoading}
         children={
           <LinkTranskrip

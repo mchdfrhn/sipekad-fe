@@ -51,6 +51,7 @@ const KerjaPraktik = () => {
         title={title}
         fileName={fileName}
         setFile={setFile}
+        file={file}
         isLoading={isLoading}
         children={
           <LinkTranskrip

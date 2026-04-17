@@ -69,6 +69,7 @@ const SuratSempro = () => {
         title={title}
         isDisplay={false}
         setFile={setFile}
+        file={file}
         children={<ChildrenSempro />}
         isLoading={isLoading}
       />

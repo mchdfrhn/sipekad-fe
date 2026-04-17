@@ -68,6 +68,7 @@ const SeminarKp = () => {
         fileName={fileName}
         title={title}
         setFile={setFile}
+        file={file}
         children={<ChildrenSempro />}
         isLoading={isLoading}
       />

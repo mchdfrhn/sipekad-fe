@@ -51,6 +51,7 @@ const PengantarKerjaPraktik = () => {
         fileName={fileName}
         title={title}
         setFile={setFile}
+        file={file}
         isLoading={isLoading}
         children={
           <LinkTranskrip
