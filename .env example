@@ -1,1 +1,5 @@
-VITE_API_BASE_URL=
+# API Configuration
+VITE_API_BASE_URL=http://localhost:8000/api
+
+# Support Configuration
+VITE_WHATSAPP_NUMBER=628XXXXXXXXXX
