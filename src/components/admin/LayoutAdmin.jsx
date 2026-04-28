@@ -48,6 +48,7 @@ import { Button } from "@/components/ui/button";
 import { motion as Motion, AnimatePresence } from "motion/react";
 import { useState, useEffect, useRef } from "react";
 import Alert from "../ui/Alert";
+import { AdminChatAssistant } from "../assistant-ui/AdminChatAssistant";
 
 const LayoutAdmin = () => {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
@@ -459,6 +460,9 @@ const LayoutAdmin = () => {
             }}
           />
         </Motion.main>
+        
+        {/* Admin Chat Assistant Widget */}
+        <AdminChatAssistant />
       </div>
     </div>
   );
