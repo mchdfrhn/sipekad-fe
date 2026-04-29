@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getRequest } from "../../utils/api/request";
+import { getSummeryDataByUserId } from "../../utils/api/dashboardValue";
 import StatsCard from "../admin/StatsCard";
 import TableRiwayatUser from "./TableRiwayatUser";
 import { Button } from "@/components/ui/button";
@@ -30,6 +31,7 @@ const DashboardHome = () => {
   const [totalPage, setTotalPage] = useState(1);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [summary, setSummary] = useState([]);
 
   const changePageHandler = async (p) => {
     setLoading(true);
@@ -39,6 +41,7 @@ const DashboardHome = () => {
       setHistoryRequest(result.data);
       setPage(result.page);
       setTotalPage(result.totalPage);
+      await getSummeryDataByUserId(setSummary, user.id);
     } else {
       showToast(result.message || "Gagal mengambil data", "error");
     }
@@ -56,6 +59,7 @@ const DashboardHome = () => {
           setHistoryRequest(result.data);
           setTotalPage(result.totalPage);
           setPage(result.page);
+          await getSummeryDataByUserId(setSummary, userId);
         } else {
           showToast(result.message || "Gagal mengambil data", "error");
         }
@@ -66,22 +70,12 @@ const DashboardHome = () => {
     getRequestHandler();
   }, [page, showToast]);
 
-  const totalRequest = historRequest.length;
-  // Note: These counts might be only for the current page if the API is paginated.
-  // Ideally, the API would return total counts for stats separately.
-  // For now, consistent with previous implementation, we use what we have or placeholder if needed.
-  // Previous implementation calculated from historyRequest which seemed to be paginated?
-  // If getRequest returns paginated data, these counts are only for the current page.
-  // But let's stick to the previous logic for now.
-  const successRequest = historRequest.filter(
-    (req) => req.status === "completed",
-  ).length;
-  const procesingRequest = historRequest.filter(
-    (req) => ["submitted", "pending", "reviewing", "processing", "revision_required"].includes(req.status),
-  ).length;
-  const rejectedRequest = historRequest.filter(
-    (req) => ["rejected", "canceled"].includes(req.status),
-  ).length;
+  const summaryValue = (label) =>
+    summary.find((item) => item.label === label)?.value || 0;
+  const totalRequest = summaryValue("Total Pengajuan");
+  const successRequest = summaryValue("Selesai");
+  const procesingRequest = summaryValue("Masuk") + summaryValue("Diproses");
+  const rejectedRequest = summaryValue("Ditolak");
 
   return (
     <Motion.div

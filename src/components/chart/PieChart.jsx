@@ -21,10 +21,12 @@ const SimpleTooltip = ({ active, payload }) => {
 // Global flag for refresh detection
 let isAppLoaded = false;
 
-export default function StraightAnglePieChart() {
-  const cachedData = sessionStorage.getItem("cache_pie_chart");
+export default function StraightAnglePieChart({ days = 30 }) {
+  const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
+  const cacheKey = `cache_pie_chart_${currentUser.id || "guest"}_${days}`;
 
   const [data, setData] = useState(() => {
+    const cachedData = sessionStorage.getItem(cacheKey);
     return cachedData ? JSON.parse(cachedData) : [];
   });
   
@@ -53,24 +55,27 @@ export default function StraightAnglePieChart() {
 
     getStatusPengajuan(null, (apiData) => {
       const updateData = () => {
-        if (JSON.stringify(apiData) !== JSON.stringify(data)) {
-          setData(apiData);
-          sessionStorage.setItem("cache_pie_chart", JSON.stringify(apiData));
-        }
+        setData((currentData) =>
+          JSON.stringify(apiData) === JSON.stringify(currentData)
+            ? currentData
+            : apiData,
+        );
+        sessionStorage.setItem(cacheKey, JSON.stringify(apiData));
       };
 
+      const cachedData = sessionStorage.getItem(cacheKey);
       if (cachedData) {
         setTimeout(updateData, 2000);
       } else {
         updateData();
       }
-    });
+    }, days);
     
     return () => {
       observer.disconnect();
       clearTimeout(timer);
     };
-  }, [cachedData, data]);
+  }, [cacheKey, days]);
 
   // Semantic Color Mapping
   const getColor = (status) => {

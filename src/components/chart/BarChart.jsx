@@ -25,10 +25,12 @@ const CustomTooltip = ({ active, payload, label }) => {
 // Global flag for refresh detection
 let isAppLoaded = false;
 
-const SimpleBarChart = () => {
-  const cachedData = sessionStorage.getItem("cache_bar_chart");
+const SimpleBarChart = ({ days = 30 }) => {
+  const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
+  const cacheKey = `cache_bar_chart_${currentUser.id || "guest"}_${days}`;
 
   const [data, setData] = useState(() => {
+    const cachedData = sessionStorage.getItem(cacheKey);
     return cachedData ? JSON.parse(cachedData) : [];
   });
   
@@ -58,24 +60,27 @@ const SimpleBarChart = () => {
 
     getTopTypePengajuan(null, (apiData) => {
       const updateData = () => {
-        if (JSON.stringify(apiData) !== JSON.stringify(data)) {
-          setData(apiData);
-          sessionStorage.setItem("cache_bar_chart", JSON.stringify(apiData));
-        }
+        setData((currentData) =>
+          JSON.stringify(apiData) === JSON.stringify(currentData)
+            ? currentData
+            : apiData,
+        );
+        sessionStorage.setItem(cacheKey, JSON.stringify(apiData));
       };
 
+      const cachedData = sessionStorage.getItem(cacheKey);
       if (cachedData) {
         setTimeout(updateData, 2000);
       } else {
         updateData();
       }
-    });
+    }, days);
     
     return () => {
       observer.disconnect();
       clearTimeout(timer);
     };
-  }, [cachedData, data]);
+  }, [cacheKey, days]);
 
   if (!hasMounted || data.length === 0) {
     return (

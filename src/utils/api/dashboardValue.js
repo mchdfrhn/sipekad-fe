@@ -18,11 +18,11 @@ export const getSummeryData = async (setSummery) => {
   }
 };
 
-export const getDistribusiPengajuan = async (setLabel, setData) => {
+export const getDistribusiPengajuan = async (setLabel, setData, days = 30) => {
   const token = localStorage.getItem("tokenKey");
   try {
     const response = await axios.get(
-      `${BASE_URL}/dashboard/distribusi-pengajuan`,
+      `${BASE_URL}/dashboard/distribusi-pengajuan?days=${days}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -39,10 +39,10 @@ export const getDistribusiPengajuan = async (setLabel, setData) => {
   }
 };
 
-export const getTopTypePengajuan = async (setLabel, setData) => {
+export const getTopTypePengajuan = async (setLabel, setData, days = 30) => {
   const token = localStorage.getItem("tokenKey");
   try {
-    const response = await axios.get(`${BASE_URL}/dashboard/top-pengajuan`, {
+    const response = await axios.get(`${BASE_URL}/dashboard/top-pengajuan?days=${days}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -57,10 +57,10 @@ export const getTopTypePengajuan = async (setLabel, setData) => {
   }
 };
 
-export const getStatusPengajuan = async (setLabel, setData) => {
+export const getStatusPengajuan = async (setLabel, setData, days = 30) => {
   const token = localStorage.getItem("tokenKey");
   try {
-    const response = await axios.get(`${BASE_URL}/dashboard/status-pengajuan`, {
+    const response = await axios.get(`${BASE_URL}/dashboard/status-pengajuan?days=${days}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
