@@ -338,6 +338,30 @@ const sidangSkripsi = {
   fileName: "Seminar_kerja_praktik.pdf",
 };
 
+export const STATUS_LABEL_USER = {
+  submitted: 'Diajukan',
+  pending: 'Diajukan',
+  reviewing: 'Ditinjau',
+  processing: 'Diproses',
+  revision_required: 'Perlu Revisi',
+  rejected: 'Ditolak',
+  canceled: 'Ditolak',
+  completed: 'Selesai',
+};
+
+export const STATUS_LABEL_ADMIN = {
+  submitted: 'Masuk',
+  pending: 'Masuk',
+  reviewing: 'Verifikasi',
+  processing: 'Pengerjaan',
+  revision_required: 'Butuh Revisi',
+  rejected: 'Ditolak',
+  canceled: 'Ditolak',
+  completed: 'Selesai',
+};
+
+export const ACTIVE_STATUSES = ['submitted', 'pending', 'reviewing', 'processing', 'revision_required'];
+
 export {
   kategoriPermintaan,
   kategoriKeterangan,

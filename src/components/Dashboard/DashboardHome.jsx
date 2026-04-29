@@ -77,10 +77,10 @@ const DashboardHome = () => {
     (req) => req.status === "completed",
   ).length;
   const procesingRequest = historRequest.filter(
-    (req) => req.status === "pending",
+    (req) => ["submitted", "pending", "reviewing", "processing", "revision_required"].includes(req.status),
   ).length;
   const rejectedRequest = historRequest.filter(
-    (req) => req.status === "canceled",
+    (req) => ["rejected", "canceled"].includes(req.status),
   ).length;
 
   return (
