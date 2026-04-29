@@ -49,6 +49,8 @@ let isAppLoaded = false;
 
 const DistribusiPengajuan = ({ days = 7 }) => {
   const isPreviouslyStabilized = !!sessionStorage.getItem("dashboard_stabilized");
+  const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
+  const cacheKey = `cache_distribusi_pengajuan_${currentUser.id || "guest"}_${days}`;
 
   // Memoize template to prevent reference changes
   const defaultData = useMemo(() => Array.from({ length: days }, (_, i) => {
@@ -60,13 +62,13 @@ const DistribusiPengajuan = ({ days = 7 }) => {
   }), [days]);
 
   const [dataPengajuan, setDataPengajuan] = useState(() => {
-    const cachedData = sessionStorage.getItem("cache_distribusi_pengajuan");
+    const cachedData = sessionStorage.getItem(cacheKey);
     return cachedData ? JSON.parse(cachedData) : defaultData;
   });
   
   // ALWAYS start false to ensure layout stabilization cycle happens
   const [hasMounted, setHasMounted] = useState(false);
-  const [dataReady, setDataReady] = useState(!!sessionStorage.getItem("cache_distribusi_pengajuan"));
+  const [dataReady, setDataReady] = useState(!!sessionStorage.getItem(cacheKey));
   const [chartWidth, setChartWidth] = useState(0);
   const containerRef = useRef(null);
 
@@ -82,14 +84,16 @@ const DistribusiPengajuan = ({ days = 7 }) => {
         });
 
         const updateData = () => {
-          if (JSON.stringify(mergedData) !== JSON.stringify(dataPengajuan)) {
-            setDataPengajuan(mergedData);
-            sessionStorage.setItem("cache_distribusi_pengajuan", JSON.stringify(mergedData));
-          }
+          setDataPengajuan((currentData) =>
+            JSON.stringify(mergedData) === JSON.stringify(currentData)
+              ? currentData
+              : mergedData,
+          );
+          sessionStorage.setItem(cacheKey, JSON.stringify(mergedData));
           setDataReady(true);
         };
 
-        const cachedData = sessionStorage.getItem("cache_distribusi_pengajuan");
+        const cachedData = sessionStorage.getItem(cacheKey);
         // If we matched cached data, wait for animation to finish before updating
         if (cachedData) {
           setTimeout(updateData, 2000); // Wait for entrance animation (1.5s + buffer)
@@ -99,7 +103,7 @@ const DistribusiPengajuan = ({ days = 7 }) => {
       } else {
         setDataReady(true);
       }
-    });
+    }, days);
 
     // Phase 2: Observer for layout stability
     let resizeTimer;
@@ -128,7 +132,7 @@ const DistribusiPengajuan = ({ days = 7 }) => {
       observer.disconnect();
       clearTimeout(resizeTimer);
     };
-  }, [days, defaultData]);
+  }, [days, defaultData, cacheKey]);
 
   // Only render chart when BOTH layout is ready and data has been fetched
   const isReady = hasMounted && dataReady;

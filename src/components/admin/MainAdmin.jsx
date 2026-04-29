@@ -16,10 +16,10 @@ const MainAdmin = () => {
   // index 0=Total, 1=Masuk, 2=Diproses, 3=Ditolak, 4=Selesai
   const filterMap = [
     null,
-    "submitted",
-    "processing",
-    "rejected",
-    "completed",
+    "masuk",
+    "diproses",
+    "ditolak",
+    "selesai",
   ];
 
   const handleCardClick = (index) => {
@@ -94,7 +94,7 @@ const MainAdmin = () => {
               </CardHeader>
               <CardContent className="px-4 pb-4">
                 <div className="h-[250px] w-full min-h-[250px]">
-                  <SimpleBarChart />
+                  <SimpleBarChart days={7} />
                 </div>
               </CardContent>
             </Card>

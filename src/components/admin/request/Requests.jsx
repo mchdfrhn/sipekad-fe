@@ -202,12 +202,16 @@ export const TablePengajuan = ({
 
   const statusOptions = [
     { label: "Semua Status", value: "default" },
-    { label: "Masuk", value: "submitted" },
+    { label: "Masuk", value: "masuk" },
+    { label: "Diproses", value: "diproses" },
+    { label: "Ditolak", value: "ditolak" },
+    { label: "Selesai", value: "selesai" },
+    { label: "Diajukan", value: "submitted" },
     { label: "Verifikasi", value: "reviewing" },
     { label: "Pengerjaan", value: "processing" },
     { label: "Butuh Revisi", value: "revision_required" },
-    { label: "Ditolak", value: "rejected" },
-    { label: "Selesai", value: "completed" },
+    { label: "Ditolak saja", value: "rejected" },
+    { label: "Selesai saja", value: "completed" },
   ];
 
   return (
