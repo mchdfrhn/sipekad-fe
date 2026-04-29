@@ -113,7 +113,7 @@ const ActivityItem = ({
     <div className="flex items-center gap-4 mb-5 last:mb-0">
       <Avatar className="h-10 w-10">
         <AvatarImage src={image} />
-        <AvatarFallback>{admin_name?.charAt(0) || "U"}</AvatarFallback>
+        <AvatarFallback>{(admin_name || requester_name)?.charAt(0) || "U"}</AvatarFallback>
       </Avatar>
       <div>
         <p className="text-sm font-medium text-[#2B3674] leading-relaxed">
@@ -122,6 +122,16 @@ const ActivityItem = ({
               <span className="font-bold">{admin_name}</span> merespon pengajuan{" "}
               <span className="font-bold">{request_type}</span> dari{" "}
               {requester_name}
+            </>
+          ) : type === "revision" ? (
+            <>
+              <span className="font-bold">{requester_name}</span> mengirim revisi pengajuan{" "}
+              <span className="font-bold">{request_type}</span>
+            </>
+          ) : type === "request" ? (
+            <>
+              <span className="font-bold">{requester_name}</span> mengirim pengajuan{" "}
+              <span className="font-bold">{request_type}</span>
             </>
           ) : (
             <>
@@ -144,13 +154,18 @@ const RightPanel = () => {
   const [activities, setActivities] = useState([]);
 
   useEffect(() => {
-    // Only fetch activities here, notifications come from context
-    getDashboardActivities(setActivities, null);
+    // Only fetch activities here; notifications come from context.
+    const fetchActivities = () => getDashboardActivities(setActivities, null);
+    fetchActivities();
+    const interval = setInterval(fetchActivities, 60000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const getNotificationIcon = (type) => {
     switch (type) {
       case "request":
+      case "revision":
         return Bell;
       case "user":
         return User;
@@ -163,6 +178,8 @@ const RightPanel = () => {
     switch (type) {
       case "request":
         return "blue";
+      case "revision":
+        return "green";
       case "user":
         return "purple";
       default:

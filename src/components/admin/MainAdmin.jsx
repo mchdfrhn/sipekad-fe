@@ -6,20 +6,20 @@ import StraightAnglePieChart from "../chart/PieChart";
 import SimpleBarChart from "../chart/BarChart";
 import StatsCard from "./StatsCard";
 import RightPanel from "./RightPanel"; // Import RightPanel
-import { FileText, CheckCircle, XCircle, Clock } from "lucide-react";
+import { FileText, CheckCircle, XCircle, Clock, Wrench } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const MainAdmin = () => {
   const navigate = useNavigate();
   const [summery, setSummery] = useState([]);
 
-  // Map each card index to its filter value for /admin/pengajuan page
-  // index 0=Total(all), 1=Pending, 2=Canceled, 3=Completed
+  // index 0=Total, 1=Masuk, 2=Diproses, 3=Ditolak, 4=Selesai
   const filterMap = [
-    null, // Total — no filter
-    "pending", // Diproses
-    "canceled", // Ditolak
-    "completed", // Sukses
+    null,
+    "submitted",
+    "processing",
+    "rejected",
+    "completed",
   ];
 
   const handleCardClick = (index) => {
@@ -36,34 +36,13 @@ const MainAdmin = () => {
   }, []);
 
   const getIcon = (index) => {
-    switch (index) {
-      case 0:
-        return FileText;
-      case 1:
-        return Clock;
-      case 2:
-        return XCircle;
-      case 3:
-        return CheckCircle;
-      default:
-        return FileText;
-    }
+    const icons = [FileText, Clock, Wrench, XCircle, CheckCircle];
+    return icons[index] || FileText;
   };
 
-  // Define variants for the stats cards
   const getVariant = (index) => {
-    switch (index) {
-      case 0:
-        return "blue";
-      case 1:
-        return "orange";
-      case 2:
-        return "red";
-      case 3:
-        return "green";
-      default:
-        return "default";
-    }
+    const variants = ["blue", "orange", "teal", "red", "green"];
+    return index === 0 ? "premium" : (variants[index] || "default");
   };
 
   const getData = (index) =>
@@ -72,11 +51,11 @@ const MainAdmin = () => {
   return (
     <div className="space-y-6">
       {/* Row 1: Stats Cards */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {[0, 1, 2, 3].map((index) => {
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-5">
+        {[0, 1, 2, 3, 4].map((index) => {
           const data = getData(index);
           const Icon = getIcon(index);
-          const variant = index === 0 ? "premium" : getVariant(index);
+          const variant = getVariant(index);
           return (
             <StatsCard
               key={index}

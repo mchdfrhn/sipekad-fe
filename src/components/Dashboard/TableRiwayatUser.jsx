@@ -1,8 +1,23 @@
 import { Link } from "react-router";
 import { Send, Eye } from "lucide-react";
+import { STATUS_LABEL_USER } from "../../utils/constant";
 import { Button } from "@/components/ui/button";
 import { TableSkeleton } from "@/components/ui/Loading";
 import { motion as Motion } from "motion/react";
+
+const userStatusBadgeClass = (status) => {
+  const map = {
+    submitted: "bg-blue-50 text-blue-600 border-blue-100",
+    pending:   "bg-blue-50 text-blue-600 border-blue-100",
+    reviewing: "bg-purple-50 text-purple-600 border-purple-100",
+    processing: "bg-teal-50 text-teal-600 border-teal-100",
+    revision_required: "bg-orange-50 text-orange-600 border-orange-100",
+    rejected:  "bg-red-50 text-red-600 border-red-100",
+    canceled:  "bg-red-50 text-red-600 border-red-100",
+    completed: "bg-green-50 text-green-600 border-green-100",
+  };
+  return map[status] || "bg-gray-50 text-gray-600 border-gray-100";
+};
 
 const TableRiwayatUser = ({ historyRequest, page, limit = 10, isLoading }) => {
   const dataKey = ["No", "Jenis Surat", "Tanggal", "Status"];
@@ -89,21 +104,8 @@ const TableRiwayatUser = ({ historyRequest, page, limit = 10, isLoading }) => {
                   </td>
 
                   <td className="px-4 py-3 text-center">
-                    <span
-                      className={`inline-flex items-center px-2 py-0.5 rounded-full text-[9px] md:text-[11px] font-bold capitalize
-                        ${
-                          value.status === "completed"
-                            ? "bg-green-50 text-green-600 border border-green-100"
-                            : value.status === "pending"
-                              ? "bg-orange-50 text-orange-600 border border-orange-100"
-                              : "bg-red-50 text-red-600 border border-red-100"
-                        }`}
-                    >
-                      {value.status === "completed"
-                        ? "Selesai"
-                        : value.status === "pending"
-                          ? "Menunggu"
-                          : "Ditolak"}
+                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[9px] md:text-[11px] font-bold border ${userStatusBadgeClass(value.status)}`}>
+                      {STATUS_LABEL_USER[value.status] || value.status}
                     </span>
                   </td>
                 </Motion.tr>

@@ -1,4 +1,5 @@
-import { ArrowLeft, ArrowRight, Send, Eye, Filter } from "lucide-react";
+import { ArrowLeft, ArrowRight, Send, Eye, Filter, Play } from "lucide-react";
+import { STATUS_LABEL_ADMIN, ACTIVE_STATUSES } from "../../../utils/constant";
 import { motion as Motion } from "motion/react";
 import { useEffect, useState, useCallback } from "react";
 import { getAllRequestForAdmin } from "../../../utils/api/request";
@@ -201,9 +202,12 @@ export const TablePengajuan = ({
 
   const statusOptions = [
     { label: "Semua Status", value: "default" },
-    { label: "Pending", value: "pending" },
+    { label: "Masuk", value: "submitted" },
+    { label: "Verifikasi", value: "reviewing" },
+    { label: "Pengerjaan", value: "processing" },
+    { label: "Butuh Revisi", value: "revision_required" },
+    { label: "Ditolak", value: "rejected" },
     { label: "Selesai", value: "completed" },
-    { label: "Ditolak", value: "canceled" },
   ];
 
   return (
@@ -359,22 +363,7 @@ export const TablePengajuan = ({
                   </td>
 
                   <td className="px-4 md:px-6 py-2.5 text-center">
-                    <span
-                      className={`inline-flex items-center px-3 py-1 rounded-lg text-[10px] md:text-[11px] font-bold capitalize
-                        ${
-                          value.status === "completed"
-                            ? "bg-green-50 text-green-600"
-                            : value.status === "pending"
-                              ? "bg-orange-50 text-orange-600"
-                              : "bg-red-50 text-red-600"
-                        }`}
-                    >
-                      {value.status === "completed"
-                        ? "Selesai"
-                        : value.status === "pending"
-                          ? "Menunggu"
-                          : "Ditolak"}
-                    </span>
+                    <StatusBadgeAdmin status={value.status} />
                   </td>
 
                   <td className="px-4 md:px-6 py-2.5">
@@ -384,13 +373,13 @@ export const TablePengajuan = ({
                           variant="ghost"
                           size="icon"
                           className={`h-7 w-7 md:h-8 md:w-8 rounded-xl transition-all ${
-                            value.status === "pending"
+                            ACTIVE_STATUSES.includes(value.status)
                               ? "bg-green-50 text-green-600 hover:bg-green-100"
                               : "bg-blue-50 text-blue-600 hover:bg-blue-100"
                           }`}
                         >
-                          {value.status === "pending" ? (
-                            <Send className="h-4 w-4" />
+                          {ACTIVE_STATUSES.includes(value.status) ? (
+                            <Play className="h-4 w-4" />
                           ) : (
                             <Eye className="h-4 w-4" />
                           )}
@@ -422,5 +411,25 @@ export const TablePengajuan = ({
     </Motion.div>
   );
 };
+
+const statusBadgeStyles = {
+  submitted: "bg-blue-50 text-blue-600",
+  pending: "bg-blue-50 text-blue-600",
+  reviewing: "bg-purple-50 text-purple-600",
+  processing: "bg-teal-50 text-teal-600",
+  revision_required: "bg-orange-50 text-orange-600",
+  rejected: "bg-red-50 text-red-600",
+  canceled: "bg-red-50 text-red-600",
+  completed: "bg-green-50 text-green-600",
+};
+
+const StatusBadgeAdmin = ({ status }) => (
+  <span
+    className={`inline-flex items-center px-3 py-1 rounded-lg text-[10px] md:text-[11px] font-bold
+      ${statusBadgeStyles[status] || "bg-gray-50 text-gray-600"}`}
+  >
+    {STATUS_LABEL_ADMIN[status] || status}
+  </span>
+);
 
 export default RequestAdmin;

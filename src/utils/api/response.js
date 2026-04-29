@@ -1,14 +1,13 @@
 import BASE_URL from "./index.js";
 import Axios from "axios";
 
-export const addResponse = async (reqId, message, isComplete, token) => {
+export const addResponse = async (reqId, message, _isComplete, token) => {
   try {
     const response = await Axios.post(
       `${BASE_URL}/response`,
       {
         requestId: reqId,
         message,
-        isComplete,
       },
       {
         headers: {

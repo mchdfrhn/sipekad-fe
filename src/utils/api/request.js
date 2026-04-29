@@ -101,4 +101,38 @@ const getAllRequestForAdmin = async (
   }
 };
 
+export const updateRequestStatus = async (requestId, status) => {
+  const token = localStorage.getItem("tokenKey");
+  try {
+    const result = await Axios.patch(
+      `${BASE_URL}/request/${requestId}/status`,
+      { status },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    return result.data;
+  } catch (err) {
+    return {
+      status: "fail",
+      message: err.response?.data?.message || "Gagal mengubah status",
+    };
+  }
+};
+
+export const reviseRequest = async (requestId, message) => {
+  const token = localStorage.getItem("tokenKey");
+  try {
+    const result = await Axios.patch(
+      `${BASE_URL}/request/${requestId}/revision`,
+      { message },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    return result.data;
+  } catch (err) {
+    return {
+      status: "fail",
+      message: err.response?.data?.message || "Gagal mengirim revisi",
+    };
+  }
+};
+
 export { postrequest, getRequest, getAllRequestForAdmin };

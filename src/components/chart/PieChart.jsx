@@ -75,10 +75,11 @@ export default function StraightAnglePieChart() {
   // Semantic Color Mapping
   const getColor = (status) => {
     const lowerStatus = status?.toLowerCase() || "";
+    if (lowerStatus.includes("masuk")) return "#2563EB"; // Blue
     if (lowerStatus.includes("tolak")) return "#EE5D50"; // Red
     if (lowerStatus.includes("proses") || lowerStatus.includes("pending"))
       return "#FFB547"; // Orange
-    if (lowerStatus.includes("sukses") || lowerStatus.includes("setuju"))
+    if (lowerStatus.includes("selesai") || lowerStatus.includes("sukses") || lowerStatus.includes("setuju"))
       return "#05CD99"; // Green
     return "#4318FF";
   };
@@ -113,7 +114,7 @@ export default function StraightAnglePieChart() {
               animationBegin={isAppLoaded ? 50 : 800}
             >
               {data.map((entry, index) => (
-                <Cell key={`slice-${index}`} fill={getColor(entry.name)} />
+                <Cell key={`slice-${index}`} fill={entry.color || getColor(entry.name)} />
               ))}
             </Pie>
             <Tooltip content={<SimpleTooltip />} />

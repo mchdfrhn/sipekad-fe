@@ -1,6 +1,21 @@
 import Underline from "./Underline";
 import { Link } from "react-router";
 import { motion as Motion } from "motion/react";
+import { STATUS_LABEL_USER } from "../../utils/constant";
+
+const tableRiwayatDotClass = (status) => {
+  const map = {
+    submitted: "bg-blue-400",
+    pending:   "bg-blue-400",
+    reviewing: "bg-purple-400",
+    processing: "bg-teal-400",
+    revision_required: "bg-orange-400",
+    rejected:  "bg-red-500",
+    canceled:  "bg-red-500",
+    completed: "bg-green-500",
+  };
+  return map[status] || "bg-gray-400";
+};
 
 const TableRiwayat = ({ historyRequest }) => {
   const propertyTable = ["No", "Jenis", "Tanggal", "Status"];
@@ -10,25 +25,37 @@ const TableRiwayat = ({ historyRequest }) => {
         Riwayat Pengajuan
       </h1>
       <Underline />
-      <div className="flex items-center mb-6 gap-4 text-xs md:text-sm">
+      <div className="flex flex-wrap items-center mb-6 gap-4 text-xs md:text-sm">
+        <div className="flex items-center gap-2">
+          <span className="size-2 md:size-3 block bg-blue-400 rounded-full"></span>
+          <p>: diajukan</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="size-2 md:size-3 block bg-purple-400 rounded-full"></span>
+          <p>: ditinjau</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="size-2 md:size-3 block bg-teal-400 rounded-full"></span>
+          <p>: diproses</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="size-2 md:size-3 block bg-orange-400 rounded-full"></span>
+          <p>: perlu revisi</p>
+        </div>
         <div className="flex items-center gap-2">
           <span className="size-2 md:size-3 block bg-red-500 rounded-full"></span>
           <p>: ditolak</p>
         </div>
         <div className="flex items-center gap-2">
           <span className="size-2 md:size-3 block bg-green-500 rounded-full"></span>
-          <p>: diterima</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="size-2 md:size-3 block bg-yellow-500 rounded-full"></span>
-          <p>: diproses</p>
+          <p>: selesai</p>
         </div>
       </div>
       <Motion.div
         initial={{ opacity: 0, translateY: 20 }}
         animate={{ opacity: 1, translateY: 0 }}
         transition={{ duration: 0.5, ease: ["easeInOut"] }}
-        className="rounded-lg bg-white overflow-hidden shadow-xl "
+        className="rounded-lg bg-white overflow-hidden shadow-xl"
       >
         <div className="px-2 md:py-4 overflow-x-auto">
           <table className="w-full">
@@ -68,13 +95,8 @@ const TableRiwayat = ({ historyRequest }) => {
                   <td className="px-3 md:px-6 py-3 text-center">
                     <div className="flex justify-center">
                       <span
-                        className={`size-2 md:size-3 rounded-full shadow-sm ring-2 ring-white ${
-                          value.status === "completed"
-                            ? "bg-green-500"
-                            : value.status === "pending"
-                              ? "bg-yellow-400"
-                              : "bg-red-500"
-                        }`}
+                        className={`size-2 md:size-3 rounded-full shadow-sm ring-2 ring-white ${tableRiwayatDotClass(value.status)}`}
+                        title={STATUS_LABEL_USER[value.status] || value.status}
                       />
                     </div>
                   </td>
