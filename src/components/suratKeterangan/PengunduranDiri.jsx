@@ -4,6 +4,7 @@ import { useState } from "react";
 import { requestPengajuan } from "../../utils/action";
 import { useToast } from "@/utils/hooks/useToast";
 import { useNavigate } from "react-router";
+import ConfirmDialog from "../../components/ui/ConfirmDialog";
 
 const PengunduranDiri = () => {
   const navigate = useNavigate();
@@ -11,9 +12,15 @@ const PengunduranDiri = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
+  const [showConfirm, setShowConfirm] = useState(false);
   const { title, syarat, url, fileName } = pengunduranDiri;
-  const submitHandler = async (e) => {
+
+  const submitHandler = (e) => {
     e.preventDefault();
+    setShowConfirm(true);
+  };
+
+  const doSubmit = async () => {
     setIsLoading(true);
     const result = await requestPengajuan(
       "Pengunduran Diri",
@@ -38,6 +45,7 @@ const PengunduranDiri = () => {
       showToast(result?.message || "Gagal mengirim pengajuan", "error");
     }
   };
+
   return (
     <>
       <Pengajuan
@@ -51,6 +59,16 @@ const PengunduranDiri = () => {
         setFile={setFile}
         file={file}
         isLoading={isLoading}
+      />
+      <ConfirmDialog
+        isOpen={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        onConfirm={doSubmit}
+        variant="warning"
+        title="Konfirmasi Pengajuan"
+        description="Apakah Anda yakin ingin mengajukan Pengunduran Diri? Tindakan ini tidak dapat dibatalkan."
+        confirmText="Ya, Ajukan"
+        cancelText="Batalkan"
       />
     </>
   );

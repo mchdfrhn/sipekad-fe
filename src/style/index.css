@@ -17,7 +17,15 @@
     --primary-blue: #4318ff;
     --secondary-gray: #a3aed0;
     --text-primary: #2b3674;
-    --text-secondary: #a3aed0;
+    --text-secondary: #718096;   /* WCAG AA compliant — was #a3aed0 (fail) */
+    --text-muted: #718096;
+    --page-bg: #f4f7fe;
+
+    /* Shadow tokens */
+    --shadow-card: 14px 17px 40px 4px rgba(112, 144, 176, 0.10);
+    --shadow-brand-sm: 0 4px 14px rgba(67, 24, 255, 0.20);
+    --shadow-brand-md: 0 8px 24px rgba(67, 24, 255, 0.18);
+    --shadow-brand-lg: 0 20px 60px rgba(67, 24, 255, 0.13);
 
     /* Shadcn UI Variables */
     --background: 0 0% 100%;
@@ -86,11 +94,44 @@
     --radius-sm: calc(var(--radius) - 4px);
     --radius-md: calc(var(--radius) - 2px);
     --radius-lg: var(--radius);
+
+    /* Brand tokens — use these instead of hardcoded hex */
+    --color-brand: var(--primary-blue);          /* text-brand, bg-brand, border-brand */
+    --color-brand-light: #f4f7fe;                /* bg-brand-light */
+    --color-ink: var(--text-primary);            /* text-ink  (#2b3674) */
+    --color-muted-text: var(--text-muted);       /* text-muted-text (#718096) */
+    --color-page: var(--page-bg);                /* bg-page   (#f4f7fe) */
+
+    /* Radius tokens — 3 values, pick one */
+    --radius-card: 20px;    /* Card, modal */
+    --radius-input: 16px;   /* Input, button */
+    --radius-chip: 9999px;  /* Badge, pill */
+
+    /* Shadow tokens */
+    --shadow-card: var(--shadow-card);
+    --shadow-brand-sm: var(--shadow-brand-sm);
+    --shadow-brand-md: var(--shadow-brand-md);
+    --shadow-brand-lg: var(--shadow-brand-lg);
   }
 
   body {
     font-family: var(--font-jakarta);
-    @apply bg-[#F4F7FE] text-[#2B3674];
+    background-color: var(--page-bg);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(67, 24, 255, 0.30) transparent;
+  }
+
+  ::selection {
+    background-color: rgba(67, 24, 255, 0.15);
+    color: #2b3674;
+  }
+
+  :focus-visible {
+    outline: 2px solid #4318ff;
+    outline-offset: 2px;
   }
 
   a, button, [role="button"], .cursor-pointer {
@@ -102,6 +143,31 @@
   }
 }
 
+/* ── Keyframes ─────────────────────────────────────────────────── */
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-12px); }
+}
+
+@keyframes gradient-shift {
+  0%   { background-position: 0%   50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0%   50%; }
+}
+
+@keyframes pulse-ring {
+  0%   { transform: scale(0.95); opacity: 0.7; }
+  50%  { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.7; }
+}
+
+/* ── Components ────────────────────────────────────────────────── */
 
 @layer components {
   /* Glassmorphism Utility */
@@ -126,50 +192,232 @@
   }
 
   /* Buttons - Refined */
-  /* Remove button-base as a dependency for @apply and repeat styles or use simple CSS inheritance if applicable, 
-     but for @apply simplicity we just repeat the utility classes. */
-
   .button-base {
     @apply rounded-xl px-6 py-3 font-bold text-white transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
   }
 
   .button-blue {
-    @apply rounded-xl px-6 py-3 font-bold text-white transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-[#4318FF] hover:bg-[#3311CC];
+    @apply rounded-[--radius-input] px-6 py-3 font-bold text-white transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+    background-color: var(--primary-blue);
   }
-
-  /* Legacy Button classes kept for compatibility, but updated style */
-  .button-yellow {
-    @apply rounded-xl px-6 py-3 font-bold text-white transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-amber-400;
-  }
-  .button-green {
-    @apply rounded-xl px-6 py-3 font-bold text-white transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-emerald-500;
-  }
-  .button-red {
-    @apply rounded-xl px-6 py-3 font-bold text-white transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-red-500;
-  }
+  .button-blue:hover { background-color: #3311cc; }
 
   .input {
-    @apply border border-gray-200 outline-none text-[#2B3674] focus:border-[#4318FF] px-4 py-3 rounded-xl bg-white;
+    @apply border border-gray-200 outline-none px-4 py-3 bg-white;
+    border-radius: var(--radius-input);
+    color: var(--text-primary);
   }
-
-  /* Custom Scrollbar for dashboard */
-  ::-webkit-scrollbar {
-    width: 6px;
-  }
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: #a3aed0;
-    border-radius: 10px;
-  }
+  .input:focus { border-color: var(--primary-blue); }
 
   /* Sidebar */
   .sidebar-link {
-    @apply flex items-center gap-3 px-4 py-3 rounded-lg text-[#A3AED0] font-medium transition-all duration-200 hover:text-[#2B3674];
+    @apply flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all duration-200;
+    color: #a3aed0;
+  }
+  .card-shadow {
+    box-shadow: var(--shadow-card);
   }
 
-  .active-indicator {
-    @apply absolute right-0 top-1/2 -translate-y-1/2 h-9 w-1 rounded-l-lg bg-[#4318FF];
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(67, 24, 255, 0.30);
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(67, 24, 255, 0.60);
+  }
+
+  .sidebar-link:hover { color: var(--text-primary); }
+
+  /* ── NEW: Shimmer ───────────────────────────────────────────── */
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(67, 24, 255, 0.04),
+      transparent
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.8s infinite;
+  }
+
+  /* ── NEW: Glass Card ────────────────────────────────────────── */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.70);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.60);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    border-radius: 20px;
+  }
+
+  /* ── NEW: Premium Card ──────────────────────────────────────── */
+  .premium-card {
+    background: #ffffff;
+    border: 1px solid rgba(243, 244, 246, 0.80);
+    border-radius: 20px;
+    box-shadow: 0 4px 24px rgba(67, 24, 255, 0.06);
+    transition: all 0.3s ease;
+  }
+  .premium-card:hover {
+    box-shadow: 0 8px 32px rgba(67, 24, 255, 0.12);
+  }
+
+  /* ── NEW: Gradient Text ─────────────────────────────────────── */
+  .gradient-text {
+    background: linear-gradient(135deg, #4318ff 0%, #7c5fff 50%, #a78bfa 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: gradient-shift 4s ease infinite;
+  }
+
+  /* ── NEW: Sidebar Premium ───────────────────────────────────── */
+  .sidebar-premium {
+    background: linear-gradient(180deg, #ffffff 0%, #fafbff 100%);
+    border-right: 1px solid rgba(67, 24, 255, 0.06);
+  }
+
+  /* ── NEW: Active Nav ────────────────────────────────────────── */
+  .active-nav {
+    background: linear-gradient(
+      135deg,
+      rgba(67, 24, 255, 0.08) 0%,
+      rgba(124, 95, 255, 0.05) 100%
+    );
+    color: #4318ff;
+    font-weight: 700;
+  }
+
+  /* ── NEW: Stat Badge ────────────────────────────────────────── */
+  .stat-badge {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.125rem 0.5rem;
+  }
+
+  /* ── NEW: Page Header ───────────────────────────────────────── */
+  .page-header {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2b3674;
+    letter-spacing: -0.025em;
+  }
+
+  /* ── NEW: Input Premium ─────────────────────────────────────── */
+  .input-premium {
+    height: 3rem;
+    background-color: #f8f9ff;
+    border: 1px solid transparent;
+    border-radius: 1rem;
+    padding: 0 1rem;
+    width: 100%;
+    transition: all 0.2s ease;
+    outline: none;
+    color: var(--text-primary);
+  }
+  .input-premium:focus {
+    border-color: rgba(67, 24, 255, 0.30);
+    box-shadow: 0 0 0 2px rgba(67, 24, 255, 0.10);
+  }
+
+  /* ── NEW: Button Primary ────────────────────────────────────── */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #4318ff;
+    color: #ffffff;
+    border-radius: 1rem;
+    font-weight: 700;
+    padding: 0.625rem 1.5rem;
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.20);
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+  }
+  .btn-primary:hover {
+    background-color: #3311cc;
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.30);
+    transform: translateY(-2px);
+  }
+  .btn-primary:active {
+    transform: translateY(0);
+  }
+
+  /* ── NEW: Toast Container ───────────────────────────────────── */
+  .toast-container {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 0.5rem;
+    max-height: calc(100vh - 48px);
+    overflow: hidden;
+    pointer-events: none;
+  }
+}
+
+/* ── Print Styles ───────────────────────────────────────────────── */
+@media print {
+  /* Hide navigation, sidebar, action buttons */
+  nav,
+  aside,
+  header,
+  .no-print,
+  [data-no-print],
+  button:not(.print-show) {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 12pt;
+  }
+
+  .premium-card,
+  .glass-card {
+    box-shadow: none !important;
+    border: 1px solid #e5e7eb !important;
+    break-inside: avoid;
+  }
+
+  a[href]::after {
+    content: none !important;
+  }
+
+  h1, h2, h3 {
+    break-after: avoid;
+    color: #1a1a2e !important;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  th, td {
+    border: 1px solid #d1d5db;
+    padding: 8px 12px;
+  }
+
+  thead {
+    background-color: #f3f4f6 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .page-break {
+    page-break-before: always;
   }
 }

@@ -14,7 +14,6 @@ export const getSummeryData = async (setSummery) => {
       setSummery(result.data);
     }
   } catch (err) {
-    console.error(err);
   }
 };
 
@@ -35,7 +34,6 @@ export const getDistribusiPengajuan = async (setLabel, setData, days = 30) => {
       if (typeof setData === "function") setData(result.data);
     }
   } catch (err) {
-    console.error(err);
   }
 };
 
@@ -53,7 +51,6 @@ export const getTopTypePengajuan = async (setLabel, setData, days = 30) => {
       if (typeof setData === "function") setData(result.data);
     }
   } catch (err) {
-    console.error(err);
   }
 };
 
@@ -71,7 +68,6 @@ export const getStatusPengajuan = async (setLabel, setData, days = 30) => {
       if (typeof setData === "function") setData(result.data);
     }
   } catch (err) {
-    console.error(err);
   }
 };
 
@@ -91,7 +87,6 @@ export const getSummeryDataByUserId = async (setSummery, userId) => {
       setSummery(result.data);
     }
   } catch (err) {
-    console.error(err);
   }
 };
 
@@ -114,7 +109,6 @@ export const getDashboardActivities = async (
         setNotifications(result.data.notifications || []);
     }
   } catch (err) {
-    console.error(err);
   }
 };
 
@@ -133,9 +127,7 @@ export const markAsRead = async (id) => {
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.error("markAsRead error:", error.response?.data || error.message);
     } else {
-      console.error("markAsRead unexpected error:", error);
     }
     throw error;
   }

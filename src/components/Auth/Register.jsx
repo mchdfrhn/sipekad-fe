@@ -97,16 +97,11 @@ const Register = () => {
               Daftar Akun <br />
               <span className="text-[#4318FF]">SIPEKAD</span>
             </h1>
-            <p className="text-[#A3AED0] text-lg md:text-2xl font-semibold mb-10 leading-relaxed max-w-[450px]">
+            <p className="text-[#718096] text-lg md:text-2xl font-semibold mb-10 leading-relaxed max-w-[450px]">
               Sistem Pengajuan Akademik. Silakan lengkapi data diri Anda untuk memulai.
             </p>
             
-            <div className="flex flex-col gap-1 mb-12">
-              <p className="text-gray-500 font-medium">Sudah memiliki akun?</p>
-              <Link to="/login" className="text-[#4318FF] font-bold text-xl hover:underline">
-                Masuk di sini!
-              </Link>
-            </div>
+            <div className="mb-12" />
 
             {/* Playful 3D Character Illustration below text */}
             <div className="relative w-full max-w-[320px] md:max-w-[440px]">
@@ -120,7 +115,7 @@ const Register = () => {
                 <img
                   src="/assets/3d-student.png"
                   alt="Student Animation"
-                  className="w-full h-auto drop-shadow-[0_45px_45px_rgba(67,24,255,0.12)]"
+                  className="w-full h-auto drop-shadow-[var(--shadow-brand-lg)]"
                 />
               </Motion.div>
               
@@ -133,7 +128,7 @@ const Register = () => {
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
                 className="absolute top-0 -right-4 w-28 md:w-40 z-20"
               >
-                <img src="/assets/3d-cap.png" alt="Cap" className="w-full h-auto drop-shadow-2xl" />
+                <img src="/assets/3d-cap.png" alt="Cap" loading="lazy" className="w-full h-auto drop-shadow-2xl" />
               </Motion.div>
             </div>
           </Motion.div>
@@ -145,11 +140,11 @@ const Register = () => {
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="w-full max-w-[540px] bg-white rounded-[40px] p-8 md:p-12 shadow-[0_20px_50px_rgba(67,24,255,0.06)] border border-gray-50 md:my-10"
+            className="w-full max-w-[540px] bg-white rounded-[20px] p-8 md:p-12 shadow-[var(--shadow-brand-lg)] border border-gray-50 md:my-10"
           >
             <div className="mb-8">
-              <h2 className="text-3xl font-bold text-[#2B3674] mb-2 tracking-tight">Create Account</h2>
-              <p className="text-[#A3AED0] font-medium text-sm">Fill in your information to register</p>
+              <h2 className="text-3xl font-bold text-[#2B3674] mb-2 tracking-tight">Buat Akun</h2>
+              <p className="text-[#718096] font-medium text-sm">Lengkapi data diri Anda untuk mendaftar</p>
             </div>
 
             <form onSubmit={onSubmitHandler} className="space-y-4">
@@ -157,14 +152,14 @@ const Register = () => {
                 <div className="space-y-2">
                   <Label className="text-xs font-bold text-[#2B3674] ml-1">NIM *</Label>
                   <div className="relative group">
-                    <UserIcon className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#A3AED0] group-focus-within:text-[#4318FF] transition-colors" />
+                    <UserIcon className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#718096] group-focus-within:text-[#4318FF] transition-colors" />
                     <Input
                       id="nim"
                       type="text"
                       placeholder="NIM"
                       value={formData.nim}
                       onChange={handleChange}
-                      className="h-12 pl-12 rounded-2xl bg-[#F4F7FE] border-none placeholder:text-[#A3AED0] focus:ring-2 focus:ring-[#4318FF]/20 transition-all text-sm font-medium"
+                      className="h-12 pl-12 rounded-2xl bg-[#F4F7FE] border-none placeholder:text-[#718096] focus:ring-2 focus:ring-[#4318FF]/20 transition-all text-sm font-medium"
                     />
                   </div>
                 </div>
@@ -172,14 +167,14 @@ const Register = () => {
                 <div className="space-y-2">
                   <Label className="text-xs font-bold text-[#2B3674] ml-1">Nama Lengkap *</Label>
                   <div className="relative group">
-                    <UserIcon className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#A3AED0] group-focus-within:text-[#4318FF] transition-colors" />
+                    <UserIcon className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#718096] group-focus-within:text-[#4318FF] transition-colors" />
                     <Input
                       id="full_name"
                       type="text"
                       placeholder="Nama Lengkap"
                       value={formData.full_name}
                       onChange={handleChange}
-                      className="h-12 pl-12 rounded-2xl bg-[#F4F7FE] border-none placeholder:text-[#A3AED0] focus:ring-2 focus:ring-[#4318FF]/20 transition-all text-sm font-medium"
+                      className="h-12 pl-12 rounded-2xl bg-[#F4F7FE] border-none placeholder:text-[#718096] focus:ring-2 focus:ring-[#4318FF]/20 transition-all text-sm font-medium"
                     />
                   </div>
                 </div>
@@ -188,19 +183,21 @@ const Register = () => {
               <div className="space-y-2">
                 <Label className="text-xs font-bold text-[#2B3674] ml-1">NIK (Digunakan sebagai Password) *</Label>
                 <div className="relative group">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#A3AED0] group-focus-within:text-[#4318FF] transition-colors" />
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#718096] group-focus-within:text-[#4318FF] transition-colors" />
                   <Input
                     id="nik"
                     type={hiddenPassword ? "text" : "password"}
-                    placeholder="Masukkan NIK"
+                    placeholder="Masukkan NIK (16 digit)"
                     value={formData.nik}
                     onChange={handleChange}
-                    className="h-12 pl-12 pr-12 rounded-2xl bg-[#F4F7FE] border-none placeholder:text-[#A3AED0] focus:ring-2 focus:ring-[#4318FF]/20 transition-all text-sm font-medium"
+                    maxLength={16}
+                    inputMode="numeric"
+                    className="h-12 pl-12 pr-12 rounded-2xl bg-[#F4F7FE] border-none placeholder:text-[#718096] focus:ring-2 focus:ring-[#4318FF]/20 transition-all text-sm font-medium"
                   />
                   <button
                     type="button"
                     onClick={() => setHiddenPassword(!hiddenPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 p-2 hover:bg-gray-100 rounded-full transition-colors text-[#A3AED0]"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 p-2 hover:bg-gray-100 rounded-full transition-colors text-[#718096]"
                   >
                     {hiddenPassword ? <Eye size={16} /> : <EyeOff size={16} />}
                   </button>
@@ -211,14 +208,14 @@ const Register = () => {
                 <div className="space-y-2">
                   <Label className="text-xs font-bold text-[#2B3674] ml-1">Email *</Label>
                   <div className="relative group">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#A3AED0] group-focus-within:text-[#4318FF] transition-colors" />
+                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#718096] group-focus-within:text-[#4318FF] transition-colors" />
                     <Input
                       id="email"
                       type="email"
                       placeholder="example@mail.com"
                       value={formData.email}
                       onChange={handleChange}
-                      className="h-12 pl-12 rounded-2xl bg-[#F4F7FE] border-none placeholder:text-[#A3AED0] focus:ring-2 focus:ring-[#4318FF]/20 transition-all text-sm font-medium"
+                      className="h-12 pl-12 rounded-2xl bg-[#F4F7FE] border-none placeholder:text-[#718096] focus:ring-2 focus:ring-[#4318FF]/20 transition-all text-sm font-medium"
                     />
                   </div>
                 </div>
@@ -226,14 +223,14 @@ const Register = () => {
                 <div className="space-y-2">
                   <Label className="text-xs font-bold text-[#2B3674] ml-1">Nomor HP *</Label>
                   <div className="relative group">
-                    <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#A3AED0] group-focus-within:text-[#4318FF] transition-colors" />
+                    <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#718096] group-focus-within:text-[#4318FF] transition-colors" />
                     <Input
                       id="phone"
                       type="text"
                       placeholder="08..."
                       value={formData.phone}
                       onChange={handleChange}
-                      className="h-12 pl-12 rounded-2xl bg-[#F4F7FE] border-none placeholder:text-[#A3AED0] focus:ring-2 focus:ring-[#4318FF]/20 transition-all text-sm font-medium"
+                      className="h-12 pl-12 rounded-2xl bg-[#F4F7FE] border-none placeholder:text-[#718096] focus:ring-2 focus:ring-[#4318FF]/20 transition-all text-sm font-medium"
                     />
                   </div>
                 </div>
@@ -242,7 +239,7 @@ const Register = () => {
               <div className="space-y-2">
                 <Label className="text-xs font-bold text-[#2B3674] ml-1">Program Studi *</Label>
                 <div className="relative group">
-                  <div className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#A3AED0] group-focus-within:text-[#4318FF] transition-colors z-10 pointer-events-none">
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#718096] group-focus-within:text-[#4318FF] transition-colors z-10 pointer-events-none">
                     <Briefcase size={16} />
                   </div>
                   <CustomSelect
@@ -261,12 +258,12 @@ const Register = () => {
               <div className="pt-4">
                 <Button
                   disabled={isLoading}
-                  className="w-full h-12 bg-[#4318FF] hover:bg-[#3311db] text-white rounded-2xl text-base font-bold shadow-xl shadow-[#4318FF]/25 active:scale-[0.98] transition-all"
+                  className="w-full h-12 bg-[#4318FF] hover:bg-[#3311db] text-white rounded-2xl text-base font-bold shadow-xl shadow-[var(--shadow-brand-sm)]/25 active:scale-[0.98] transition-all"
                 >
                   {isLoading ? (
                     <div className="flex items-center gap-2">
                       <LoaderCircle className="animate-spin" />
-                      <span>Registering...</span>
+                      <span>Mendaftar...</span>
                     </div>
                   ) : (
                     "Daftar Sekarang"

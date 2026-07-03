@@ -17,6 +17,9 @@ export const uploadPdf = async (file, id, token, endpoint) => {
     );
     return response.data;
   } catch (err) {
-    console.error(err.response.data);
+    return {
+      status: "fail",
+      message: err.response?.data?.message || "Gagal upload file",
+    };
   }
 };

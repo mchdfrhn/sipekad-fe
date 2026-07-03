@@ -1,70 +1,83 @@
 import { createBrowserRouter } from "react-router";
-// Homepage
+import { lazy, Suspense } from "react";
+
+// Static — needed immediately
 import App from "../App";
-
-// Auth
-import Login from "../components/Auth/Login";
-import Register from "../components/Auth/Register";
-import ForgotPassword from "../components/Auth/ForgotPassword";
-import ResetPassword from "../components/Auth/ResetPassword";
-
-// Dashboard
-import LayoutDashboard from "../components/Dashboard/LayoutDashboard";
-import DashboardHome from "../components/Dashboard/DashboardHome";
-import DashboardRequest from "../components/Dashboard/DashboardRequest";
-import DashboardUser from "../components/Dashboard/DashboardUser";
-import Settings from "../pages/Settings";
-
-// admin
-import LayoutAdmin from "../components/admin/LayoutAdmin";
-import User from "../components/admin/user/User";
-import RequestLayout from "../components/admin/RequestLayout";
-import MainAdmin from "../components/admin/MainAdmin";
-import LayoutUser from "../components/admin/LayoutUser";
-import UserDetail from "../components/admin/user/UserDetail";
-import RequestAdmin from "../components/admin/request/Requests";
-import RequestDetail from "../components/admin/request/RequestDetail";
-import Backup from "../pages/admin/Backup";
-import WhatsAppManager from "../pages/admin/WhatsAppManager";
-
-// Request
-import Request from "../components/Request/Request";
-import SuratKeterangan from "../components/Request/SuratKeterangan";
-import SuratPengajuan from "../components/Request/SuratPengajuan";
-import SuratPenjugasan from "../components/Request/SuratPenjugasan";
-import SuratSempro from "../components/Request/SuratSempro";
-import Skripsi from "../components/Request/Skripsi";
-import TranskripNilai from "../components/Request/TranskripNilai";
-import Yudisium from "../components/Request/Yudisium";
-import SeminarKp from "../components/Request/SeminarKp";
-
-// Request Detail
-import RequestDetailUser from "../components/requestUser/RequestDetailUser";
-
-// Surat Keterangan
-import ListKeterangan from "../components/suratKeterangan/ListKeterangan";
-import KeteranganLulus from "../components/suratKeterangan/KeteranganLulus";
-import MahasiswaAktif from "../components/suratKeterangan/MahasiswaAktif";
-import KeteranganCuti from "../components/suratKeterangan/KeteranganCuti";
-import PengunduranDiri from "../components/suratKeterangan/PengunduranDiri";
-
-// Surat Pengajuan
-import ListPengajuan from "../components/suratPengajuan/ListPengajuan";
-import JudulSkripsi from "../components/suratPengajuan/JudulSkripsi";
-import KerjaPraktik from "../components/suratPengajuan/KerjaPraktik";
-import PengantarKerjaPraktik from "../components/suratPengajuan/PengantarKerjaPraktik";
-
-// Penugasan
-import ListPenugasan from "../components/Penugasan/ListPenugasan";
-import DosenKerjaPraktik from "../components/Penugasan/DosenKerjaPraktik";
-import DosenSkripsi from "../components/Penugasan/DosenSkripsi";
-
-// User
-import UserBio from "../components/User/UserBio";
-import FormUpdateUser from "../components/dashboardUser/FormUpdateUser";
-
+import NotFound from "../pages/NotFound";
 import PublicRoute from "../components/Auth/PublicRoute";
 import ProtectedRoute from "../components/Auth/ProtectedRoute";
+import LayoutDashboard from "../components/Dashboard/LayoutDashboard";
+import LayoutAdmin from "../components/admin/LayoutAdmin";
+
+// Lazy — Auth
+const Login = lazy(() => import("../components/Auth/Login"));
+const Register = lazy(() => import("../components/Auth/Register"));
+const ForgotPassword = lazy(() => import("../components/Auth/ForgotPassword"));
+const ResetPassword = lazy(() => import("../components/Auth/ResetPassword"));
+
+// Lazy — Dashboard
+const DashboardHome = lazy(() => import("../components/Dashboard/DashboardHome"));
+const DashboardRequest = lazy(() => import("../components/Dashboard/DashboardRequest"));
+const DashboardUser = lazy(() => import("../components/Dashboard/DashboardUser"));
+const Settings = lazy(() => import("../pages/Settings"));
+
+// Lazy — Admin
+const User = lazy(() => import("../components/admin/user/User"));
+const RequestLayout = lazy(() => import("../components/admin/RequestLayout"));
+const MainAdmin = lazy(() => import("../components/admin/MainAdmin"));
+const LayoutUser = lazy(() => import("../components/admin/LayoutUser"));
+const UserDetail = lazy(() => import("../components/admin/user/UserDetail"));
+const RequestAdmin = lazy(() => import("../components/admin/request/Requests"));
+const RequestDetail = lazy(() => import("../components/admin/request/RequestDetail"));
+const Backup = lazy(() => import("../pages/admin/Backup"));
+const WhatsAppManager = lazy(() => import("../pages/admin/WhatsAppManager"));
+
+// Lazy — Request
+const Request = lazy(() => import("../components/Request/Request"));
+const SuratKeterangan = lazy(() => import("../components/Request/SuratKeterangan"));
+const SuratPengajuan = lazy(() => import("../components/Request/SuratPengajuan"));
+const SuratPenjugasan = lazy(() => import("../components/Request/SuratPenjugasan"));
+const SuratSempro = lazy(() => import("../components/Request/SuratSempro"));
+const Skripsi = lazy(() => import("../components/Request/Skripsi"));
+const TranskripNilai = lazy(() => import("../components/Request/TranskripNilai"));
+const Yudisium = lazy(() => import("../components/Request/Yudisium"));
+const SeminarKp = lazy(() => import("../components/Request/SeminarKp"));
+
+// Lazy — Request Detail
+const RequestDetailUser = lazy(() => import("../components/requestUser/RequestDetailUser"));
+
+// Lazy — Surat Keterangan
+const ListKeterangan = lazy(() => import("../components/suratKeterangan/ListKeterangan"));
+const KeteranganLulus = lazy(() => import("../components/suratKeterangan/KeteranganLulus"));
+const MahasiswaAktif = lazy(() => import("../components/suratKeterangan/MahasiswaAktif"));
+const KeteranganCuti = lazy(() => import("../components/suratKeterangan/KeteranganCuti"));
+const PengunduranDiri = lazy(() => import("../components/suratKeterangan/PengunduranDiri"));
+
+// Lazy — Surat Pengajuan
+const ListPengajuan = lazy(() => import("../components/suratPengajuan/ListPengajuan"));
+const JudulSkripsi = lazy(() => import("../components/suratPengajuan/JudulSkripsi"));
+const KerjaPraktik = lazy(() => import("../components/suratPengajuan/KerjaPraktik"));
+const PengantarKerjaPraktik = lazy(() => import("../components/suratPengajuan/PengantarKerjaPraktik"));
+
+// Lazy — Penugasan
+const ListPenugasan = lazy(() => import("../components/Penugasan/ListPenugasan"));
+const DosenKerjaPraktik = lazy(() => import("../components/Penugasan/DosenKerjaPraktik"));
+const DosenSkripsi = lazy(() => import("../components/Penugasan/DosenSkripsi"));
+
+// Lazy — User
+const UserBio = lazy(() => import("../components/User/UserBio"));
+
+const PageLoader = () => (
+  <div className="flex items-center justify-center py-20">
+    <div className="h-7 w-7 rounded-full border-[3px] border-[#4318FF] border-t-transparent animate-spin" />
+  </div>
+);
+
+const w = (C) => (
+  <Suspense fallback={<PageLoader />}>
+    <C />
+  </Suspense>
+);
 
 const Router = createBrowserRouter([
   {
@@ -76,23 +89,23 @@ const Router = createBrowserRouter([
         children: [
           {
             index: true,
-            Component: Login,
+            element: w(Login),
           },
           {
             path: "login",
-            Component: Login,
+            element: w(Login),
           },
           {
             path: "register",
-            Component: Register,
+            element: w(Register),
           },
           {
             path: "forgot-password",
-            Component: ForgotPassword,
+            element: w(ForgotPassword),
           },
           {
             path: "reset-password",
-            Component: ResetPassword,
+            element: w(ResetPassword),
           },
         ],
       },
@@ -105,119 +118,119 @@ const Router = createBrowserRouter([
             children: [
               {
                 index: true,
-                Component: DashboardHome,
+                element: w(DashboardHome),
               },
               {
                 path: ":id",
-                Component: RequestDetailUser,
+                element: w(RequestDetailUser),
               },
               {
                 path: "user",
-                Component: DashboardUser,
+                element: w(DashboardUser),
                 children: [
                   {
                     index: true,
-                    Component: UserBio,
+                    element: w(UserBio),
                   },
                 ],
               },
               {
                 path: "settings",
-                Component: Settings,
+                element: w(Settings),
               },
               {
                 path: "request",
-                Component: DashboardRequest,
+                element: w(DashboardRequest),
                 children: [
                   {
                     index: true,
-                    Component: Request,
+                    element: w(Request),
                   },
                   {
                     path: "suratketerangan",
-                    Component: SuratKeterangan,
+                    element: w(SuratKeterangan),
                     children: [
                       {
                         index: true,
-                        Component: ListKeterangan,
+                        element: w(ListKeterangan),
                       },
                       {
                         path: "cuti",
-                        Component: KeteranganCuti,
+                        element: w(KeteranganCuti),
                       },
                       {
                         path: "mahasiswaaktif",
-                        Component: MahasiswaAktif,
+                        element: w(MahasiswaAktif),
                       },
                       {
                         path: "keteranganlulus",
-                        Component: KeteranganLulus,
+                        element: w(KeteranganLulus),
                       },
                       {
                         path: "pengundurandiri",
-                        Component: PengunduranDiri,
+                        element: w(PengunduranDiri),
                       },
                     ],
                   },
                   {
                     path: "suratpengajuan",
-                    Component: SuratPengajuan,
+                    element: w(SuratPengajuan),
                     children: [
                       {
                         index: true,
-                        Component: ListPengajuan,
+                        element: w(ListPengajuan),
                       },
                       {
                         path: "kerjapraktik",
-                        Component: KerjaPraktik,
+                        element: w(KerjaPraktik),
                       },
                       {
                         path: "judulskripsi",
-                        Component: JudulSkripsi,
+                        element: w(JudulSkripsi),
                       },
                       {
                         path: "pengantar-kerja-praktik",
-                        Component: PengantarKerjaPraktik,
+                        element: w(PengantarKerjaPraktik),
                       },
                     ],
                   },
                   {
                     path: "suratpenugasan",
-                    Component: SuratPenjugasan,
+                    element: w(SuratPenjugasan),
                     children: [
                       {
                         index: true,
-                        Component: ListPenugasan,
+                        element: w(ListPenugasan),
                       },
                       {
                         path: "dosenkerjapraktik",
-                        Component: DosenKerjaPraktik,
+                        element: w(DosenKerjaPraktik),
                       },
                       {
                         path: "dosentugasakhir",
-                        Component: DosenSkripsi,
+                        element: w(DosenSkripsi),
                       },
                     ],
                   },
                   {
                     path: "transkripnilai",
-                    Component: TranskripNilai,
+                    element: w(TranskripNilai),
                   },
                   {
                     path: "yudisium",
-                    Component: Yudisium,
+                    element: w(Yudisium),
                   },
                   {
                     path: "pengajuansempro",
-                    Component: SuratSempro,
+                    element: w(SuratSempro),
                   },
                   {
                     path: "seminarkp",
-                    Component: SeminarKp,
+                    element: w(SeminarKp),
                   },
                   {
                     path: "skripsi",
-                    Component: Skripsi,
+                    element: w(Skripsi),
                   },
                 ],
               },
@@ -229,53 +242,57 @@ const Router = createBrowserRouter([
             children: [
               {
                 index: true,
-                Component: MainAdmin,
+                element: w(MainAdmin),
               },
               {
                 path: "user",
-                Component: LayoutUser,
+                element: w(LayoutUser),
                 children: [
                   {
                     index: true,
-                    Component: User,
+                    element: w(User),
                   },
                   {
                     path: ":id",
-                    Component: UserDetail,
+                    element: w(UserDetail),
                   },
                 ],
               },
               {
                 path: "pengajuan",
-                Component: RequestLayout,
+                element: w(RequestLayout),
                 children: [
                   {
                     index: true,
-                    Component: RequestAdmin,
+                    element: w(RequestAdmin),
                   },
                   {
                     path: ":id",
-                    Component: RequestDetail,
+                    element: w(RequestDetail),
                   },
                 ],
               },
               {
                 path: "settings",
-                Component: Settings,
+                element: w(Settings),
               },
               {
                 path: "backup",
-                Component: Backup,
+                element: w(Backup),
               },
               {
                 path: "whatsapp",
-                Component: WhatsAppManager,
+                element: w(WhatsAppManager),
               },
             ],
           },
         ],
       },
     ],
+  },
+  {
+    path: "*",
+    Component: NotFound,
   },
 ]);
 

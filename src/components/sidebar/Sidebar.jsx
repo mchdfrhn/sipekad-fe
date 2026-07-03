@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router";
 import Alert from "../ui/Alert";
 import { useState } from "react";
 import { motion as Motion } from "motion/react";
+import { logout } from "../../utils/api/auth";
 
 const Sidebar = ({ activeSidebar, setActiveSideBar, links }) => {
   const navigate = useNavigate();
@@ -10,18 +11,17 @@ const Sidebar = ({ activeSidebar, setActiveSideBar, links }) => {
 
   const logoutHandler = async () => {
     const token = localStorage.getItem("tokenKey");
-
-    if (token) {
-      navigate("/");
-      localStorage.removeItem("tokenKey");
-      localStorage.removeItem("user");
-    }
+    localStorage.removeItem("tokenKey");
+    localStorage.removeItem("user");
+    navigate("/");
+    // blacklist token di server — fire and forget, jangan block UI
+    if (token) logout(token).catch(() => {});
   };
 
   const { pathname } = useLocation();
   return (
     <>
-      <button
+      <button type="button"
         onClick={() => setActiveSideBar(!activeSidebar)}
         className="block md:hidden fixed right-8 rounded-full shadow-md cursor-pointer bg-white p-2 top-14 z-40"
       >
@@ -113,7 +113,7 @@ const Sidebar = ({ activeSidebar, setActiveSideBar, links }) => {
             onClick={() => setIsDisplay(!isDisplay)}
             className="mt-8 group w-full cursor-pointer relative"
           >
-            <button
+            <button type="button"
               className={`flex items-center gap-3 px-8 py-3 w-full text-sm font-medium text-gray-500 hover:text-gray-800 transition-all duration-200`}
             >
               <div className="text-gray-400 group-hover:text-gray-800">

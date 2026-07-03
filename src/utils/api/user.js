@@ -2,7 +2,6 @@ import axios from "axios";
 import BASE_URL from ".";
 
 const handleApiError = (err) => {
-  console.error("API Error:", err);
   return {
     status: "fail",
     message: err.response?.data?.message || "Terjadi kesalahan pada server",
@@ -31,9 +30,10 @@ const updateProfile = async (
   setShowProfile,
   showProfile,
 ) => {
-  const user = JSON.parse(localStorage.getItem("user"));
-  const token = localStorage.getItem("tokenKey");
+  const user = JSON.parse(localStorage.getItem("user") || "null");
+  if (!user?.id) return { status: "fail", message: "Sesi tidak valid, silakan login ulang" };
   const { id } = user;
+  const token = localStorage.getItem("tokenKey");
   try {
     const response = await axios.put(
       `${BASE_URL}/users/${id}`,

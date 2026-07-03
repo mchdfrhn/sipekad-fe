@@ -4,7 +4,10 @@ import {
   useContext,
   useCallback,
   useMemo,
+  useEffect,
 } from "react";
+import axios from "axios";
+import BASE_URL from "../api";
 
 const UserContext = createContext();
 
@@ -27,6 +30,22 @@ export const UserProvider = ({ children }) => {
     }
     return {};
   });
+
+  // Fetch fresh profile (including NIK) from BE on mount — NIK never stored in localStorage
+  useEffect(() => {
+    const token = localStorage.getItem("tokenKey");
+    if (!token) return;
+    axios
+      .get(`${BASE_URL}/auth/profile`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        if (res.data?.status === "success") {
+          setUserData((prev) => ({ ...prev, ...res.data.data }));
+        }
+      })
+      .catch(() => {/* silently ignore — stale localStorage still works */});
+  }, []);
 
   const updateUserData = useCallback((newUserData) => {
     setUserData(newUserData);
@@ -60,7 +79,7 @@ export const UserProvider = ({ children }) => {
   const stopImpersonating = useCallback(() => {
     const adminSession = localStorage.getItem("adminSession");
     if (adminSession) {
-      const { user, tokenKey, loginTimestamp } = JSON.parse(adminSession);
+      const { user, tokenKey, loginTimestamp } = JSON.parse(adminSession) || {};
 
       // Restore admin context
       setUserData(user);

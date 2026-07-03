@@ -3,11 +3,9 @@ import { Outlet } from 'react-router'
 
 const App = () => {
   return (
-    <>
-      <main className=''>
-        <Outlet />
-      </main>
-    </>
+    <main>
+      <Outlet />
+    </main>
   )
 }
 

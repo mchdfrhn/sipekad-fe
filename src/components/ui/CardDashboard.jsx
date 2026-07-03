@@ -1,3 +1,4 @@
+// ponytail: dead component — not used anywhere, safe to delete in future cleanup
 const CardDashboard = ({ title, value }) => {
   return (
     <div className="card-dashboard shadow-md">

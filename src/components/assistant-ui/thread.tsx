@@ -62,7 +62,7 @@ export const Thread: FC = () => {
               <h2 className="truncate text-sm font-semibold text-[#2B3674]">
                 Asisten Admin SIPEKAD
               </h2>
-              <p className="truncate text-xs text-[#A3AED0]">
+              <p className="truncate text-xs text-[#718096]">
                 Siap bantu cek alur, data ringkas, dan troubleshooting
               </p>
             </div>
@@ -126,7 +126,7 @@ const ThreadWelcome: FC = () => {
           <h1 className="aui-thread-welcome-message-inner fade-in slide-in-from-bottom-1 animate-in fill-mode-both text-2xl font-semibold text-[#2B3674] duration-200">
             Mau cek apa hari ini?
           </h1>
-          <p className="aui-thread-welcome-message-inner fade-in slide-in-from-bottom-1 animate-in fill-mode-both max-w-sm text-sm leading-6 text-[#A3AED0] delay-75 duration-200">
+          <p className="aui-thread-welcome-message-inner fade-in slide-in-from-bottom-1 animate-in fill-mode-both max-w-sm text-sm leading-6 text-[#718096] delay-75 duration-200">
             Saya bisa bantu ringkas pengajuan, arahkan menu admin, dan diagnosis error SIPEKAD.
           </p>
         </div>
@@ -192,7 +192,7 @@ const Composer: FC = () => {
           <ComposerAttachments />
           <ComposerPrimitive.Input
             placeholder="Tanya soal pengajuan, user, backup, atau error..."
-            className="aui-composer-input max-h-32 min-h-10 w-full resize-none bg-transparent px-1.75 py-1 text-sm text-[#2B3674] outline-none placeholder:text-[#A3AED0]"
+            className="aui-composer-input max-h-32 min-h-10 w-full resize-none bg-transparent px-1.75 py-1 text-sm text-[#2B3674] outline-none placeholder:text-[#718096]"
             rows={1}
             autoFocus
             aria-label="Message input"
@@ -254,7 +254,7 @@ const MessageError: FC = () => {
 
 const TypingIndicator: FC = () => {
   return (
-    <div className="fade-in slide-in-from-bottom-1 flex animate-in items-center gap-2 px-2 text-xs text-[#A3AED0] duration-150">
+    <div className="fade-in slide-in-from-bottom-1 flex animate-in items-center gap-2 px-2 text-xs text-[#718096] duration-150">
       <span className="grid size-7 place-items-center rounded-full bg-[#F4F0FF] text-[#4318FF]">
         <GaugeIcon className="size-3.5" />
       </span>
@@ -312,7 +312,7 @@ const AssistantActionBar: FC = () => {
     <ActionBarPrimitive.Root
       hideWhenRunning
       autohide="not-last"
-        className="aui-assistant-action-bar-root col-start-3 row-start-2 -ms-1 flex gap-1 text-[#A3AED0]"
+        className="aui-assistant-action-bar-root col-start-3 row-start-2 -ms-1 flex gap-1 text-[#718096]"
     >
       <ActionBarPrimitive.Copy asChild>
         <TooltipIconButton tooltip="Copy">
@@ -433,7 +433,7 @@ const BranchPicker: FC<BranchPickerPrimitive.Root.Props> = ({
     <BranchPickerPrimitive.Root
       hideWhenSingleBranch
       className={cn(
-        "aui-branch-picker-root -ms-2 me-2 inline-flex items-center text-[#A3AED0] text-xs",
+        "aui-branch-picker-root -ms-2 me-2 inline-flex items-center text-[#718096] text-xs",
         className,
       )}
       {...rest}

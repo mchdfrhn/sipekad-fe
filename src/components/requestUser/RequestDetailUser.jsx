@@ -34,6 +34,7 @@ const RequestDetailUser = () => {
   const [data, setData] = useState(null);
   const [showFrameResponse, setShowFrameResponse] = useState(false);
   const [showFrameRequest, setShowFrameRequest] = useState(false);
+  const [selectedResponseUrl, setSelectedResponseUrl] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [revisionMessage, setRevisionMessage] = useState("");
   const [revisionFile, setRevisionFile] = useState(null);
@@ -45,7 +46,6 @@ const RequestDetailUser = () => {
     try {
       await getRequestDetail(id, setData, setResponse);
     } catch (error) {
-      console.error("Failed to fetch request detail:", error);
     } finally {
       setIsLoading(false);
     }
@@ -63,7 +63,7 @@ const RequestDetailUser = () => {
     link.click();
   };
 
-  const response = responses[0];
+  const response = responses[responses.length - 1]; // latest untuk status badge
 
   const handleSubmitRevision = async (event) => {
     event.preventDefault();
@@ -159,8 +159,8 @@ const RequestDetailUser = () => {
                     <Calendar className="h-3 w-3" /> Tanggal Pengajuan
                   </p>
                   <p className="text-base font-bold text-[#2B3674]">
-                    {data?.updated_at
-                      ? new Date(data.updated_at).toLocaleDateString("id-ID", {
+                    {data?.created_at
+                      ? new Date(data.created_at).toLocaleDateString("id-ID", {
                           day: "numeric",
                           month: "long",
                           year: "numeric",
@@ -297,8 +297,8 @@ const RequestDetailUser = () => {
                   </p>
                 </div>
               ) : (
-                <div className="space-y-6">
-                  <div className="space-y-1">
+                <div className="space-y-4">
+                  <div className="space-y-1 mb-4">
                     <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">
                       Status Terakhir
                     </p>
@@ -307,49 +307,44 @@ const RequestDetailUser = () => {
                     </div>
                   </div>
 
-                  <div className="space-y-1">
-                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">
-                      Pesan Admin
-                    </p>
-                    <p className="text-sm font-bold text-[#2B3674] bg-[#F4F7FE] p-4 rounded-2xl border border-indigo-50">
-                      {response?.message || "-"}
-                    </p>
+                  {/* Timeline semua response */}
+                  <div className="relative pl-4 border-l-2 border-gray-100 space-y-6">
+                    {responses.map((res, idx) => (
+                      <div key={res.id || idx} className="relative">
+                        <div className="absolute -left-[21px] top-1 h-3 w-3 rounded-full bg-[#4318FF] ring-4 ring-white" />
+                        <div className="bg-[#F4F7FE] p-3 rounded-xl border border-indigo-50">
+                          <div className="flex justify-between items-start mb-2">
+                            <span className="text-xs font-bold text-[#4318FF]">
+                              {res.admin_name || "Admin"}
+                            </span>
+                            <span className="text-[10px] text-gray-400">
+                              {new Date(res.updated_at || res.created_at).toLocaleDateString("id-ID", {
+                                day: "numeric",
+                                month: "short",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
+                            </span>
+                          </div>
+                          <p className="text-sm text-[#2B3674] leading-relaxed">
+                            {res.message || "-"}
+                          </p>
+                          {res.url && (
+                            <Button
+                              onClick={() => {
+                                setSelectedResponseUrl(res.url);
+                                setShowFrameResponse(true);
+                              }}
+                              className="w-full mt-2 bg-[#4318FF] hover:bg-[#3311CC] text-white rounded-lg py-2 text-xs font-bold"
+                            >
+                              <Eye className="h-3 w-3 mr-1" />
+                              Lihat Berkas
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    ))}
                   </div>
-
-                  <div className="space-y-1">
-                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">
-                      Admin yang Merespon
-                    </p>
-                    <p className="text-sm font-bold text-[#2B3674]">
-                      {response?.admin_name || "Admin"}
-                    </p>
-                  </div>
-
-                  <div className="space-y-1">
-                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">
-                      Tanggal Tanggapan
-                    </p>
-                    <p className="text-sm font-bold text-[#2B3674]">
-                      {new Date(response?.updated_at).toLocaleDateString(
-                        "id-ID",
-                        {
-                          day: "numeric",
-                          month: "long",
-                          year: "numeric",
-                        },
-                      )}
-                    </p>
-                  </div>
-
-                  {response?.url && (
-                    <Button
-                      onClick={() => setShowFrameResponse(true)}
-                      className="w-full bg-[#4318FF] hover:bg-[#3311CC] text-white rounded-xl py-6 font-bold shadow-lg shadow-indigo-500/20"
-                    >
-                      <Eye className="h-4 w-4 mr-2" />
-                      Lihat Berkas Tanggapan
-                    </Button>
-                  )}
                 </div>
               )}
             </CardContent>
@@ -369,7 +364,7 @@ const RequestDetailUser = () => {
           }}
         >
           <Card
-            className="w-full max-w-4xl max-h-[90vh] overflow-hidden rounded-[30px] border-none shadow-2xl relative"
+            className="w-full max-w-4xl max-h-[90vh] overflow-hidden rounded-[20px] border-none shadow-2xl relative"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="absolute top-4 right-4 z-10">
@@ -387,8 +382,8 @@ const RequestDetailUser = () => {
             </div>
             <div className="p-1 h-full min-h-[500px]">
               <IframeRequest
-                url={showFrameRequest ? data?.url : response?.url}
-                className="w-full h-[600px] border-none rounded-[25px]"
+                url={showFrameRequest ? data?.url : selectedResponseUrl}
+                className="w-full h-[600px] border-none rounded-[20px]"
               />
             </div>
           </Card>

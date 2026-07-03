@@ -33,10 +33,10 @@ const Toast = ({ message, type = "success", onClose, duration = 3000 }) => {
 
   return (
     <Motion.div
-      initial={{ opacity: 0, y: 50, scale: 0.9 }}
+      initial={{ opacity: 0, y: 20, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
-      className={`fixed bottom-8 right-8 z-200 flex items-center gap-3 px-4 py-3 rounded-2xl shadow-2xl border ${style.bg} ${style.border} min-w-[300px] overflow-hidden`}
+      exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
+      className={`pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-2xl shadow-2xl border ${style.bg} ${style.border} min-w-[300px] overflow-hidden`}
     >
       <div className="shrink-0">{style.icon}</div>
       <div className="flex-1">
@@ -48,7 +48,7 @@ const Toast = ({ message, type = "success", onClose, duration = 3000 }) => {
               : String(message)}
         </p>
       </div>
-      <button
+      <button type="button"
         onClick={onClose}
         className="p-1 hover:bg-black/5 rounded-lg transition-colors text-gray-400"
       >

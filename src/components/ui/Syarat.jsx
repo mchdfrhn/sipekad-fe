@@ -30,6 +30,9 @@ const Syarat = ({
           </p>
         </CardHeader>
         <CardContent className="pt-8 space-y-8">
+          {syarat.length === 0 ? (
+            <p className="text-gray-400 text-sm italic">Tidak ada syarat khusus.</p>
+          ) : (
           <ul className="grid gap-4">
             {syarat.map((item, index) => (
               <li key={index} className="flex gap-4 items-start group">
@@ -44,12 +47,14 @@ const Syarat = ({
               </li>
             ))}
           </ul>
+          )}
 
           {children && <div className="pt-4">{children}</div>}
 
           {url && (
             <div className="flex flex-wrap gap-3 pt-4 border-t border-gray-50">
               <Button
+                type="button"
                 onClick={handlerDownload}
                 className="bg-green-500 hover:bg-green-600 text-white rounded-xl px-6 font-bold flex items-center gap-2 shadow-lg shadow-green-500/20"
               >
@@ -58,6 +63,7 @@ const Syarat = ({
               </Button>
 
               <Button
+                type="button"
                 onClick={handlerPreview}
                 variant="outline"
                 className="rounded-xl px-6 font-bold flex items-center gap-2 border-gray-100 text-[#2B3674] hover:bg-gray-50 shadow-sm"
@@ -76,7 +82,7 @@ const Syarat = ({
           animate={{ opacity: 1, scale: 1 }}
           className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm"
         >
-          <Card className="w-full max-w-4xl max-h-[90vh] overflow-hidden rounded-[30px] border-none shadow-2xl relative">
+          <Card className="w-full max-w-4xl max-h-[90vh] overflow-hidden rounded-[20px] border-none shadow-2xl relative">
             <div className="absolute top-4 right-4 z-10">
               <Button
                 variant="ghost"
@@ -93,7 +99,7 @@ const Syarat = ({
                 title="Preview PDF"
                 width="100%"
                 height="600px"
-                className="w-full h-[600px] border-none rounded-[25px]"
+                className="w-full h-[600px] border-none rounded-[20px]"
               ></iframe>
             </div>
           </Card>

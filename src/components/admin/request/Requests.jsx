@@ -8,6 +8,7 @@ import { generatePaginationPages } from "@/utils/helpers";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { LoadingOverlay } from "@/components/ui/Loading";
+import EmptyState from '../../ui/EmptyState';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -79,80 +80,88 @@ const RequestAdmin = () => {
   }, [getRequests]);
 
   return (
-    <Motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="border-0 shadow-lg rounded-[20px] bg-white h-full flex flex-col relative overflow-hidden"
-    >
-      <CardContent className="p-0 pb-6 flex-1 flex flex-col justify-between relative">
-        {loading && <LoadingOverlay />}
-        <TablePengajuan
-          requests={requests}
-          page={page}
-          limit={limit}
-          dontDisplayUsername={false}
-          onStatusFilter={handleStatusChange}
-          onTypeFilter={handleTypeChange}
-          currentStatus={filterStatus}
-          currentType={filterType}
-        />
+    <div className="space-y-4">
+      {/* Page Header */}
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-[#2B3674]">Manajemen Pengajuan</h1>
+        <p className="text-sm text-[#718096] mt-0.5">Kelola seluruh pengajuan surat masuk</p>
+      </div>
 
-        {/* Pagination - Fixed at bottom */}
-        {totalPage > 1 && (
-          <div className="flex justify-center items-center gap-2 mt-auto pt-6 border-t border-gray-50">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => handlePageChange(page - 1)}
-              disabled={page === 1}
-              className="rounded-full hover:bg-gray-100 disabled:opacity-50"
-            >
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
+      <Motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="border-0 shadow-lg rounded-[20px] bg-white h-full flex flex-col relative overflow-hidden"
+      >
+        <CardContent className="p-0 pb-6 flex-1 flex flex-col justify-between relative">
+          {loading && <LoadingOverlay />}
+          <TablePengajuan
+            requests={requests}
+            page={page}
+            limit={limit}
+            dontDisplayUsername={false}
+            onStatusFilter={handleStatusChange}
+            onTypeFilter={handleTypeChange}
+            currentStatus={filterStatus}
+            currentType={filterType}
+          />
 
-            {generatePaginationPages(page, totalPage).map(
-              (pageNumber, index) => {
-                if (pageNumber === "..") {
+          {/* Pagination - Fixed at bottom */}
+          {totalPage > 1 && (
+            <div className="flex justify-center items-center gap-2 mt-auto pt-6 border-t border-gray-50">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => handlePageChange(page - 1)}
+                disabled={page === 1}
+                className="rounded-xl hover:bg-gray-100 disabled:opacity-50"
+              >
+                <ArrowLeft className="h-4 w-4" />
+              </Button>
+
+              {generatePaginationPages(page, totalPage).map(
+                (pageNumber, index) => {
+                  if (pageNumber === "..") {
+                    return (
+                      <span
+                        key={`dots-${index}`}
+                        className="px-2 text-gray-400 font-bold"
+                      >
+                        ..
+                      </span>
+                    );
+                  }
                   return (
-                    <span
-                      key={`dots-${index}`}
-                      className="px-2 text-gray-400 font-bold"
+                    <Button
+                      key={pageNumber}
+                      variant={page === pageNumber ? "default" : "ghost"}
+                      onClick={() => handlePageChange(pageNumber)}
+                      className={`h-8 w-8 rounded-xl p-0 text-xs font-bold ${
+                        page === pageNumber
+                          ? "bg-[#4318FF] text-white hover:bg-[#3311CC]"
+                          : "text-gray-500 hover:bg-gray-100"
+                      }`}
                     >
-                      ..
-                    </span>
+                      {pageNumber}
+                    </Button>
                   );
-                }
-                return (
-                  <Button
-                    key={pageNumber}
-                    variant={page === pageNumber ? "default" : "ghost"}
-                    onClick={() => handlePageChange(pageNumber)}
-                    className={`h-8 w-8 rounded-full p-0 text-xs font-bold ${
-                      page === pageNumber
-                        ? "bg-[#4318FF] text-white hover:bg-[#3311CC]"
-                        : "text-gray-500 hover:bg-gray-100"
-                    }`}
-                  >
-                    {pageNumber}
-                  </Button>
-                );
-              },
-            )}
+                },
+              )}
 
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => handlePageChange(page + 1)}
-              disabled={page === totalPage}
-              className="rounded-full hover:bg-gray-100 disabled:opacity-50"
-            >
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-          </div>
-        )}
-      </CardContent>
-    </Motion.div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => handlePageChange(page + 1)}
+                disabled={page === totalPage}
+                className="rounded-xl hover:bg-gray-100 disabled:opacity-50"
+              >
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
+        </CardContent>
+      </Motion.div>
+    </div>
   );
 };
 
@@ -210,8 +219,6 @@ export const TablePengajuan = ({
     { label: "Verifikasi", value: "reviewing" },
     { label: "Pengerjaan", value: "processing" },
     { label: "Butuh Revisi", value: "revision_required" },
-    { label: "Ditolak saja", value: "rejected" },
-    { label: "Selesai saja", value: "completed" },
   ];
 
   return (
@@ -290,15 +297,12 @@ export const TablePengajuan = ({
         <tbody className="divide-y divide-gray-50">
           {requests.length === 0 ? (
             <tr>
-              <td colSpan={dataKey.length} className="px-6 py-20 text-center">
-                <div className="flex flex-col items-center gap-3">
-                  <div className="bg-gray-50 p-4 rounded-full">
-                    <Send className="h-10 w-10 text-gray-300" />
-                  </div>
-                  <p className="text-gray-400 font-bold">
-                    Tidak ada data pengajuan yang ditemukan
-                  </p>
-                </div>
+              <td colSpan={dataKey.length}>
+                <EmptyState
+                  variant="search"
+                  title="Tidak ada pengajuan"
+                  description="Tidak ada pengajuan yang cocok dengan filter saat ini."
+                />
               </td>
             </tr>
           ) : (
@@ -309,7 +313,7 @@ export const TablePengajuan = ({
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.05, duration: 0.3 }}
-                  className={`group transition-colors border-b border-gray-50 last:border-0 hover:bg-blue-50/50 ${
+                  className={`group hover:bg-indigo-50/30 transition-colors border-b border-gray-50 last:border-0 ${
                     index % 2 === 0 ? "bg-white" : "bg-gray-50/50"
                   }`}
                 >
@@ -327,7 +331,7 @@ export const TablePengajuan = ({
                             src={value.url_photo}
                             className="object-cover"
                           />
-                          <AvatarFallback className="bg-blue-100 text-[#4318FF] font-bold text-xs">
+                          <AvatarFallback className="bg-gradient-to-br from-[#4318FF] to-[#7C5FFF] text-white font-bold text-xs">
                             {value.full_name?.charAt(0) || "U"}
                           </AvatarFallback>
                         </Avatar>
@@ -358,7 +362,7 @@ export const TablePengajuan = ({
 
                   <td className="hidden lg:table-cell px-6 py-2.5">
                     <span className="text-xs md:text-sm font-bold text-[#2B3674]">
-                      {new Date(value.updated_at).toLocaleDateString("id-ID", {
+                      {new Date(value.created_at).toLocaleDateString("id-ID", {
                         day: "numeric",
                         month: "short",
                         year: "numeric",
@@ -417,20 +421,20 @@ export const TablePengajuan = ({
 };
 
 const statusBadgeStyles = {
-  submitted: "bg-blue-50 text-blue-600",
-  pending: "bg-blue-50 text-blue-600",
-  reviewing: "bg-purple-50 text-purple-600",
-  processing: "bg-teal-50 text-teal-600",
-  revision_required: "bg-orange-50 text-orange-600",
-  rejected: "bg-red-50 text-red-600",
-  canceled: "bg-red-50 text-red-600",
-  completed: "bg-green-50 text-green-600",
+  submitted: "bg-blue-50 text-blue-600 border-blue-200",
+  pending: "bg-blue-50 text-blue-600 border-blue-200",
+  reviewing: "bg-purple-50 text-purple-600 border-purple-200",
+  processing: "bg-teal-50 text-teal-600 border-teal-200",
+  revision_required: "bg-orange-50 text-orange-600 border-orange-200",
+  rejected: "bg-red-50 text-red-600 border-red-200",
+  canceled: "bg-red-50 text-red-600 border-red-200",
+  completed: "bg-green-50 text-green-600 border-green-200",
 };
 
 const StatusBadgeAdmin = ({ status }) => (
   <span
-    className={`inline-flex items-center px-3 py-1 rounded-lg text-[10px] md:text-[11px] font-bold
-      ${statusBadgeStyles[status] || "bg-gray-50 text-gray-600"}`}
+    className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold border
+      ${statusBadgeStyles[status] || "bg-gray-50 text-gray-600 border-gray-200"}`}
   >
     {STATUS_LABEL_ADMIN[status] || status}
   </span>

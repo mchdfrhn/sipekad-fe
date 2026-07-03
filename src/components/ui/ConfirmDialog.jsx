@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "motion/react";
 import { AlertCircle, X } from "lucide-react";
 import { Button } from "./button";
+import { useEffect, useRef } from "react";
 
 const ConfirmDialog = ({
   isOpen,
@@ -9,9 +10,36 @@ const ConfirmDialog = ({
   title = "Are you sure?",
   description = "This action cannot be undone.",
   confirmText = "Confirm",
-  cancelText = "Cancel",
+  cancelText = "Batal",
   variant = "danger",
 }) => {
+  const dialogRef = useRef(null);
+
+  useEffect(() => {
+    const handleKey = (e) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, [isOpen, onClose]);
+
+  useEffect(() => {
+    if (!isOpen || !dialogRef.current) return;
+    const focusable = () =>
+      Array.from(dialogRef.current.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      )).filter((el) => !el.disabled);
+    const t = setTimeout(() => { focusable()[0]?.focus(); }, 0);
+    const trapTab = (e) => {
+      if (e.key !== "Tab") return;
+      const els = focusable();
+      const first = els[0], last = els[els.length - 1];
+      if (e.shiftKey) { if (document.activeElement === first) { e.preventDefault(); last?.focus(); } }
+      else            { if (document.activeElement === last)  { e.preventDefault(); first?.focus(); } }
+    };
+    dialogRef.current.addEventListener("keydown", trapTab);
+    const ref = dialogRef.current;
+    return () => { clearTimeout(t); ref.removeEventListener("keydown", trapTab); };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const variants = {
@@ -42,7 +70,7 @@ const ConfirmDialog = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-[#111C44]/40 backdrop-blur-xs"
+          className="fixed inset-0 bg-black/40 backdrop-blur-xs"
           onClick={onClose}
         />
 
@@ -51,11 +79,15 @@ const ConfirmDialog = ({
           initial={{ scale: 0.95, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.95, opacity: 0, y: 20 }}
-          className="relative w-full max-w-[400px] bg-white rounded-[30px] shadow-2xl overflow-hidden border border-gray-100"
+          className="relative w-full max-w-[400px] bg-white rounded-[20px] shadow-2xl overflow-hidden border border-gray-100"
+          ref={dialogRef}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="confirm-dialog-title"
         >
           {/* Header */}
           <div className="flex justify-end p-4 pb-0">
-            <button
+            <button type="button"
               onClick={onClose}
               className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-400 hover:text-gray-600"
             >
@@ -65,11 +97,11 @@ const ConfirmDialog = ({
 
           <div className="px-8 pb-8 flex flex-col items-center text-center">
             {/* Icon Circle */}
-            <div className={`p-4 rounded-3xl mb-6 ${currentVariant.bg}`}>
+            <div className={`p-4 rounded-[20px] mb-6 ${currentVariant.bg}`}>
               {currentVariant.icon}
             </div>
 
-            <h3 className="text-xl font-extrabold text-[#2B3674] mb-2 px-2">
+            <h3 id="confirm-dialog-title" className="text-xl font-extrabold text-[#2B3674] mb-2 px-2">
               {title}
             </h3>
             <p className="text-sm font-medium text-gray-500 leading-relaxed px-4">
