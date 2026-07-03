@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { getSummeryData } from "../../utils/api/dashboardValue";
 import DistribusiPengajuan from "../chart/DistribusiPengajuan";
-import StraightAnglePieChart from "../chart/PieChart";
+import StatusBarChart from "../chart/PieChart";
 import SimpleBarChart from "../chart/BarChart";
 import StatsCard from "./StatsCard";
 import RightPanel from "./RightPanel"; // Import RightPanel
@@ -46,7 +46,7 @@ const MainAdmin = () => {
   };
 
   const getData = (index) =>
-    summery[index] || { label: "Loading...", value: 0 };
+    summery[index] || { label: "Memuat...", value: 0 };
 
   return (
     <div className="space-y-6">
@@ -74,9 +74,10 @@ const MainAdmin = () => {
         {/* Left Column (Charts) - Spans 2 columns on LG */}
         <div className="lg:col-span-2 space-y-6">
           {/* Total Distribution - Area Chart */}
-          <Card className="rounded-[20px]">
-            <CardHeader>
-              <CardTitle>Distribusi Pengajuan</CardTitle>
+          <Card className="rounded-[20px] border-gray-100/80 shadow-[0_4px_24px_rgba(67,24,255,0.06)]">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base font-bold text-[#2B3674]">Distribusi Pengajuan</CardTitle>
+              <p className="text-xs text-[#718096] mt-0.5">30 hari terakhir</p>
             </CardHeader>
             <CardContent className="px-4 pb-4">
               <div className="h-[300px] w-full min-h-[300px]">
@@ -88,9 +89,10 @@ const MainAdmin = () => {
           {/* Weekly Stats & Status - Grid inside Grid */}
           <div className="grid gap-6 md:grid-cols-2">
             {/* Weekly Bar Chart */}
-            <Card className="rounded-[20px]">
-              <CardHeader>
-                <CardTitle>Grafik Mingguan</CardTitle>
+            <Card className="rounded-[20px] border-gray-100/80 shadow-[0_4px_24px_rgba(67,24,255,0.06)]">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-base font-bold text-[#2B3674]">Grafik Mingguan</CardTitle>
+                <p className="text-xs text-[#718096] mt-0.5">7 hari terakhir</p>
               </CardHeader>
               <CardContent className="px-4 pb-4">
                 <div className="h-[250px] w-full min-h-[250px]">
@@ -100,13 +102,14 @@ const MainAdmin = () => {
             </Card>
 
             {/* Status Donut Chart */}
-            <Card className="rounded-[20px]">
-              <CardHeader>
-                <CardTitle>Statistik Status</CardTitle>
+            <Card className="rounded-[20px] border-gray-100/80 shadow-[0_4px_24px_rgba(67,24,255,0.06)]">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-base font-bold text-[#2B3674]">Statistik Status</CardTitle>
+                <p className="text-xs text-[#718096] mt-0.5">Distribusi saat ini</p>
               </CardHeader>
               <CardContent className="px-4 pb-4">
                 <div className="h-[250px] w-full min-h-[250px] flex items-center justify-center">
-                  <StraightAnglePieChart />
+                  <StatusBarChart />
                 </div>
               </CardContent>
             </Card>

@@ -19,7 +19,10 @@ export const addResponse = async (reqId, message, _isComplete, token) => {
     const result = response.data;
     return result;
   } catch (err) {
-    console.error(err);
+    return {
+      status: "fail",
+      message: err.response?.data?.message || "Gagal mengirim respons",
+    };
   }
 };
 
@@ -38,7 +41,7 @@ export const getResponseById = async (reqId, token, setResponses) => {
   } catch (err) {
     return {
       status: "error",
-      error: err.response.data
-    }
+      error: err.response?.data,
+    };
   }
 };

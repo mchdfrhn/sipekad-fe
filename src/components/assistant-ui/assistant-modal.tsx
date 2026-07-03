@@ -40,7 +40,7 @@ const AssistantModalButton = forwardRef<
       tooltip={tooltip}
       side="left"
       {...rest}
-      className="aui-modal-button size-full rounded-full bg-[#4318FF] text-white shadow-[0_8px_24px_rgba(67,24,255,0.34)] transition-all hover:scale-105 hover:bg-[#3311CC] active:scale-95"
+      className="aui-modal-button size-full rounded-full bg-[#4318FF] text-white shadow-[var(--shadow-brand-md)] transition-all hover:scale-105 hover:bg-[#3311CC] active:scale-95"
       ref={ref}
     >
       <BotIcon

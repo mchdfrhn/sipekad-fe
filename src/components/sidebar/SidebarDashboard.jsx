@@ -1,147 +1,125 @@
-import { LayoutDashboard, User, Send, Info } from "lucide-react";
+import { LayoutDashboard, Send, Info } from "lucide-react";
 import { Link, useLocation } from "react-router";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import { motion as Motion } from "motion/react";
 
+const links = [
+  { path: "/dashboard", name: "Dashboard", icon: LayoutDashboard, exact: true },
+  { path: "/dashboard/request", name: "Buat Permintaan", icon: Send },
+];
+
+const WA_TEXT = encodeURIComponent("Saya mau melaporkan ada bug pada aplikasi SIPEKAD, berikut list bug nya...");
+
 const SidebarDashboard = ({ className, onClose }) => {
   const { pathname } = useLocation();
-
-  const links = [
-    {
-      path: "/dashboard",
-      name: "Dashboard",
-      icon: LayoutDashboard,
-      exact: true,
-    },
-    {
-      path: "/dashboard/request",
-      name: "Buat Permintaan",
-      icon: Send,
-    },
-  ];
 
   return (
     <div
       className={cn(
-        "flex flex-col h-full bg-white transition-all duration-300 py-6",
+        "flex flex-col h-screen bg-white border-r transition-all duration-300 font-jakarta",
         className,
       )}
+      style={{ borderRight: "1px solid rgba(67,24,255,0.06)" }}
     >
-      {/* Logo Section */}
+      {/* Logo */}
       <Motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-        className="flex flex-col items-center justify-center gap-2 px-8 pb-8"
+        initial={{ opacity: 0, y: -12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="mx-4 mt-4 rounded-2xl px-4 py-5 flex items-center gap-3 bg-gradient-to-r from-indigo-50/50 to-purple-50/30"
       >
         <img
           src="/sttimage.png"
-          alt="stt-logo"
-          className="w-16 h-16 object-contain"
+          alt="sipekad-logo"
+          className="w-12 h-12 rounded-2xl shadow-md object-contain flex-shrink-0"
         />
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-[#2B3674] tracking-tight">
+        <div>
+          <h1
+            className="text-2xl font-black leading-tight"
+            style={{
+              background: "linear-gradient(135deg, #4318FF, #7C5FFF)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}
+          >
             SIPEKAD
           </h1>
-          <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mt-1">
+          <p className="text-[10px] tracking-widest text-[#718096] uppercase mt-0.5">
             Sistem Pengajuan Akademik
           </p>
         </div>
       </Motion.div>
 
-      <Separator className="mb-6 opacity-50" />
+      <Separator className="mx-4 my-3" style={{ borderColor: "rgba(67,24,255,0.10)" }} />
 
-      {/* Main Menu */}
-      <div className="flex-1 px-4">
-        <Motion.div
-          initial="hidden"
-          animate="visible"
-          variants={{
-            hidden: { opacity: 0 },
-            visible: {
-              opacity: 1,
-              transition: {
-                staggerChildren: 0.1,
-              },
-            },
-          }}
-          className="space-y-2"
-        >
-          {links.map((link) => {
-            const isActive = link.exact
-              ? pathname === link.path
-              : pathname.startsWith(link.path);
+      {/* Nav */}
+      <nav className="flex-1 px-3 py-2 space-y-1 overflow-y-auto">
+        {links.map((link) => {
+          const isActive = link.exact
+            ? pathname === link.path
+            : pathname.startsWith(link.path);
+          const Icon = link.icon;
 
-            return (
-              <Motion.div
-                key={link.path}
-                variants={{
-                  hidden: { opacity: 0, x: -20 },
-                  visible: { opacity: 1, x: 0 },
-                }}
-                className="relative"
-              >
-                {isActive && (
-                  <Motion.div
-                    layoutId="activeIndicator"
-                    className="absolute right-[-16px] top-1/2 -translate-y-1/2 h-6 w-1 rounded-l-lg bg-[#4318FF] shadow-[0_0_8px_rgba(67,24,255,0.3)] transition-all duration-300"
-                  />
-                )}
+          return (
+            <Motion.div
+              key={link.path}
+              className="relative"
+              whileHover={{ x: 4 }}
+              whileTap={{ scale: 0.97 }}
+            >
+              {isActive && (
                 <Motion.div
-                  whileHover={{ x: 5 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <Link
-                    to={link.path}
-                    className={cn(
-                      "group flex items-center gap-4 px-5 py-3 rounded-2xl font-semibold transition-all duration-300",
-                      isActive
-                        ? "bg-indigo-100/50 text-[#4318FF] font-extrabold shadow-sm"
-                        : "text-[#A3AED0] hover:text-[#4318FF] hover:bg-gray-100/50",
-                    )}
-                    onClick={onClose}
-                  >
-                  <link.icon
-                    size={22}
-                    className={cn(
-                      "transition-all duration-300",
-                      isActive
-                        ? "text-[#4318FF] drop-shadow-[0_0_8px_rgba(67,24,255,0.2)]"
-                        : "text-[#A3AED0] group-hover:text-[#4318FF]",
-                    )}
-                    fill={isActive ? "currentColor" : "none"}
-                  />
-                  <span
-                    className={cn(
-                      "text-sm tracking-wide transition-colors",
-                      isActive ? "text-[#2B3674]" : "text-[#A3AED0]",
-                    )}
-                  >
-                    {link.name}
-                  </span>
-                </Link>
-                </Motion.div>
-              </Motion.div>
-            );
-          })}
-        </Motion.div>
-      </div>
+                  layoutId="sidebar-active"
+                  className="absolute inset-0 rounded-xl"
+                  style={{
+                    background:
+                      "linear-gradient(135deg, rgba(67,24,255,0.08), rgba(124,95,255,0.05))",
+                    borderLeft: "3px solid #4318FF",
+                    borderRadius: "0 12px 12px 0",
+                  }}
+                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                />
+              )}
+              <Link
+                to={link.path}
+                onClick={onClose}
+                className={cn(
+                  "relative flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-colors duration-200",
+                  isActive
+                    ? "text-[#4318FF] font-bold"
+                    : "text-[#718096] hover:text-[#4318FF] hover:bg-[#F8F9FF]",
+                )}
+              >
+                <Icon
+                  size={20}
+                  fill={isActive ? "currentColor" : "none"}
+                  className="flex-shrink-0 transition-colors duration-200"
+                />
+                <span className="tracking-wide">{link.name}</span>
+              </Link>
+            </Motion.div>
+          );
+        })}
+      </nav>
 
-      {/* Footer / Support */}
-      <div className="px-4 mt-auto pt-6">
-        <Separator className="mb-6 opacity-50" />
+      {/* Bottom */}
+      <div className="px-3 pb-4 mt-auto space-y-3">
+        <Separator style={{ borderColor: "rgba(67,24,255,0.10)" }} />
+
+        {/* Laporkan Bug */}
         <a
-          href={`https://wa.me/${import.meta.env.VITE_WHATSAPP_NUMBER}?text=${encodeURIComponent("Saya mau melaporkan ada bug pada aplikasi SIPEKAD, berikut list bug nya...")}`}
+          href={`https://wa.me/${import.meta.env.VITE_WHATSAPP_NUMBER}?text=${WA_TEXT}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="group flex items-center gap-4 px-5 py-2 rounded-2xl font-bold bg-red-50 text-red-500 hover:bg-red-100 transition-all duration-300 shadow-sm border border-red-100/50"
           onClick={onClose}
+          className="group flex items-center gap-3 px-4 py-3 rounded-xl font-bold bg-green-50 text-green-600 hover:bg-green-100 transition-colors duration-200 border border-green-100"
         >
-          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-white shadow-sm group-hover:scale-110 transition-transform">
-            <Info size={18} />
+          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-white shadow-sm group-hover:scale-110 transition-transform flex-shrink-0">
+            <Info size={16} className="text-green-600" />
           </div>
-          <span className="text-sm tracking-wide">Report Bug</span>
+          <span className="text-sm tracking-wide">Laporkan Bug</span>
         </a>
       </div>
     </div>

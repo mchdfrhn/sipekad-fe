@@ -36,7 +36,7 @@ const CodeHeader: FC<CodeHeaderProps> = ({ language, code }) => {
 
   return (
     <div className="aui-code-header-root mt-2.5 flex items-center justify-between rounded-t-lg border border-[#A3AED0]/30 border-b-0 bg-[#F4F7FE] px-3 py-1.5 text-xs">
-      <span className="aui-code-header-language font-medium text-[#A3AED0] lowercase">
+      <span className="aui-code-header-language font-medium text-[#718096] lowercase">
         {language}
       </span>
       <TooltipIconButton tooltip="Copy" onClick={onCopy}>
@@ -142,7 +142,7 @@ const defaultComponents = memoizeMarkdownComponents({
   blockquote: ({ className, ...props }) => (
     <blockquote
       className={cn(
-        "aui-md-blockquote my-2.5 border-[#A3AED0]/50 border-s-2 ps-3 text-[#A3AED0] italic",
+        "aui-md-blockquote my-2.5 border-[#A3AED0]/50 border-s-2 ps-3 text-[#718096] italic",
         className,
       )}
       {...props}
@@ -151,7 +151,7 @@ const defaultComponents = memoizeMarkdownComponents({
   ul: ({ className, ...props }) => (
     <ul
       className={cn(
-        "aui-md-ul my-2 ms-4 list-disc marker:text-[#A3AED0] [&>li]:mt-1",
+        "aui-md-ul my-2 ms-4 list-disc marker:text-[#718096] [&>li]:mt-1",
         className,
       )}
       {...props}
@@ -160,7 +160,7 @@ const defaultComponents = memoizeMarkdownComponents({
   ol: ({ className, ...props }) => (
     <ol
       className={cn(
-        "aui-md-ol my-2 ms-4 list-decimal marker:text-[#A3AED0] [&>li]:mt-1",
+        "aui-md-ol my-2 ms-4 list-decimal marker:text-[#718096] [&>li]:mt-1",
         className,
       )}
       {...props}

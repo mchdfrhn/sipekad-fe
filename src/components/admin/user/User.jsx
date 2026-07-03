@@ -16,6 +16,7 @@ import AddUserForm from "./AddUserForm";
 import { deleteUserForAdmin, resetPasswordAction } from "../../../utils/action";
 import ConfirmDialog from "../../ui/ConfirmDialog";
 import { LoadingOverlay, TableSkeleton } from "@/components/ui/Loading";
+import EmptyState from '../../ui/EmptyState';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -189,9 +190,9 @@ const User = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setShowForm(!showForm)}
-            className="flex items-center gap-2 bg-[#4318FF] hover:bg-[#3311CC] text-white rounded-full px-5 py-2.5 text-sm font-bold shadow-[0_4px_14px_0_rgba(67,24,255,0.39)] hover:shadow-[0_6px_20px_rgba(67,24,255,0.23)] transition-all duration-300 whitespace-nowrap"
+            className="flex items-center gap-2 bg-[#4318FF] hover:bg-[#3311CC] text-white rounded-full px-5 py-2.5 text-sm font-bold shadow-[var(--shadow-brand-sm)] hover:shadow-[var(--shadow-brand-md)] transition-all duration-300 whitespace-nowrap"
           >
-            <Plus className="h-4 w-4" /> Add User
+            <Plus className="h-4 w-4" /> Tambah User
           </Motion.button>,
           document.getElementById("header-actions"),
         )}
@@ -268,11 +269,12 @@ const User = () => {
                 <tbody>
                   {users.length === 0 ? (
                     <tr>
-                      <td
-                        colSpan={headers.length}
-                        className="px-6 py-8 text-center text-gray-500 text-sm"
-                      >
-                        Tidak ada data user.
+                      <td colSpan={headers.length}>
+                        <EmptyState
+                          variant="data"
+                          title="Belum ada pengguna"
+                          description="Tambah pengguna baru untuk mulai mengelola akun mahasiswa."
+                        />
                       </td>
                     </tr>
                   ) : (
@@ -349,6 +351,7 @@ const User = () => {
                                 size="icon"
                                 onClick={() => handleDeleteClick(value.id)}
                                 className="h-7 w-7 md:h-8 md:w-8 text-red-500 bg-red-50 hover:bg-red-100 hover:text-red-700 rounded-lg"
+                                title="Hapus User"
                               >
                                 <Trash className="h-4 w-4" />
                               </Button>

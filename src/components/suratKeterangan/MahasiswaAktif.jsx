@@ -4,6 +4,7 @@ import { useState } from "react";
 import { requestPengajuan } from "../../utils/action";
 import { useToast } from "@/utils/hooks/useToast";
 import { useNavigate } from "react-router";
+import ConfirmDialog from "../../components/ui/ConfirmDialog";
 
 const MahasiswaAktif = () => {
   const navigate = useNavigate();
@@ -11,9 +12,9 @@ const MahasiswaAktif = () => {
   const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
-  const submitHandler = async (e) => {
-    e.preventDefault();
+  const doSubmit = async () => {
     setIsLoading(true);
     const result = await requestPengajuan(
       "Mahasiswa Aktif",
@@ -39,6 +40,11 @@ const MahasiswaAktif = () => {
     }
   };
 
+  const submitHandler = (e) => {
+    e.preventDefault();
+    setShowConfirm(true);
+  };
+
   const { syarat, title, url, fileName } = pengajuanMahasiswaAktif;
   return (
     <>
@@ -53,6 +59,16 @@ const MahasiswaAktif = () => {
         setFile={setFile}
         file={file}
         isLoading={isLoading}
+      />
+      <ConfirmDialog
+        isOpen={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        onConfirm={doSubmit}
+        variant="primary"
+        title="Konfirmasi Pengajuan"
+        description="Apakah Anda yakin ingin mengirimkan pengajuan ini?"
+        confirmText="Ya, Kirim"
+        cancelText="Batalkan"
       />
     </>
   );

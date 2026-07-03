@@ -25,13 +25,13 @@ const Alert = ({ setDisplay, onYesHundler, isDisplay }) => {
             </p>
           </div>
           <div className="flex justify-center gap-4">
-            <button
+            <button type="button"
               onClick={onYesHundler}
               className="border w-20 md:w-40 rounded-md py-1 cursor-pointer bg-blue-500 text-white border-transparent hover:bg-transparent hover:text-blue-500 hover:border-blue-500 transition-color duration-300 ease-in-out"
             >
               Ya
             </button>
-            <button
+            <button type="button"
               onClick={() => setDisplay(!isDisplay)}
               className="border w-20 md:w-40 rounded-md py-1 cursor-pointer bg-red-500 text-white border-transparent hover:bg-transparent hover:text-red-500 hover:border-red-500 transition-color duration-300 ease-in-out"
             >

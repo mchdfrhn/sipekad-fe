@@ -49,6 +49,7 @@ import { motion as Motion, AnimatePresence } from "motion/react";
 import { useState, useEffect, useRef } from "react";
 import Alert from "../ui/Alert";
 import { AdminChatAssistant } from "../assistant-ui/AdminChatAssistant";
+import { logout } from "../../utils/api/auth";
 
 const LayoutAdmin = () => {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
@@ -146,16 +147,18 @@ const LayoutAdmin = () => {
           prev.map((n) => (n.id === notif.id ? { ...n, is_read: true } : n)),
         );
       } catch (err) {
-        console.error("Failed to mark notification as read", err);
+        // silent — UI still navigates
       }
     }
     navigate(`/admin/pengajuan/${notif.id}`);
   };
 
   const logoutHandler = async () => {
-    navigate("/");
+    const token = localStorage.getItem("tokenKey");
     localStorage.removeItem("tokenKey");
     localStorage.removeItem("user");
+    navigate("/");
+    if (token) logout(token).catch(() => {});
   };
 
   const getInitials = (name) => {
@@ -259,7 +262,7 @@ const LayoutAdmin = () => {
                   className="pl-8 bg-transparent border-none outline-none text-sm text-[#2B3674] placeholder-gray-400 w-40 focus:w-60 transition-all font-medium"
                 />
                 {searchValue && (
-                  <button
+                  <button type="button"
                     onClick={clearSearch}
                     className="absolute right-3 top-1/2 -translate-y-1/2 p-0.5 hover:bg-gray-200 rounded-full transition-colors"
                   >

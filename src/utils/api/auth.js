@@ -11,7 +11,7 @@ const login = async ({ username, password }) => {
   } catch (err) {
     return {
       status: "error",
-      message: err.response.data.message,
+      message: err.response?.data?.message || "Gagal login",
     };
   }
 };
@@ -29,7 +29,7 @@ const logout = async (token) => {
   } catch (err) {
     return {
       status: "error",
-      message: err.response.data,
+      message: err.response?.data?.message || "Gagal logout",
     };
   }
 };

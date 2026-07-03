@@ -44,11 +44,9 @@ const CustomTooltip = ({ active, payload, label }) => {
   return null;
 };
 
-// Global flag to track if the application has settled since the last hard refresh/load
-let isAppLoaded = false;
-
 const DistribusiPengajuan = ({ days = 7 }) => {
-  const isPreviouslyStabilized = !!sessionStorage.getItem("dashboard_stabilized");
+  // ponytail: isAppLoaded moved from module scope → ref per instance
+  const isAppLoadedRef = useRef(!!sessionStorage.getItem("dashboard_stabilized"));
   const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
   const cacheKey = `cache_distribusi_pengajuan_${currentUser.id || "guest"}_${days}`;
 
@@ -112,12 +110,12 @@ const DistribusiPengajuan = ({ days = 7 }) => {
         if (entry.contentRect.width > 50 && entry.contentRect.height > 50) {
           // Always update width immediately for responsiveness
           clearTimeout(resizeTimer);
-          const targetDelay = isAppLoaded ? 200 : 800;
+          const targetDelay = isAppLoadedRef.current ? 200 : 800;
           
           resizeTimer = setTimeout(() => {
             setChartWidth(entry.contentRect.width);
             setHasMounted(true);
-            isAppLoaded = true; // Mark as settled for subsequent internal navigations
+            isAppLoadedRef.current = true;
             sessionStorage.setItem("dashboard_stabilized", "true");
           }, targetDelay); 
         }
@@ -205,7 +203,7 @@ const DistribusiPengajuan = ({ days = 7 }) => {
               fill="url(#colorUv)"
               isAnimationActive={true}
               animationDuration={1500}
-              animationBegin={isPreviouslyStabilized ? 50 : 800}
+              animationBegin={isAppLoadedRef.current ? 50 : 800}
               animationEasing="ease-in-out"
             />
           </AreaChart>

@@ -4,13 +4,16 @@ import { RouterProvider } from "react-router/dom";
 import Router from "./router/Route.jsx";
 import { UserProvider } from "./utils/hooks/userContext.jsx";
 import { ToastProvider } from "./utils/hooks/useToast";
+import ErrorBoundary from "./components/ui/ErrorBoundary.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <UserProvider>
-      <ToastProvider>
-        <RouterProvider router={Router} />
-      </ToastProvider>
-    </UserProvider>
+    <ErrorBoundary>
+      <UserProvider>
+        <ToastProvider>
+          <RouterProvider router={Router} />
+        </ToastProvider>
+      </UserProvider>
+    </ErrorBoundary>
   </StrictMode>,
 );

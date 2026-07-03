@@ -4,6 +4,7 @@ import { useState } from "react";
 import { requestPengajuan } from "../../utils/action";
 import { useToast } from "@/utils/hooks/useToast";
 import { useNavigate } from "react-router";
+import ConfirmDialog from "../../components/ui/ConfirmDialog";
 
 const KeteranganCuti = () => {
   const navigate = useNavigate();
@@ -11,10 +12,10 @@ const KeteranganCuti = () => {
   const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const { url, syarat, title, fileName } = pengajuanCuti;
 
-  const submitHandler = async (e) => {
-    e.preventDefault();
+  const doSubmit = async () => {
     setIsLoading(true);
     const result = await requestPengajuan(
       "Keterangan Cuti",
@@ -40,6 +41,11 @@ const KeteranganCuti = () => {
     }
   };
 
+  const submitHandler = (e) => {
+    e.preventDefault();
+    setShowConfirm(true);
+  };
+
   return (
     <>
       <Pengajuan
@@ -53,6 +59,16 @@ const KeteranganCuti = () => {
         setFile={setFile}
         file={file}
         isLoading={isLoading}
+      />
+      <ConfirmDialog
+        isOpen={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        onConfirm={doSubmit}
+        variant="primary"
+        title="Konfirmasi Pengajuan"
+        description="Apakah Anda yakin ingin mengirimkan pengajuan ini?"
+        confirmText="Ya, Kirim"
+        cancelText="Batalkan"
       />
     </>
   );

@@ -12,7 +12,7 @@ const prodiOptions = Object.values(STUDENT_PRODI).map((val) => ({
   value: val,
 }));
 
-const UpdateUserForm = ({ userDetail, shwoForm, setShowForm }) => {
+const UpdateUserForm = ({ userDetail, showForm, setShowForm }) => {
   const { showToast } = useToast();
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
@@ -24,6 +24,7 @@ const UpdateUserForm = ({ userDetail, shwoForm, setShowForm }) => {
   const [id, setId] = useState("");
   const [nik, setNik] = useState("");
   const [prodi, setProdi] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const onCHangeHandler = (e, setData) => {
     setData(e.target.value);
@@ -44,6 +45,7 @@ const UpdateUserForm = ({ userDetail, shwoForm, setShowForm }) => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     const newData = {
       username,
       nim,
@@ -65,32 +67,33 @@ const UpdateUserForm = ({ userDetail, shwoForm, setShowForm }) => {
     } else if (result && result.status === "fail") {
       showToast(errMessage || "Gagal memperbarui user", "error");
     }
+    setIsLoading(false);
   };
 
   return (
     <AnimatePresence>
-      {shwoForm && (
+      {showForm && (
         <>
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setShowForm(!shwoForm)}
-            className="fixed inset-0 w-screen h-screen bg-[#111c44]/30 backdrop-blur-[2px] z-99"
+            onClick={() => setShowForm(!showForm)}
+            className="fixed inset-0 w-screen h-screen bg-black/40 backdrop-blur-[2px] z-99"
           ></motion.div>
           <motion.div
             initial={{ opacity: 0, scale: 0.9, x: "-50%", y: "-48%" }}
             animate={{ opacity: 1, scale: 1, x: "-50%", y: "-50%" }}
             exit={{ opacity: 0, scale: 0.9, x: "-50%", y: "-48%" }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="flex flex-col gap-4 bg-white shadow-2xl p-8 h-[90vh] md:h-auto max-h-[90vh] overflow-y-auto rounded-[30px] fixed top-1/2 left-1/2 z-[100] w-[90%] max-w-[500px] border border-gray-100"
+            className="flex flex-col gap-4 bg-white shadow-2xl p-8 h-[90vh] md:h-auto max-h-[90vh] overflow-y-auto rounded-[20px] fixed top-1/2 left-1/2 z-[100] w-[90%] max-w-[500px] border border-gray-100"
           >
             <div className="flex justify-between items-center mb-2">
               <h2 className="text-xl font-extrabold text-[#2B3674] tracking-tight">
                 Perbarui Informasi Pengguna
               </h2>
-              <button
-                onClick={() => setShowForm(!shwoForm)}
+              <button type="button"
+                onClick={() => setShowForm(!showForm)}
                 className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-400 hover:text-red-500"
               >
                 <X className="h-5 w-5" />
@@ -209,10 +212,11 @@ const UpdateUserForm = ({ userDetail, shwoForm, setShowForm }) => {
                 />
               </div>
               <button
-                className="mt-4 bg-[#4318FF] text-white py-3 rounded-2xl text-sm font-bold shadow-[0_4px_14px_0_rgba(67,24,255,0.39)] hover:shadow-[0_6px_20px_rgba(67,24,255,0.23)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer"
+                className="mt-4 bg-[#4318FF] text-white py-3 rounded-2xl text-sm font-bold shadow-[var(--shadow-brand-sm)] hover:shadow-[var(--shadow-brand-md)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
                 type="submit"
+                disabled={isLoading}
               >
-                Perbarui Informasi
+                {isLoading ? "Menyimpan..." : "Perbarui Informasi"}
               </button>
             </form>
             <p className="text-xs font-semibold text-red-500">{errMessage}</p>

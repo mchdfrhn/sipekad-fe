@@ -5,8 +5,9 @@ import {
   EyeOff,
   LoaderCircle,
   CheckCircle,
+  ArrowLeft,
 } from "lucide-react";
-import { useNavigate, useSearchParams } from "react-router";
+import { useNavigate, useSearchParams, Link } from "react-router";
 import { useToast } from "../../utils/hooks/useToast";
 import { resetPasswordFlow } from "../../utils/action";
 import { Button } from "../ui/button";
@@ -23,6 +24,7 @@ const ResetPassword = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [hiddenPassword, setHiddenPassword] = useState(false);
+  const [hiddenConfirmPassword, setHiddenConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -65,11 +67,13 @@ const ResetPassword = () => {
       {/* Top Left Header Logo */}
       <header className="fixed top-0 left-0 w-full p-6 md:p-10 z-50">
         <div className="max-w-[1440px] mx-auto">
-          <img
-            src="/sttimage.png"
-            alt="Logo STT"
-            className="h-10 md:h-12 w-auto drop-shadow-sm"
-          />
+          <Link to="/login">
+            <img
+              src="/sttimage.png"
+              alt="Logo STT"
+              className="h-10 md:h-12 w-auto drop-shadow-sm"
+            />
+          </Link>
         </div>
       </header>
 
@@ -88,9 +92,15 @@ const ResetPassword = () => {
               Atur Ulang <br />
               <span className="text-[#4318FF]">Password</span>
             </h1>
-            <p className="text-[#A3AED0] text-lg md:text-2xl font-semibold mb-10 leading-relaxed max-w-[450px]">
+            <p className="text-[#718096] text-lg md:text-2xl font-semibold mb-10 leading-relaxed max-w-[450px]">
               Silakan masukkan kata sandi baru Anda untuk mengamankan akun SIPEKAD.
             </p>
+
+            <div className="flex flex-col gap-1 mb-12">
+              <Link to="/login" className="text-[#4318FF] font-bold text-xl hover:underline flex items-center gap-2">
+                <ArrowLeft size={20} /> Kembali ke Login
+              </Link>
+            </div>
             
             {/* Playful 3D Character Illustration */}
             <div className="relative w-full max-w-[320px] md:max-w-[440px]">
@@ -104,7 +114,7 @@ const ResetPassword = () => {
                 <img
                   src="/assets/3d-student.png"
                   alt="Student Animation"
-                  className="w-full h-auto drop-shadow-[0_45px_45px_rgba(67,24,255,0.12)]"
+                  className="w-full h-auto drop-shadow-[var(--shadow-brand-lg)]"
                 />
               </Motion.div>
             </div>
@@ -117,7 +127,7 @@ const ResetPassword = () => {
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="w-full max-w-[480px] bg-white rounded-[40px] p-8 md:p-12 shadow-[0_20px_50px_rgba(67,24,255,0.06)] border border-gray-50 md:my-10"
+            className="w-full max-w-[480px] bg-white rounded-[20px] p-8 md:p-12 shadow-[var(--shadow-brand-lg)] border border-gray-50 md:my-10"
           >
             {isSuccess ? (
               <div className="text-center py-8">
@@ -129,7 +139,7 @@ const ResetPassword = () => {
                   <CheckCircle size={80} className="text-green-500" />
                 </Motion.div>
                 <h2 className="text-3xl font-bold text-[#2B3674] mb-3">Berhasil!</h2>
-                <p className="text-[#A3AED0] font-medium mb-8">Password Anda telah berhasil diperbarui. Mengalihkan ke halaman login...</p>
+                <p className="text-[#718096] font-medium mb-8">Password berhasil diperbarui. Klik tombol di bawah untuk masuk.</p>
                 <Button 
                   onClick={() => navigate("/login")}
                   className="w-full h-14 bg-[#4318FF] hover:bg-[#3311db] text-white rounded-2xl text-lg font-bold"
@@ -141,7 +151,7 @@ const ResetPassword = () => {
               <>
                 <div className="mb-10 text-center md:text-left">
                   <h2 className="text-3xl font-bold text-[#2B3674] mb-3">Reset Password</h2>
-                  <p className="text-[#A3AED0] font-medium">Create a new secure password for your account.</p>
+                  <p className="text-[#718096] font-medium">Buat kata sandi baru yang aman untuk akun SIPEKAD Anda.</p>
                 </div>
 
                 {!token ? (
@@ -153,18 +163,18 @@ const ResetPassword = () => {
                     <div className="space-y-2">
                       <Label className="text-sm font-bold text-[#2B3674] ml-1">Password Baru</Label>
                       <div className="relative group">
-                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#A3AED0] group-focus-within:text-[#4318FF] transition-colors" />
+                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#718096] group-focus-within:text-[#4318FF] transition-colors" />
                         <Input
                           type={hiddenPassword ? "text" : "password"}
                           placeholder="Minimal 6 karakter"
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
-                          className="h-14 pl-12 pr-12 rounded-2xl bg-[#F4F7FE] border-none placeholder:text-[#A3AED0] focus:ring-2 focus:ring-[#4318FF]/20 transition-all font-medium text-base"
+                          className="h-14 pl-12 pr-12 rounded-2xl bg-[#F4F7FE] border-none placeholder:text-[#718096] focus:ring-2 focus:ring-[#4318FF]/20 transition-all font-medium text-base"
                         />
                         <button
                           type="button"
                           onClick={() => setHiddenPassword(!hiddenPassword)}
-                          className="absolute right-4 top-1/2 -translate-y-1/2 p-2 hover:bg-gray-100 rounded-full transition-colors text-[#A3AED0]"
+                          className="absolute right-4 top-1/2 -translate-y-1/2 p-2 hover:bg-gray-100 rounded-full transition-colors text-[#718096]"
                         >
                           {hiddenPassword ? <Eye size={18} /> : <EyeOff size={18} />}
                         </button>
@@ -174,31 +184,44 @@ const ResetPassword = () => {
                     <div className="space-y-2">
                       <Label className="text-sm font-bold text-[#2B3674] ml-1">Konfirmasi Password</Label>
                       <div className="relative group">
-                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#A3AED0] group-focus-within:text-[#4318FF] transition-colors" />
+                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#718096] group-focus-within:text-[#4318FF] transition-colors" />
                         <Input
-                          type={hiddenPassword ? "text" : "password"}
+                          type={hiddenConfirmPassword ? "text" : "password"}
                           placeholder="Masukkan ulang password"
                           value={confirmPassword}
                           onChange={(e) => setConfirmPassword(e.target.value)}
-                          className="h-14 pl-12 pr-12 rounded-2xl bg-[#F4F7FE] border-none placeholder:text-[#A3AED0] focus:ring-2 focus:ring-[#4318FF]/20 transition-all font-medium text-base"
+                          className="h-14 pl-12 pr-12 rounded-2xl bg-[#F4F7FE] border-none placeholder:text-[#718096] focus:ring-2 focus:ring-[#4318FF]/20 transition-all font-medium text-base"
                         />
+                        <button
+                          type="button"
+                          onClick={() => setHiddenConfirmPassword(!hiddenConfirmPassword)}
+                          className="absolute right-4 top-1/2 -translate-y-1/2 p-2 hover:bg-gray-100 rounded-full transition-colors text-[#718096]"
+                        >
+                          {hiddenConfirmPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+                        </button>
                       </div>
                     </div>
 
                     <div className="pt-4">
                       <Button
                         disabled={isLoading}
-                        className="w-full h-14 bg-[#4318FF] hover:bg-[#3311db] text-white rounded-2xl text-lg font-bold shadow-xl shadow-[#4318FF]/25 active:scale-[0.98] transition-all"
+                        className="w-full h-14 bg-[#4318FF] hover:bg-[#3311db] text-white rounded-2xl text-lg font-bold shadow-xl shadow-[var(--shadow-brand-sm)]/25 active:scale-[0.98] transition-all"
                       >
                         {isLoading ? (
                           <div className="flex items-center gap-2">
                             <LoaderCircle className="animate-spin" />
-                            <span>Updating...</span>
+                            <span>Memperbarui...</span>
                           </div>
                         ) : (
                           "Perbarui Password"
                         )}
                       </Button>
+                    </div>
+
+                    <div className="flex justify-center mt-8 md:hidden">
+                      <Link to="/login" className="text-sm font-bold text-[#4318FF] hover:underline flex items-center gap-1">
+                        <ArrowLeft size={16} /> Kembali ke Login
+                      </Link>
                     </div>
                   </form>
                 )}

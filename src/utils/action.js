@@ -42,7 +42,6 @@ export const requestPengajuan = async (
       type,
       message,
     });
-    console.log(response);
     if (response.status === "success") {
       if (file) {
         const pengajuanId = response.pengajuanId;
@@ -52,7 +51,7 @@ export const requestPengajuan = async (
           token,
           "upload-request",
         );
-        console.log(resultUpload);
+        void resultUpload; // upload best-effort, errors already handled in uploadPdf
       }
 
       if (setDisplayModal) setDisplayModal(!displayModal);
@@ -60,7 +59,7 @@ export const requestPengajuan = async (
       return response;
     }
 
-    if (response.status === "faiil") {
+    if (response.status === "fail") {
       if (setDisplayModal) setDisplayModal(true);
       if (setLoading) setLoading(false);
       if (setErr) setErr(true);
@@ -98,7 +97,7 @@ export const addResponseHandler = async (
           token,
           "upload-response",
         );
-        console.log(resultUpload);
+        void resultUpload;
       }
       setDisplayModal(!displayModal);
       setLoading(false);
@@ -175,8 +174,6 @@ export const addUserForAdmin = async (
     setErrorMessage(messages[0]);
   }
 
-  console.log(result);
-
   if (result.error === "23505") {
     setErrorMessage("Data sudah terdaftar");
   }
@@ -228,8 +225,6 @@ export const updateUserForAdminAction = async (
     const messages = Object.values(result.message).flat();
     setErrorMessage(messages[0]);
   }
-  console.log(result);
-  console.log(data.prodi);
 
   if (result.status === "success") {
     navigate("/admin/user");

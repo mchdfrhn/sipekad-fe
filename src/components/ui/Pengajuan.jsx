@@ -66,12 +66,19 @@ const Pengajuan = ({
       >
         <Card className="border-none shadow-xl shadow-shadow-500/10 rounded-[20px] bg-white border-gray-100 overflow-hidden">
           <CardHeader className="bg-[#4318FF]/5 pb-6">
-            <CardTitle className="text-xl font-bold text-[#2B3674] flex items-center gap-2">
-              <FileText className="h-5 w-5 text-[#4318FF]" />
-              Form Pengajuan
-            </CardTitle>
-            <p className="text-sm text-gray-500 font-medium">
-              Silahkan isi informasi berikut dengan benar
+            <div className="flex items-start justify-between gap-2">
+              <CardTitle className="text-xl font-bold text-[#2B3674] flex items-center gap-2">
+                <FileText className="h-5 w-5 text-[#4318FF] shrink-0" />
+                Form Pengajuan
+              </CardTitle>
+              {title && (
+                <span className="shrink-0 text-xs font-bold px-3 py-1 rounded-full bg-[#4318FF] text-white leading-5">
+                  {title}
+                </span>
+              )}
+            </div>
+            <p className="text-sm text-gray-500 font-medium mt-1">
+              Silakan isi informasi berikut dengan benar
             </p>
           </CardHeader>
           <CardContent className="pt-8">
@@ -94,7 +101,7 @@ const Pengajuan = ({
                   }
                   value={message}
                   onChange={handleChange}
-                  className="w-full min-h-[120px] px-4 py-3 bg-gray-50 border border-transparent rounded-2xl focus:bg-white focus:ring-2 focus:ring-[#4318FF] transition-all outline-none text-sm font-medium resize-none"
+                  className="w-full min-h-[160px] px-4 py-3 bg-gray-50 border border-transparent rounded-2xl focus:bg-white focus:ring-2 focus:ring-[#4318FF] transition-all outline-none text-sm font-medium resize-none"
                 />
               </div>
 

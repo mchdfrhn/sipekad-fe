@@ -9,25 +9,19 @@ export const Skeleton = ({ className, ...props }) => {
   );
 };
 
-export const TableSkeleton = ({ rows = 5, cols = 5 }) => {
-  return (
-    <div className="w-full space-y-4">
-      {[...Array(rows)].map((_, i) => (
-        <div
-          key={i}
-          className="flex items-center space-x-4 px-6 py-4 border-b border-gray-50 last:border-0"
-        >
-          {[...Array(cols)].map((_, j) => (
-            <Skeleton
-              key={j}
-              className={`h-4 ${j === 0 ? "w-8" : "w-full"} flex-1`}
-            />
-          ))}
-        </div>
-      ))}
-    </div>
-  );
-};
+export const TableSkeleton = ({ rows = 5, cols = 4 }) => (
+  <>
+    {[...Array(rows)].map((_, i) => (
+      <tr key={i} className={i % 2 === 0 ? 'bg-white' : 'bg-indigo-50/10'}>
+        {[...Array(cols)].map((__, j) => (
+          <td key={j} className={`px-4 py-3 ${i % 2 === 0 ? 'opacity-100' : 'opacity-80'}`}>
+            <div className={`h-4 rounded-full bg-gradient-to-r from-gray-100 via-gray-50 to-gray-100 animate-pulse ${j === 0 ? 'w-8' : j === cols - 1 ? 'w-16 mx-auto' : 'w-full'}`} />
+          </td>
+        ))}
+      </tr>
+    ))}
+  </>
+);
 
 export const LoadingSpinner = () => {
   return (

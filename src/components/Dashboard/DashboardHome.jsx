@@ -6,6 +6,7 @@ import {
   Clock,
   ArrowLeft,
   ArrowRight,
+  Users,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getRequest } from "../../utils/api/request";
@@ -24,51 +25,47 @@ import {
 } from "@/components/ui/card";
 import { generatePaginationPages } from "../../utils/helpers";
 import { motion as Motion } from "motion/react";
+import { useUser } from "../../utils/hooks/userContext";
+
+const getGreeting = () => {
+  const h = new Date().getHours();
+  if (h < 11) return "Selamat Pagi";
+  if (h < 15) return "Selamat Siang";
+  if (h < 18) return "Selamat Sore";
+  return "Selamat Malam";
+};
 
 const DashboardHome = () => {
   const { showToast } = useToast();
+  const { userData } = useUser();
   const [historRequest, setHistoryRequest] = useState([]);
   const [totalPage, setTotalPage] = useState(1);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [summary, setSummary] = useState([]);
 
-  const changePageHandler = async (p) => {
+  const fetchData = async (p) => {
     setLoading(true);
-    const user = JSON.parse(localStorage.getItem("user"));
-    const result = await getRequest(user.id, p);
+    const userId = userData?.id;
+    if (!userId) { setLoading(false); return; }
+    const result = await getRequest(userId, p);
     if (result.status === "success") {
       setHistoryRequest(result.data);
       setPage(result.page);
       setTotalPage(result.totalPage);
-      await getSummeryDataByUserId(setSummary, user.id);
+      await getSummeryDataByUserId(setSummary, userId);
     } else {
       showToast(result.message || "Gagal mengambil data", "error");
     }
     setLoading(false);
   };
 
-  useEffect(() => {
-    const getRequestHandler = async () => {
-      setLoading(true);
-      const user = localStorage.getItem("user");
-      if (user) {
-        const userId = JSON.parse(user).id;
-        const result = await getRequest(userId);
-        if (result.status === "success") {
-          setHistoryRequest(result.data);
-          setTotalPage(result.totalPage);
-          setPage(result.page);
-          await getSummeryDataByUserId(setSummary, userId);
-        } else {
-          showToast(result.message || "Gagal mengambil data", "error");
-        }
-      }
-      setLoading(false);
-    };
+  const changePageHandler = (p) => fetchData(p);
 
-    getRequestHandler();
-  }, [page, showToast]);
+  useEffect(() => {
+    if (userData?.id) fetchData(1);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userData?.id]);
 
   const summaryValue = (label) =>
     summary.find((item) => item.label === label)?.value || 0;
@@ -76,6 +73,8 @@ const DashboardHome = () => {
   const successRequest = summaryValue("Selesai");
   const procesingRequest = summaryValue("Masuk") + summaryValue("Diproses");
   const rejectedRequest = summaryValue("Ditolak");
+
+  const displayName = userData?.full_name || userData?.username || "Pengguna";
 
   return (
     <Motion.div
@@ -86,13 +85,54 @@ const DashboardHome = () => {
         visible: {
           opacity: 1,
           transition: {
-            staggerChildren: 0.2, // Increased for a more deliberate feel
+            staggerChildren: 0.2,
             delayChildren: 0.1,
           },
         },
       }}
       className="space-y-6"
     >
+      {/* Welcome Card */}
+      <Motion.div
+        variants={{
+          hidden: { opacity: 0, y: -16 },
+          visible: { opacity: 1, y: 0 },
+        }}
+        className="relative w-full rounded-[20px] overflow-hidden bg-gradient-to-r from-[#4318FF] to-[#7C5FFF] p-6 md:p-8 shadow-lg shadow-indigo-500/30"
+      >
+        {/* decorative orbs */}
+        <div className="pointer-events-none absolute -top-8 -right-8 h-40 w-40 rounded-full bg-white/10 blur-2xl" />
+        <div className="pointer-events-none absolute bottom-0 left-1/3 h-24 w-24 rounded-full bg-white/10 blur-xl" />
+
+        <div className="relative flex items-center justify-between gap-4">
+          <div>
+            <p className="text-indigo-200 text-sm font-medium mb-1">{getGreeting()} 👋</p>
+            <h1 className="text-2xl md:text-3xl font-bold text-white leading-tight">{displayName}</h1>
+            <p className="text-indigo-200 text-sm mt-2">Selamat datang di dashboard pengajuan surat.</p>
+            {/* stat pills */}
+            <div className="flex flex-wrap gap-2 mt-4">
+              <span className="inline-flex items-center gap-1.5 bg-white/20 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                <FileText className="h-3 w-3" /> {totalRequest} Total
+              </span>
+              <span className="inline-flex items-center gap-1.5 bg-white/20 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                <Clock className="h-3 w-3" /> {procesingRequest} Diproses
+              </span>
+              <span className="inline-flex items-center gap-1.5 bg-white/20 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                <CheckCircle className="h-3 w-3" /> {successRequest} Selesai
+              </span>
+            </div>
+          </div>
+          {/* avatar */}
+          <div className="shrink-0 h-16 w-16 md:h-20 md:w-20 rounded-full bg-white/20 border-2 border-white/40 flex items-center justify-center shadow-lg overflow-hidden">
+            {userData?.url_photo ? (
+              <img src={userData.url_photo} alt={displayName} className="w-full h-full object-cover" />
+            ) : (
+              <Users className="h-8 w-8 md:h-10 md:w-10 text-white" />
+            )}
+          </div>
+        </div>
+      </Motion.div>
+
       {/* Stats Cards */}
       <Motion.div
         variants={{
@@ -103,7 +143,7 @@ const DashboardHome = () => {
       >
         <StatsCard
           title="Total Pengajuan"
-          value={totalRequest} // This might be incorrect if paginated, but keeping logic same as before
+          value={totalRequest}
           icon={FileText}
           variant="premium"
         />
@@ -141,7 +181,7 @@ const DashboardHome = () => {
         }}
         className="grid gap-6"
       >
-        <Card className="rounded-[30px] border-none shadow-sm overflow-hidden bg-white">
+        <Card className="rounded-[20px] border-none shadow-sm overflow-hidden bg-white">
           <CardHeader className="px-8 pt-8 pb-0">
             <CardTitle className="text-lg font-bold text-[#2B3674]">
               Distribusi Pengajuan

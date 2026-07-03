@@ -109,7 +109,7 @@ const UserDetail = () => {
       <UpdateUserForm
         setShowForm={setShowForm}
         userDetail={userDetail}
-        shwoForm={showForm}
+        showForm={showForm}
       />
       <div className="flex justify-between items-center mb-6">
         <Link
@@ -119,7 +119,7 @@ const UserDetail = () => {
           <ArrowLeft className="h-6 w-6" />
         </Link>
         <div className="flex items-center gap-3">
-          <button
+          <button type="button"
             onClick={() => setAlertReset(true)}
             disabled={isResetting}
             className="flex items-center gap-2 px-4 py-3 bg-white text-[#2B3674] border border-gray-100 rounded-full text-sm shadow-sm hover:bg-gray-50 hover:scale-[1.02] transition-all duration-300 font-bold disabled:opacity-50"
@@ -127,7 +127,7 @@ const UserDetail = () => {
             <RefreshCw className={`h-4 w-4 ${isResetting ? "animate-spin" : ""}`} />
             <span>Reset Password</span>
           </button>
-          <button
+          <button type="button"
             onClick={handleImpersonate}
             disabled={isImpersonating}
             className="flex items-center gap-2 px-4 py-3 bg-emerald-500 text-white rounded-full text-sm shadow-[0_4px_14px_0_rgba(16,185,129,0.39)] hover:shadow-[0_6px_20px_rgba(16,185,129,0.23)] hover:scale-[1.02] transition-all duration-300 font-bold disabled:opacity-50"
@@ -135,9 +135,9 @@ const UserDetail = () => {
             <UserCheck className={`h-4 w-4 ${isImpersonating ? "animate-pulse" : ""}`} />
             <span>Login sebagai User</span>
           </button>
-          <button
+          <button type="button"
             onClick={() => setShowForm(!showForm)}
-            className="flex items-center gap-2 px-4 py-3 mr-2 bg-[#4318FF] text-white rounded-full text-sm shadow-[0_4px_14px_0_rgba(67,24,255,0.39)] hover:shadow-[0_6px_20px_rgba(67,24,255,0.23)] hover:scale-[1.02] transition-all duration-300 font-bold"
+            className="flex items-center gap-2 px-4 py-3 mr-2 bg-[#4318FF] text-white rounded-full text-sm shadow-[var(--shadow-brand-sm)] hover:shadow-[var(--shadow-brand-md)] hover:scale-[1.02] transition-all duration-300 font-bold"
           >
             <Pen className="h-4 w-4" />
             <span>Perbarui Pengguna</span>
@@ -170,7 +170,7 @@ const UserDetail = () => {
                 Nama Lengkap
               </p>
               <h1 className="text-xl font-bold text-[#2B3674]">
-                {userDetail?.username}
+                {userDetail?.full_name || userDetail?.username || "-"}
               </h1>
             </div>
             <div>

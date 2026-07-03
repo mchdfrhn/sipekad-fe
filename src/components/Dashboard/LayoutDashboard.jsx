@@ -44,9 +44,11 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { motion as Motion, AnimatePresence } from "motion/react";
 import { useState, useEffect, useRef } from "react";
+import ConfirmDialog from "../../components/ui/ConfirmDialog";
 
 const LayoutDashboard = () => {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const { userData: user, stopImpersonating, isAdminImpersonating } = useUser();
@@ -107,7 +109,7 @@ const LayoutDashboard = () => {
         await import("../../utils/api/dashboardValue");
       await getDashboardActivities(
         (activities) => {
-          if (activities) console.log("Activities fetched:", activities.length);
+          // activities fetched but not used in this component
         },
         (notifs) => {
           setNotifications(notifs || []);
@@ -115,7 +117,7 @@ const LayoutDashboard = () => {
         },
       );
     } catch (err) {
-      console.error("Error fetching notifications:", err);
+      // silent — toast not shown; fetch failure is non-critical
     }
   };
 
@@ -132,7 +134,7 @@ const LayoutDashboard = () => {
       await markAsRead(id);
       fetchDashboardData();
     } catch (err) {
-      console.error("Error marking as read:", err);
+      // silent — mark-as-read failure non-critical
     }
   };
 
@@ -166,11 +168,13 @@ const LayoutDashboard = () => {
     };
   }, []);
 
-  const logoutHandler = async () => {
+  const confirmLogout = async () => {
     navigate("/");
     localStorage.removeItem("tokenKey");
     localStorage.removeItem("user");
   };
+
+  const logoutHandler = () => setShowLogoutConfirm(true);
 
   const handleBackToAdmin = () => {
     if (stopImpersonating()) {
@@ -195,6 +199,7 @@ const LayoutDashboard = () => {
   }
 
   return (
+    <>
     <div className="flex h-screen w-full bg-[#F4F7FE] overflow-hidden">
       {/* Sidebar - Fixed on Desktop */}
       <div className="hidden md:block w-[280px] shrink-0 bg-white h-full relative z-20">
@@ -221,7 +226,7 @@ const LayoutDashboard = () => {
                   Anda sedang login sebagai <span className="underline">{user.full_name}</span> (Mode Impersonasi)
                 </p>
               </div>
-              <button
+              <button type="button"
                 onClick={handleBackToAdmin}
                 className="flex items-center gap-1.5 bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full text-xs font-bold transition-all border border-white/30"
               >
@@ -296,7 +301,7 @@ const LayoutDashboard = () => {
                   className="pl-8 bg-transparent border-none outline-none text-sm text-[#2B3674] placeholder-gray-400 w-40 focus:w-60 transition-all font-medium"
                 />
                 {searchValue && (
-                  <button
+                  <button type="button"
                     onClick={clearSearch}
                     className="absolute right-3 top-1/2 -translate-y-1/2 p-0.5 hover:bg-gray-200 rounded-full transition-colors"
                   >
@@ -324,10 +329,10 @@ const LayoutDashboard = () => {
             </Sheet>
 
             {/* Buat Pengajuan Baru Button */}
-            <Link to={"/dashboard/request"} className="hidden sm:block">
-              <Button className="bg-[#4318FF] hover:bg-[#3311CC] text-white rounded-full px-5 py-2.5 text-sm font-bold shadow-[0_4px_14px_0_rgba(67,24,255,0.39)] hover:shadow-[0_6px_20px_rgba(67,24,255,0.23)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex items-center gap-2 whitespace-nowrap">
+            <Link to={"/dashboard/request"}>
+              <Button className="bg-[#4318FF] hover:bg-[#3311CC] text-white rounded-full px-5 py-2.5 text-sm font-bold shadow-[var(--shadow-brand-sm)] hover:shadow-[var(--shadow-brand-md)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex items-center whitespace-nowrap">
                 <Plus className="h-4 w-4" />
-                <span>Buat Pengajuan</span>
+                <span className="hidden sm:inline ml-2">Buat Pengajuan</span>
               </Button>
             </Link>
 
@@ -352,10 +357,10 @@ const LayoutDashboard = () => {
                 <div className="bg-[#4318FF] px-6 py-4 flex items-center justify-between">
                   <div>
                     <p className="text-white text-sm font-bold">
-                      Notifications
+                      Notifikasi
                     </p>
                     <p className="text-white/70 text-[10px] uppercase tracking-wider font-medium">
-                      You have {unreadCount} unread messages
+                      {unreadCount} pesan belum dibaca
                     </p>
                   </div>
                 </div>
@@ -392,7 +397,7 @@ const LayoutDashboard = () => {
                         </p>
                         {!notif.is_read && (
                           <span className="text-[10px] text-[#4318FF] font-bold mt-1">
-                            Click to mark as read
+                            Tandai sudah dibaca
                           </span>
                         )}
                       </DropdownMenuItem>
@@ -400,7 +405,7 @@ const LayoutDashboard = () => {
                   ) : (
                     <div className="py-8 text-center">
                       <p className="text-gray-400 text-sm font-medium">
-                        No notifications yet
+                        Belum ada notifikasi
                       </p>
                     </div>
                   )}
@@ -409,13 +414,15 @@ const LayoutDashboard = () => {
             </DropdownMenu>
 
             {/* Info Icon */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-full text-gray-400 hover:text-[#4318FF]"
-            >
-              <Info className="h-5 w-5" />
-            </Button>
+            <Link to="/dashboard/settings" title="Pengaturan">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="rounded-full text-gray-400 hover:text-[#4318FF]"
+              >
+                <Info className="h-5 w-5" />
+              </Button>
+            </Link>
 
             {/* Profile Pill */}
             <DropdownMenu>
@@ -449,7 +456,7 @@ const LayoutDashboard = () => {
                     {user.full_name}
                   </p>
                   <p className="text-white/70 text-[10px] uppercase tracking-wider font-medium">
-                    User Account
+                    Akun Pengguna
                   </p>
                 </div>
                 <div className="p-2">
@@ -458,7 +465,7 @@ const LayoutDashboard = () => {
                     onClick={() => navigate("/dashboard/settings")}
                   >
                     <Settings className="mr-3 h-4 w-4 text-gray-400 group-focus:text-[#4318FF]" />
-                    <span>Profile Settings</span>
+                    <span>Pengaturan Profil</span>
                   </DropdownMenuItem>
                   <a
                     href={`https://wa.me/${import.meta.env.VITE_WHATSAPP_NUMBER}`}
@@ -468,7 +475,7 @@ const LayoutDashboard = () => {
                   >
                     <DropdownMenuItem className="cursor-pointer font-bold text-gray-600 focus:bg-indigo-50 focus:text-[#4318FF] rounded-xl px-4 py-2.5 transition-colors">
                       <HelpCircle className="mr-3 h-4 w-4 text-gray-400 group-focus:text-[#4318FF]" />
-                      <span>Contact Support</span>
+                      <span>Hubungi Support</span>
                     </DropdownMenuItem>
                   </a>
                   <DropdownMenuSeparator className="my-1 bg-gray-100" />
@@ -477,7 +484,7 @@ const LayoutDashboard = () => {
                     onClick={logoutHandler}
                   >
                     <LogOut className="mr-3 h-4 w-4" />
-                    <span>Log out</span>
+                    <span>Keluar</span>
                   </DropdownMenuItem>
                 </div>
               </DropdownMenuContent>
@@ -502,6 +509,16 @@ const LayoutDashboard = () => {
         </Motion.main>
       </div>
     </div>
+      <ConfirmDialog
+        isOpen={showLogoutConfirm}
+        onClose={() => setShowLogoutConfirm(false)}
+        onConfirm={confirmLogout}
+        variant="danger"
+        title="Konfirmasi Keluar"
+        description="Apakah Anda yakin ingin keluar?"
+        confirmText="Keluar"
+      />
+    </>
   );
 };
 

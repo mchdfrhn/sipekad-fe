@@ -2,6 +2,7 @@ import { Bell, User, Settings, LogOut, HelpCircle } from "lucide-react";
 import { useUser } from "../../utils/hooks/userContext";
 import { motion as Motion } from "motion/react";
 import { useNavigate } from "react-router";
+import { logout } from "../../utils/api/auth";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,7 +18,8 @@ const HeaderDashboard = () => {
   const { userData } = useUser();
   const navigate = useNavigate();
 
-  const logoutHandler = () => {
+  const logoutHandler = async () => {
+    try { await logout(); } catch(_) {}
     localStorage.removeItem("tokenKey");
     localStorage.removeItem("user");
     navigate("/");
@@ -35,8 +37,8 @@ const HeaderDashboard = () => {
 
   return (
     <Motion.header
-      initial={{ opacity: 0, translateY: -20 }}
-      animate={{ opacity: 1, translateY: 0 }}
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: ["easeInOut"] }}
       className="w-full bg-white shadow-md rounded-2xl mb-8 px-6 py-3 flex justify-between items-center"
     >
@@ -55,7 +57,7 @@ const HeaderDashboard = () => {
                   {userData?.full_name}
                 </p>
                 <p className="text-[10px] font-medium text-gray-400 uppercase">
-                  Student
+                  Mahasiswa
                 </p>
               </div>
             </div>
@@ -69,7 +71,7 @@ const HeaderDashboard = () => {
                 {userData?.full_name}
               </p>
               <p className="text-white/70 text-[10px] uppercase tracking-wider font-medium">
-                Student Account
+                Akun Mahasiswa
               </p>
             </div>
             <div className="p-2">
@@ -78,7 +80,7 @@ const HeaderDashboard = () => {
                 onClick={() => navigate("/dashboard/settings")}
               >
                 <Settings className="mr-3 h-4 w-4 text-gray-400 group-focus:text-[#4318FF]" />
-                <span>Profile Settings</span>
+                <span>Pengaturan Profil</span>
               </DropdownMenuItem>
               <a
                 href={`https://wa.me/${import.meta.env.VITE_WHATSAPP_NUMBER}`}
@@ -88,7 +90,7 @@ const HeaderDashboard = () => {
               >
                 <DropdownMenuItem className="cursor-pointer font-bold text-gray-600 focus:bg-indigo-50 focus:text-[#4318FF] rounded-xl px-4 py-2.5 transition-colors">
                   <HelpCircle className="mr-3 h-4 w-4 text-gray-400 group-focus:text-[#4318FF]" />
-                  <span>Contact Support</span>
+                  <span>Hubungi Dukungan</span>
                 </DropdownMenuItem>
               </a>
               <DropdownMenuSeparator className="my-1 bg-gray-100" />
@@ -97,7 +99,7 @@ const HeaderDashboard = () => {
                 onClick={logoutHandler}
               >
                 <LogOut className="mr-3 h-4 w-4" />
-                <span>Log out</span>
+                <span>Keluar</span>
               </DropdownMenuItem>
             </div>
           </DropdownMenuContent>
@@ -108,6 +110,7 @@ const HeaderDashboard = () => {
         <Button
           variant="ghost"
           size="icon"
+          title="Notifikasi"
           className="relative rounded-full text-gray-400 hover:text-[#4318FF] transition-colors"
         >
           <Bell className="h-5 w-5" />

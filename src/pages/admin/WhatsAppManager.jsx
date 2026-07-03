@@ -46,7 +46,7 @@ const WhatsAppManager = () => {
         setQrUrl(null);
       }
     } catch (err) {
-      console.error("Failed to fetch WhatsApp status", err);
+      // silent fail
     } finally {
       setLoading(prev => ({ ...prev, status: false }));
     }
@@ -62,7 +62,7 @@ const WhatsAppManager = () => {
       const url = URL.createObjectURL(response.data);
       setQrUrl(url);
     } catch (err) {
-      console.error("Failed to fetch QR code", err);
+      // silent fail
     }
   };
 
@@ -76,7 +76,7 @@ const WhatsAppManager = () => {
         setLogs(response.data.data);
       }
     } catch (err) {
-      console.error("Failed to fetch logs", err);
+      // silent fail
     } finally {
       setLoading(prev => ({ ...prev, logs: false }));
     }
@@ -124,11 +124,12 @@ const WhatsAppManager = () => {
     }
   };
 
+  // Interval hanya buat saat mount — tidak re-create saat status berubah
+  // Cek status.status di dalam callback agar tidak stale
   useEffect(() => {
     fetchStatus();
     fetchLogs();
 
-    // Auto refresh status every 10 seconds if not connected
     const interval = setInterval(() => {
       if (status.status !== "connected") {
         fetchStatus();
@@ -136,7 +137,8 @@ const WhatsAppManager = () => {
     }, 10000);
 
     return () => clearInterval(interval);
-  }, [fetchStatus, fetchLogs, status.status]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const StatusIcon = () => {
     switch (status.status) {
@@ -153,6 +155,19 @@ const WhatsAppManager = () => {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
+      {/* Page Header */}
+      <div className="mb-8">
+        <div className="flex items-center gap-3 mb-1">
+          <div className="h-10 w-10 rounded-2xl bg-green-50 flex items-center justify-center">
+            <MessageSquare className="h-5 w-5 text-green-600" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-[#2B3674]">Manajer WhatsApp</h1>
+            <p className="text-sm text-[#718096]">Kelola koneksi dan kirim pesan WhatsApp</p>
+          </div>
+        </div>
+      </div>
+
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <p className="text-gray-500">Kelola notifikasi WhatsApp dan pantau status koneksi bot.</p>
@@ -165,7 +180,7 @@ const WhatsAppManager = () => {
             disabled={loading.status}
           >
             <RefreshCw className={`mr-2 h-4 w-4 ${loading.status ? 'animate-spin' : ''}`} />
-            Refresh Status
+            Segarkan Status
           </Button>
           <Button 
             onClick={() => handleAction('reconnect')} 
@@ -173,16 +188,16 @@ const WhatsAppManager = () => {
             disabled={loading.action}
           >
             {loading.action ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className="mr-2 h-4 w-4" />}
-            Reconnect Bot
+            Sambungkan Ulang
           </Button>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Status Dashboard */}
-        <Card className="border-none shadow-sm rounded-3xl bg-white overflow-hidden">
+        <Card className="rounded-[20px] border-gray-100/80 shadow-[0_4px_24px_rgba(67,24,255,0.06)] bg-white overflow-hidden">
           <CardHeader className="pb-2">
-            <CardTitle className="text-lg font-bold text-[#2B3674]">Connection Status</CardTitle>
+            <CardTitle className="text-lg font-bold text-[#2B3674]">Status WhatsApp</CardTitle>
             <CardDescription>Status koneksi saat ini</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col items-center justify-center py-6 text-center">
@@ -200,25 +215,25 @@ const WhatsAppManager = () => {
               disabled={loading.action}
             >
               <LogOut className="mr-2 h-3 w-3" />
-              Reset Session / Logout
+              Putuskan Sesi / Putuskan
             </Button>
           </CardFooter>
         </Card>
 
         {/* QR Code Section */}
-        <Card className="border-none shadow-sm rounded-3xl bg-white overflow-hidden lg:col-span-1">
+        <Card className="rounded-[20px] border-gray-100/80 shadow-[0_4px_24px_rgba(67,24,255,0.06)] bg-white overflow-hidden lg:col-span-1">
           <CardHeader className="pb-2">
-            <CardTitle className="text-lg font-bold text-[#2B3674]">QR Code</CardTitle>
+            <CardTitle className="text-lg font-bold text-[#2B3674]">Kode QR</CardTitle>
             <CardDescription>Scan untuk menghubungkan</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col items-center justify-center py-4 min-h-[250px]">
             {status.status === "qr_pending" && qrUrl ? (
               <div className="relative group">
                 <div className="absolute -inset-1 bg-linear-to-r from-[#4318FF] to-blue-500 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
-                <img src={qrUrl} alt="WhatsApp QR Code" className="relative w-48 h-48 rounded-xl border-4 border-white shadow-xl bg-white" />
+                <img src={qrUrl} alt="Kode QR WhatsApp" loading="lazy" className="relative w-48 h-48 rounded-xl border-4 border-white shadow-xl bg-white" />
                 <div className="mt-4 text-center">
                   <Badge variant="secondary" className="bg-blue-50 text-blue-600 border-blue-100 animate-pulse">
-                    Scan by March 27, 2026
+                    Kode QR aktif — segera scan
                   </Badge>
                 </div>
               </div>
@@ -228,22 +243,22 @@ const WhatsAppManager = () => {
                   <CheckCircle2 className="h-8 w-8 text-emerald-500" />
                 </div>
                 <p className="text-sm font-medium text-emerald-600">Bot sudah terhubung.</p>
-                <p className="text-xs text-gray-400">Scan QR hanya diperlukan saat bot terputus.</p>
+                <p className="text-xs text-gray-400">Scan Kode QR hanya diperlukan saat bot terputus.</p>
               </div>
             ) : (
               <div className="text-center space-y-3 p-6 text-gray-400">
                 <QrCode className="h-12 w-12 mx-auto opacity-20" />
-                <p className="text-sm">QR tidak tersedia saat ini.</p>
-                <p className="text-xs">Klik "Reset Session" jika ingin scan ulang.</p>
+                <p className="text-sm">Kode QR tidak tersedia saat ini.</p>
+                <p className="text-xs">Klik "Putuskan Sesi" jika ingin scan ulang.</p>
               </div>
             )}
           </CardContent>
         </Card>
 
         {/* Test Message Form */}
-        <Card className="border-none shadow-sm rounded-3xl bg-white overflow-hidden">
+        <Card className="rounded-[20px] border-gray-100/80 shadow-[0_4px_24px_rgba(67,24,255,0.06)] bg-white overflow-hidden">
           <CardHeader className="pb-2">
-            <CardTitle className="text-lg font-bold text-[#2B3674]">Test Notification</CardTitle>
+            <CardTitle className="text-lg font-bold text-[#2B3674]">Kirim Pesan Tes</CardTitle>
             <CardDescription>Kirim pesan tes manual</CardDescription>
           </CardHeader>
           <CardContent>
@@ -289,10 +304,10 @@ const WhatsAppManager = () => {
       </div>
 
       {/* History Table */}
-      <Card className="border-none shadow-sm rounded-3xl bg-white overflow-hidden">
+      <Card className="rounded-[20px] border-gray-100/80 shadow-[0_4px_24px_rgba(67,24,255,0.06)] bg-white overflow-hidden">
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <div>
-            <CardTitle className="text-lg font-bold text-[#2B3674]">Message History</CardTitle>
+            <CardTitle className="text-lg font-bold text-[#2B3674]">Riwayat Pesan</CardTitle>
             <CardDescription>50 pesan terakhir yang dikirim sistem</CardDescription>
           </div>
           <div className="p-2 bg-indigo-50 rounded-xl">
@@ -302,7 +317,7 @@ const WhatsAppManager = () => {
         <CardContent className="p-0">
           <div className="overflow-x-auto no-scrollbar">
             <table className="w-full text-left text-sm">
-              <thead className="bg-gray-50/50 text-[#A3AED0] font-bold">
+              <thead className="bg-gray-50/50 text-[#718096] font-bold">
                 <tr>
                   <th className="px-6 py-4">Waktu</th>
                   <th className="px-6 py-4">Penerima</th>
@@ -319,7 +334,7 @@ const WhatsAppManager = () => {
                   ))
                 ) : logs.length > 0 ? (
                   logs.map((log) => (
-                    <tr key={log.id} className="hover:bg-gray-50/30 transition-colors">
+                    <tr key={log.id} className="hover:bg-indigo-50/30 transition-colors group">
                       <td className="px-6 py-4 font-medium whitespace-nowrap">
                         {formatDateRelative(log.created_at)}
                       </td>
@@ -333,13 +348,13 @@ const WhatsAppManager = () => {
                       </td>
                       <td className="px-6 py-4 text-center">
                         {log.status === "sent" ? (
-                          <Badge className="bg-emerald-50 text-emerald-600 border-emerald-100 hover:bg-emerald-100 px-2 py-0.5 rounded-full font-bold text-[10px] uppercase">
-                            Success
+                          <Badge className="bg-emerald-50 text-emerald-600 border-emerald-100 hover:bg-emerald-100 px-2.5 py-1 rounded-full font-bold text-[11px] border">
+                            Terkirim
                           </Badge>
                         ) : (
                           <div className="flex flex-col items-center gap-1 group relative">
-                            <Badge className="bg-rose-50 text-rose-600 border-rose-100 px-2 py-0.5 rounded-full font-bold text-[10px] uppercase cursor-help">
-                              Failed
+                            <Badge className="bg-rose-50 text-rose-600 border-rose-100 px-2.5 py-1 rounded-full font-bold text-[11px] border cursor-help">
+                              Gagal
                             </Badge>
                             {log.error && (
                               <span className="invisible group-hover:visible absolute bottom-full left-1/2 -translate-x-1/2 mb-2 p-2 bg-gray-800 text-white text-[10px] rounded-lg whitespace-nowrap z-50">

@@ -12,14 +12,14 @@ const ListLink = ({ data, title }) => {
         {data.map((item, index) => (
           <Motion.div
             key={index}
-            initial={{ opacity: 0, translateY: 20 }}
-            animate={{ opacity: 1, translateY: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: index * 0.1, ease: "easeOut" }}
           >
             <Link
               to={item.path}
               className={cn(
-                "group flex flex-col p-6 rounded-[20px] bg-white border border-gray-100 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1 relative overflow-hidden",
+                "group flex flex-col p-6 rounded-[20px] bg-white border border-gray-100 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1 relative overflow-hidden cursor-pointer touch-manipulation active:scale-[0.98] active:shadow-md",
                 "before:absolute before:left-0 before:top-0 before:h-full before:w-1.5 before:bg-[#4318FF]/20 group-hover:before:bg-[#4318FF] before:transition-colors",
               )}
             >
@@ -35,7 +35,7 @@ const ListLink = ({ data, title }) => {
               <span className="text-lg font-bold text-[#2B3674] group-hover:text-[#4318FF] transition-colors">
                 {item.content}
               </span>
-              <p className="text-xs text-gray-400 mt-2 font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+              <p className="text-xs text-gray-400 mt-2 font-medium opacity-70 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                 Klik untuk detail pengajuan →
               </p>
             </Link>

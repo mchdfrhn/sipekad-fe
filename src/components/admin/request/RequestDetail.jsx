@@ -53,6 +53,7 @@ const RequestDetail = () => {
   const [errMessage, setErrorMessage] = useState("");
   const [showConfirm, setShowConfirm] = useState(false);
   const [pendingAction, setPendingAction] = useState(null);
+  const [confirmMeta, setConfirmMeta] = useState({ title: "Konfirmasi Aksi", description: "Apakah Anda yakin ingin melanjutkan?" });
   const [displayIframe, setDisplayIframe] = useState(false);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [isLoadingAction, setIsLoadingAction] = useState(false);
@@ -116,7 +117,6 @@ const RequestDetail = () => {
       document.body.removeChild(link);
       window.URL.revokeObjectURL(blobUrl);
     } catch (error) {
-      console.error("Download failed:", error);
       window.open(url, "_blank");
     }
   };
@@ -175,45 +175,20 @@ const RequestDetail = () => {
     <div className="space-y-8 pb-10">
       {loading && <LoadingOverlay />}
 
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <Link to="/admin/pengajuan">
-            <Button
-              variant="ghost"
-              className="gap-2 pl-0 hover:bg-transparent hover:text-[#4318FF] text-gray-500 transition-all"
-            >
-              <ArrowLeft className="h-6 w-6" />
-              <span className="text-lg font-bold">Kembali ke Daftar</span>
-            </Button>
+      <div className="mb-6">
+        <div className="flex items-center gap-2 mb-4">
+          <Link to="/admin/pengajuan" className="flex items-center gap-1.5 text-sm font-semibold text-[#718096] hover:text-[#4318FF] transition-colors">
+            <ArrowLeft className="h-4 w-4" />
+            Kembali
           </Link>
         </div>
-
-        <div className="flex items-center gap-3">
-          <BadgeStatus status={requestDetail?.status} />
-          <div className="h-8 w-px bg-gray-300 mx-2 hidden md:block"></div>
-          <div className="text-right hidden md:block">
-            <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">
-              Tanggal Pengajuan
-            </p>
-            <p className="text-sm font-bold text-[#2B3674]">
-              {new Date(requestDetail?.created_at).toLocaleDateString("id-ID", {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-            </p>
-          </div>
-          <div className="h-10 w-10 rounded-full bg-blue-50 text-[#4318FF] flex items-center justify-center">
-            <Calendar className="h-5 w-5" />
-          </div>
-        </div>
+        <h1 className="text-2xl font-bold text-[#2B3674]">Detail Pengajuan</h1>
+        <p className="text-sm text-[#718096] mt-0.5">Tinjau dan kelola pengajuan surat ini</p>
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         <div className="xl:col-span-2 space-y-6">
-          <Card className="rounded-[20px] shadow-sm border-none">
+          <Card className="rounded-[20px] border-gray-100/80 shadow-[0_4px_24px_rgba(67,24,255,0.06)]">
             <CardHeader>
               <CardTitle className="text-lg font-bold text-[#2B3674] flex items-center gap-2">
                 <User className="h-5 w-5 text-[#4318FF]" />
@@ -253,7 +228,7 @@ const RequestDetail = () => {
             </CardContent>
           </Card>
 
-          <Card className="rounded-[20px] shadow-sm border-none">
+          <Card className="rounded-[20px] border-gray-100/80 shadow-[0_4px_24px_rgba(67,24,255,0.06)]">
             <CardHeader>
               <CardTitle className="text-lg font-bold text-[#2B3674] flex items-center gap-2">
                 <FileText className="h-5 w-5 text-[#4318FF]" />
@@ -334,13 +309,14 @@ const RequestDetail = () => {
             errMessage={errMessage}
             isLoadingAction={isLoadingAction}
             onStatusChange={handleStatusChange}
-            onConfirmAction={(action) => {
+            onConfirmAction={(action, meta) => {
               setPendingAction(() => action);
+              if (meta) setConfirmMeta(meta);
               setShowConfirm(true);
             }}
           />
 
-          <Card className="rounded-[20px] shadow-sm border-none">
+          <Card className="rounded-[20px] border-gray-100/80 shadow-[0_4px_24px_rgba(67,24,255,0.06)]">
             <CardHeader className="pb-2">
               <CardTitle className="text-lg font-bold text-[#2B3674]">
                 Riwayat Aktivitas
@@ -538,8 +514,8 @@ const RequestDetail = () => {
           setShowConfirm(false);
           setPendingAction(null);
         }}
-        title="Konfirmasi Aksi"
-        description="Apakah Anda yakin ingin melanjutkan aksi ini?"
+        title={confirmMeta.title}
+        description={confirmMeta.description}
         confirmText="Ya, Lanjutkan"
         variant="primary"
       />
@@ -565,7 +541,7 @@ const ActionPanel = ({
 
   if (status === "submitted" || status === "pending") {
     return (
-      <Card className="rounded-[20px] shadow-lg border-0 ring-1 ring-black/5 overflow-hidden">
+      <Card className="rounded-[20px] border-gray-100/80 shadow-[0_4px_24px_rgba(67,24,255,0.06)] overflow-hidden">
         <div className="h-2 bg-blue-400"></div>
         <CardHeader className="pb-3">
           <CardTitle className="text-lg font-bold text-[#2B3674]">
@@ -593,7 +569,7 @@ const ActionPanel = ({
 
   if (status === "reviewing") {
     return (
-      <Card className="rounded-[20px] shadow-lg border-0 ring-1 ring-black/5 overflow-hidden">
+      <Card className="rounded-[20px] border-gray-100/80 shadow-[0_4px_24px_rgba(67,24,255,0.06)] overflow-hidden">
         <div className="h-2 bg-purple-500"></div>
         <CardHeader className="pb-3">
           <CardTitle className="text-lg font-bold text-[#2B3674]">
@@ -603,10 +579,13 @@ const ActionPanel = ({
         </CardHeader>
         <CardContent className="space-y-3">
           <Button
-            className="w-full justify-start gap-2 bg-green-500 hover:bg-green-600 text-white font-bold"
+            className="w-full justify-start gap-2 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-xl"
             disabled={isLoadingAction}
             onClick={() =>
-              onConfirmAction(() => onStatusChange("processing"))
+              onConfirmAction(
+                () => onStatusChange("processing"),
+                { title: "Mulai Proses?", description: "Pengajuan akan masuk ke tahap diproses. Pastikan dokumen sudah diverifikasi." }
+              )
             }
           >
             {isLoadingAction ? (
@@ -621,7 +600,7 @@ const ActionPanel = ({
             <>
               <Button
                 variant="outline"
-                className="w-full justify-start gap-2 border-orange-200 text-orange-600 hover:bg-orange-50 font-bold"
+                className="w-full justify-start gap-2 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl border-0"
                 disabled={isLoadingAction}
                 onClick={() => setShowRevisionForm(true)}
               >
@@ -630,7 +609,7 @@ const ActionPanel = ({
               </Button>
               <Button
                 variant="outline"
-                className="w-full justify-start gap-2 border-red-200 text-red-600 hover:bg-red-50 font-bold"
+                className="w-full justify-start gap-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl border-0"
                 disabled={isLoadingAction}
                 onClick={() => setShowRejectForm(true)}
               >
@@ -724,7 +703,7 @@ const ActionPanel = ({
 
   if (status === "processing") {
     return (
-      <Card className="rounded-[20px] shadow-lg border-0 ring-1 ring-black/5 overflow-hidden">
+      <Card className="rounded-[20px] border-gray-100/80 shadow-[0_4px_24px_rgba(67,24,255,0.06)] overflow-hidden">
         <div className="h-2 bg-teal-500"></div>
         <CardHeader className="pb-3">
           <CardTitle className="text-lg font-bold text-[#2B3674]">
@@ -743,7 +722,7 @@ const ActionPanel = ({
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Tulis pesan untuk mahasiswa..."
-                className="min-h-[100px] resize-none bg-gray-50 border-gray-200 focus:bg-white transition-colors"
+                className="rounded-2xl bg-[#F4F7FE] border-0 focus:ring-2 focus:ring-[#4318FF]/20 resize-none min-h-[120px]"
               />
             </div>
 
@@ -775,7 +754,7 @@ const ActionPanel = ({
             )}
 
             <Button
-              className="w-full justify-start gap-2 bg-green-500 hover:bg-green-600 text-white font-bold py-5"
+              className="w-full justify-start gap-2 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl py-5"
               disabled={isLoadingAction || !message.trim()}
               onClick={() => onStatusChange("completed", message)}
             >
@@ -789,7 +768,7 @@ const ActionPanel = ({
 
             <Button
               variant="outline"
-              className="w-full justify-start gap-2 border-orange-200 text-orange-600 hover:bg-orange-50 font-bold"
+              className="w-full justify-start gap-2 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl border-0"
               disabled={isLoadingAction || !message.trim()}
               onClick={() => onStatusChange("revision_required", message)}
             >
@@ -799,7 +778,7 @@ const ActionPanel = ({
 
             <Button
               variant="outline"
-              className="w-full justify-start gap-2 border-red-200 text-red-600 hover:bg-red-50 font-bold"
+              className="w-full justify-start gap-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl border-0"
               disabled={isLoadingAction}
               onClick={() => onStatusChange("rejected", message || null)}
             >
@@ -814,7 +793,7 @@ const ActionPanel = ({
 
   if (status === "revision_required") {
     return (
-      <Card className="rounded-[20px] shadow-lg border-0 ring-1 ring-black/5 overflow-hidden">
+      <Card className="rounded-[20px] border-gray-100/80 shadow-[0_4px_24px_rgba(67,24,255,0.06)] overflow-hidden">
         <div className="h-2 bg-orange-400"></div>
         <CardHeader className="pb-3">
           <CardTitle className="text-lg font-bold text-[#2B3674]">
@@ -832,7 +811,7 @@ const ActionPanel = ({
             </p>
           </div>
           <Button
-            className="w-full justify-start gap-2 bg-blue-500 hover:bg-blue-600 text-white font-bold"
+            className="w-full justify-start gap-2 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-xl"
             disabled={isLoadingAction}
             onClick={() => onStatusChange("processing")}
           >
@@ -845,7 +824,7 @@ const ActionPanel = ({
           </Button>
           <Button
             variant="outline"
-            className="w-full justify-start gap-2 border-red-200 text-red-600 hover:bg-red-50 font-bold"
+            className="w-full justify-start gap-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl border-0"
             disabled={isLoadingAction}
             onClick={() => onStatusChange("rejected")}
           >
@@ -897,13 +876,13 @@ const ActionPanel = ({
 };
 
 const DetailRow = ({ icon, label, value }) => (
-  <div className="flex items-start gap-3">
-    <div className="mt-0.5 text-gray-400">{icon}</div>
+  <div className="flex items-start gap-3 py-3 border-b border-gray-50 last:border-0">
+    <div className="h-8 w-8 rounded-xl bg-[#F4F7FE] flex items-center justify-center shrink-0">
+      <span className="text-[#4318FF] [&>svg]:h-4 [&>svg]:w-4">{icon}</span>
+    </div>
     <div>
-      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">
-        {label}
-      </p>
-      <div className="text-sm font-bold text-[#2B3674]">{value || "-"}</div>
+      <p className="text-[10px] font-bold text-[#718096] uppercase tracking-wider">{label}</p>
+      <div className="text-sm font-bold text-[#2B3674] mt-0.5">{value || "-"}</div>
     </div>
   </div>
 );

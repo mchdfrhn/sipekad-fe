@@ -20,10 +20,9 @@ const postrequest = async (token, { type, message }) => {
 
     return response.data;
   } catch (err) {
-    console.log(err);
     return {
-      status: err,
-      message: err.response.data,
+      status: "fail",
+      message: err.response?.data?.message || "Gagal mengirim pengajuan",
     };
   }
 };
@@ -44,8 +43,8 @@ const getRequest = async (userId, page = 1, filterStatus = "") => {
   } catch (err) {
     return {
       status: "error",
-      message: err.response.data.message,
-      error: err.response.data.error_message,
+      message: err.response?.data?.message,
+      error: err.response?.data,
     };
   }
 };
@@ -60,15 +59,13 @@ export const getRequestDetail = async (requestId, setData, setResponses) => {
     });
 
     const result = response.data;
-    console.log(result);
     if (result.status === "success") {
       setData(result.data);
       const id = result.data.id;
       await getResponseById(id, token, setResponses);
     }
   } catch (err) {
-    console.error(err);
-    return err.response.data;
+    return err.response?.data;
   }
 };
 
@@ -96,7 +93,7 @@ const getAllRequestForAdmin = async (
   } catch (err) {
     return {
       success: false,
-      error: err.response.data,
+      error: err.response?.data,
     };
   }
 };
