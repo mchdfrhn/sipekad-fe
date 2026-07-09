@@ -51,7 +51,10 @@ export const requestPengajuan = async (
           token,
           "upload-request",
         );
-        void resultUpload; // upload best-effort, errors already handled in uploadPdf
+        if (resultUpload.status === "fail") {
+          if (setLoading) setLoading(false);
+          return { status: "fail", message: resultUpload.message || "Gagal upload file lampiran" };
+        }
       }
 
       if (setDisplayModal) setDisplayModal(!displayModal);
@@ -97,7 +100,10 @@ export const addResponseHandler = async (
           token,
           "upload-response",
         );
-        void resultUpload;
+        if (resultUpload.status === "fail") {
+          setLoading(false);
+          return { status: "fail", message: resultUpload.message || "Gagal upload file lampiran" };
+        }
       }
       setDisplayModal(!displayModal);
       setLoading(false);
