@@ -78,18 +78,13 @@ const RequestDetail = () => {
     setIsLoadingAction(true);
 
     if (messageText) {
-      const responseResult = await addResponseHandler(
+      await addResponseHandler(
         { id, message: messageText, isComplete: null, file },
         () => {},
         false,
         setIsLoadingAction,
         setErrorMessage,
       );
-      if (responseResult?.status === "fail") {
-        showToast(responseResult.message || "Gagal mengirim respon", "error");
-        setIsLoadingAction(false);
-        return;
-      }
     }
 
     const result = await updateRequestStatus(id, newStatus);
