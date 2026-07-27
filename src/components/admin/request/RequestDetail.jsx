@@ -41,6 +41,7 @@ import { useToast } from "@/utils/hooks/useToast";
 import { STATUS_LABEL_ADMIN } from "../../../utils/constant";
 
 import BASE_URL from "../../../utils/api";
+import { getSignedUrl } from "../../../utils/api/storage";
 
 const RequestDetail = () => {
   const { showToast } = useToast();
@@ -104,18 +105,14 @@ const RequestDetail = () => {
 
   const downloadFile = async (url, filename) => {
     try {
-      const response = await fetch(url);
-      if (!response.ok)
-        throw new Error(`HTTP error! status: ${response.status}`);
-      const blob = await response.blob();
-      const blobUrl = window.URL.createObjectURL(blob);
+      const signed = await getSignedUrl(url);
       const link = document.createElement("a");
-      link.href = blobUrl;
+      link.href = signed;
       link.download = filename;
+      link.target = "_blank";
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      window.URL.revokeObjectURL(blobUrl);
     } catch (error) {
       window.open(url, "_blank");
     }
@@ -272,8 +269,9 @@ const RequestDetail = () => {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => {
-                        setPreviewUrl(fileUrl);
+                      onClick={async () => {
+                        const signed = await getSignedUrl(fileUrl);
+                        setPreviewUrl(signed);
                         setDisplayIframe(true);
                       }}
                       className="flex-1 sm:flex-none gap-2 text-gray-600"
@@ -380,8 +378,9 @@ const RequestDetail = () => {
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => {
-                                setPreviewUrl(activity.url);
+                              onClick={async () => {
+                                const signed = await getSignedUrl(activity.url);
+                                setPreviewUrl(signed);
                                 setDisplayIframe(true);
                               }}
                               className="h-7 text-xs w-full gap-2 mt-2 bg-white border-orange-200 text-orange-600 hover:bg-orange-50"
@@ -422,8 +421,9 @@ const RequestDetail = () => {
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => {
-                                setPreviewUrl(activity.url);
+                              onClick={async () => {
+                                const signed = await getSignedUrl(activity.url);
+                                setPreviewUrl(signed);
                                 setDisplayIframe(true);
                               }}
                               className="h-7 text-xs flex-1 gap-2 mt-2 bg-white"

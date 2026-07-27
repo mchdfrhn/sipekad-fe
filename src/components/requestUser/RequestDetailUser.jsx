@@ -21,6 +21,7 @@ import { STATUS_LABEL_USER } from "../../utils/constant";
 import IframeRequest from "../admin/request/IframeRequest";
 import { getRequestDetail, reviseRequest } from "../../utils/api/request";
 import { uploadPdf } from "../../utils/api/uploadPdf";
+import { getSignedUrl } from "../../utils/api/storage";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -55,11 +56,13 @@ const RequestDetailUser = () => {
     getRequestDetailForUser();
   }, [getRequestDetailForUser]);
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     if (!data?.url) return;
+    const signed = await getSignedUrl(data.url);
     const link = document.createElement("a");
-    link.href = data.url;
+    link.href = signed;
     link.download = `${data.full_name || "berkas"}-${data.queue || "request"}.pdf`;
+    link.target = "_blank";
     link.click();
   };
 
@@ -254,7 +257,11 @@ const RequestDetailUser = () => {
               {data?.url && (
                 <div className="flex flex-wrap gap-3 pt-4 border-t border-gray-50">
                   <Button
-                    onClick={() => setShowFrameRequest(true)}
+                    onClick={async () => {
+                      const signed = await getSignedUrl(data.url);
+                      setSelectedResponseUrl(signed);
+                      setShowFrameRequest(true);
+                    }}
                     variant="outline"
                     className="rounded-xl px-6 font-bold flex items-center gap-2 border-gray-100 text-[#2B3674] hover:bg-gray-50 shadow-sm"
                   >
@@ -331,8 +338,9 @@ const RequestDetailUser = () => {
                           </p>
                           {res.url && (
                             <Button
-                              onClick={() => {
-                                setSelectedResponseUrl(res.url);
+                              onClick={async () => {
+                                const signed = await getSignedUrl(res.url);
+                                setSelectedResponseUrl(signed);
                                 setShowFrameResponse(true);
                               }}
                               className="w-full mt-2 bg-[#4318FF] hover:bg-[#3311CC] text-white rounded-lg py-2 text-xs font-bold"
@@ -382,7 +390,7 @@ const RequestDetailUser = () => {
             </div>
             <div className="p-1 h-full min-h-[500px]">
               <IframeRequest
-                url={showFrameRequest ? data?.url : selectedResponseUrl}
+                url={selectedResponseUrl}
                 className="w-full h-[600px] border-none rounded-[20px]"
               />
             </div>
