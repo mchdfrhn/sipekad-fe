@@ -7,6 +7,7 @@ import {
   Search,
   Filter,
   Lock,
+  Clock,
 } from "lucide-react";
 import { motion as Motion } from "motion/react";
 import { useEffect, useState } from "react";
@@ -30,6 +31,7 @@ import {
 import { STUDENT_PRODI } from "@/utils/constant";
 import { useToast } from "@/utils/hooks/useToast";
 import { generatePaginationPages } from "@/utils/helpers";
+import { getPendingUsers } from "../../../utils/api/user";
 
 const User = () => {
   const { showToast } = useToast();
@@ -47,6 +49,7 @@ const User = () => {
   const [loading, setLoading] = useState(true);
   const [alertReset, setAlertReset] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
+  const [pendingCount, setPendingCount] = useState(0);
 
   const handleResetClick = (id) => {
     setSelectedUserId(id);
@@ -111,6 +114,11 @@ const User = () => {
 
     getUsers();
     setDomReady(true);
+
+    // fetch pending count for badge
+    getPendingUsers().then((r) => {
+      if (r.status === "success") setPendingCount(r.totalData ?? r.data?.length ?? 0);
+    });
   }, [filterProdi, searchTerm]);
 
   const handleDeleteClick = (id) => {
@@ -203,6 +211,28 @@ const User = () => {
         transition={{ duration: 0.5 }}
         className="flex flex-col h-full gap-4"
       >
+        {/* Tab navigasi */}
+        <div className="flex gap-2 border-b border-gray-100 pb-0">
+          <Link
+            to="/admin/user"
+            className="px-4 py-2 text-sm font-semibold text-[#4318FF] border-b-2 border-[#4318FF] -mb-px"
+          >
+            Semua User
+          </Link>
+          <Link
+            to="/admin/user/pending"
+            className="px-4 py-2 text-sm font-semibold text-gray-400 hover:text-[#4318FF] -mb-px flex items-center gap-1.5"
+          >
+            <Clock className="h-3.5 w-3.5" />
+            Menunggu Persetujuan
+            {pendingCount > 0 && (
+              <span className="bg-amber-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">
+                {pendingCount}
+              </span>
+            )}
+          </Link>
+        </div>
+
         <Card className="border-0 shadow-lg rounded-[20px] bg-white flex-1 flex flex-col">
           <CardContent className="p-0 pb-6 flex-1 flex flex-col justify-between relative">
             {loading && <LoadingOverlay />}

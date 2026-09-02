@@ -223,4 +223,40 @@ export const resetPasswordApi = async (token, userId) => {
   }
 };
 
+export const getPendingUsers = async () => {
+  const token = localStorage.getItem("tokenKey");
+  try {
+    const result = await axios.get(`${BASE_URL}/users?status=pending&limit=100`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return result.data;
+  } catch (err) {
+    return handleApiError(err);
+  }
+};
+
+export const approveUserApi = async (userId) => {
+  const token = localStorage.getItem("tokenKey");
+  try {
+    const result = await axios.patch(`${BASE_URL}/users/${userId}/approve`, {}, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return result.data;
+  } catch (err) {
+    return handleApiError(err);
+  }
+};
+
+export const rejectUserApi = async (userId) => {
+  const token = localStorage.getItem("tokenKey");
+  try {
+    const result = await axios.delete(`${BASE_URL}/users/${userId}/reject`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return result.data;
+  } catch (err) {
+    return handleApiError(err);
+  }
+};
+
 export { getUser, updateProfile, getAllUserForAdmin, getUserDetail };

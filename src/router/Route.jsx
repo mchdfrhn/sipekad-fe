@@ -23,6 +23,7 @@ const Settings = lazy(() => import("../pages/Settings"));
 
 // Lazy — Admin
 const User = lazy(() => import("../components/admin/user/User"));
+const PendingUsers = lazy(() => import("../components/admin/user/PendingUsers"));
 const RequestLayout = lazy(() => import("../components/admin/RequestLayout"));
 const MainAdmin = lazy(() => import("../components/admin/MainAdmin"));
 const LayoutUser = lazy(() => import("../components/admin/LayoutUser"));
@@ -251,6 +252,10 @@ const Router = createBrowserRouter([
                   {
                     index: true,
                     element: w(User),
+                  },
+                  {
+                    path: "pending",
+                    element: w(PendingUsers),
                   },
                   {
                     path: ":id",
