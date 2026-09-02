@@ -58,7 +58,7 @@ const PendingUsers = () => {
             : `Akun ${confirmDialog.name} akan dihapus permanen.`
         }
         confirmText={confirmDialog.type === "approve" ? "Setujui" : "Tolak"}
-        confirmClassName={confirmDialog.type === "approve" ? "bg-green-600 hover:bg-green-700" : "bg-red-600 hover:bg-red-700"}
+        variant={confirmDialog.type === "approve" ? "primary" : "danger"}
       />
 
       <Motion.div
