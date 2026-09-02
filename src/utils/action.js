@@ -15,8 +15,8 @@ export const registerFlow = async (data, navigate, setLoading) => {
   const result = await register(data);
   setLoading(false);
   if (result.status === "success") {
-    navigate("/login");
-    return { status: "success", message: result.message };
+    // Jangan redirect ke login — akun masih pending approval admin
+    return { status: "pending", message: "Pendaftaran berhasil! Akun Anda sedang menunggu persetujuan admin. Kami akan menghubungi Anda setelah akun diaktifkan." };
   }
 
   return { 
