@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Eye,
   EyeOff,
   LoaderCircle,
   Lock,
   User as UserIcon,
+  Clock,
+  CheckCircle2,
+  AlertCircle,
 } from "lucide-react";
-import { useNavigate, Link } from "react-router";
+import { useNavigate, Link, useLocation } from "react-router";
 import { useUser } from "../../utils/hooks/userContext";
 import { useToast } from "../../utils/hooks/useToast";
 import { loginFlow } from "../../utils/action";
@@ -19,11 +22,33 @@ const Login = () => {
   const { updateUserData } = useUser();
   const { showToast } = useToast();
   const navigate = useNavigate();
+  const location = useLocation();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [hiddenPassword, setHiddenPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+
+  const [registerNotice, setRegisterNotice] = useState(
+    location.state?.registered
+      ? location.state?.message ||
+          "Pendaftaran berhasil! Akun Anda sedang menunggu persetujuan admin sebelum dapat digunakan untuk login."
+      : ""
+  );
+  const [pendingNotice, setPendingNotice] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    if (location.state?.registered) {
+      showToast(
+        location.state?.message ||
+          "Pendaftaran berhasil! Akun Anda sedang menunggu persetujuan admin.",
+        "info"
+      );
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state, showToast]);
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
@@ -34,6 +59,8 @@ const Login = () => {
       return;
     }
 
+    setPendingNotice("");
+    setErrorMessage("");
     setIsLoading(true);
     const data = { username, password };
 
@@ -45,7 +72,23 @@ const Login = () => {
     );
 
     if (result && result.status === "error") {
-      showToast(result.message, "error");
+      const isAccountPending =
+        result.code === "ACCOUNT_PENDING" ||
+        (result.message &&
+          (result.message.toLowerCase().includes("menunggu persetujuan") ||
+            result.message.toLowerCase().includes("belum disetujui") ||
+            result.message.toLowerCase().includes("pending")));
+
+      if (isAccountPending) {
+        const msg =
+          result.message ||
+          "Akun Anda sedang menunggu persetujuan admin. Harap tunggu hingga admin menyetujui akun Anda sebelum masuk.";
+        setPendingNotice(msg);
+        showToast(msg, "warning", 6000);
+      } else {
+        setErrorMessage(result.message || "Email atau password salah");
+        showToast(result.message || "Email atau password salah", "error", 4000);
+      }
     } else if (result && result.status === "success") {
       showToast("Login berhasil! Mengalihkan...", "success");
     }
@@ -124,10 +167,76 @@ const Login = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="w-full max-w-[480px] bg-white rounded-[20px] p-8 md:p-12 shadow-[var(--shadow-brand-lg)] border border-indigo-50"
           >
-            <div className="mb-10">
-              <h2 className="text-3xl font-bold text-[#2B3674] mb-3">Masuk</h2>
+            <div className="mb-8">
+              <h2 className="text-3xl font-bold text-[#2B3674] mb-2">Masuk</h2>
               <p className="text-[#718096] font-medium">Masukkan kredensial Anda untuk melanjutkan</p>
             </div>
+
+            {/* Keterangan Akun Belum Disetujui Admin */}
+            {pendingNotice && (
+              <Motion.div
+                initial={{ opacity: 0, y: -10, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                className="mb-6 p-4 rounded-2xl bg-amber-50/90 border border-amber-300 shadow-sm flex items-start gap-3.5"
+              >
+                <div className="p-2.5 rounded-xl bg-amber-100 text-amber-700 shrink-0 mt-0.5">
+                  <Clock className="w-5 h-5" />
+                </div>
+                <div className="flex-1 text-left">
+                  <div className="flex items-center gap-2">
+                    <span className="inline-block w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+                    <h4 className="text-sm font-bold text-amber-900">
+                      Akun Belum Disetujui Admin
+                    </h4>
+                  </div>
+                  <p className="text-xs text-amber-800 mt-1.5 leading-relaxed font-medium">
+                    {pendingNotice}
+                  </p>
+                  <p className="text-[11px] text-amber-700/90 mt-2.5 pt-2 border-t border-amber-200/80 leading-relaxed">
+                    💡 <span className="font-semibold">Informasi:</span> Akun Anda telah terdaftar namun masih memerlukan verifikasi & persetujuan dari administrator akademik sebelum dapat digunakan untuk masuk ke SIPEKAD.
+                  </p>
+                </div>
+              </Motion.div>
+            )}
+
+            {/* Keterangan Pendaftaran Berhasil (Pengalihan dari Register) */}
+            {registerNotice && !pendingNotice && (
+              <Motion.div
+                initial={{ opacity: 0, y: -10, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                className="mb-6 p-4 rounded-2xl bg-blue-50 border border-blue-200 shadow-sm flex items-start gap-3.5"
+              >
+                <div className="p-2 rounded-xl bg-blue-100 text-[#4318FF] shrink-0 mt-0.5">
+                  <CheckCircle2 className="w-5 h-5" />
+                </div>
+                <div className="flex-1 text-left">
+                  <h4 className="text-sm font-bold text-[#2B3674]">
+                    Pendaftaran Berhasil!
+                  </h4>
+                  <p className="text-xs text-[#718096] mt-1 leading-relaxed font-medium">
+                    {registerNotice}
+                  </p>
+                </div>
+              </Motion.div>
+            )}
+
+            {/* Error Message Umum */}
+            {errorMessage && !pendingNotice && (
+              <Motion.div
+                initial={{ opacity: 0, y: -10, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                className="mb-6 p-3.5 rounded-2xl bg-red-50 border border-red-200/80 shadow-sm flex items-start gap-3"
+              >
+                <div className="p-1.5 rounded-xl bg-red-100 text-red-600 shrink-0 mt-0.5">
+                  <AlertCircle className="w-4 h-4" />
+                </div>
+                <div className="flex-1 text-left">
+                  <p className="text-xs text-red-700 font-semibold leading-relaxed">
+                    {errorMessage}
+                  </p>
+                </div>
+              </Motion.div>
+            )}
 
             <form onSubmit={onSubmitHandler} className="space-y-6">
               <div className="space-y-2">
@@ -138,7 +247,10 @@ const Login = () => {
                     type="text"
                     placeholder="Masukkan email atau username"
                     value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    onChange={(e) => {
+                      setUsername(e.target.value);
+                      if (errorMessage) setErrorMessage("");
+                    }}
                     className="h-14 pl-12 rounded-2xl bg-[#F4F7FE] border-none placeholder:text-[#718096] focus:ring-2 focus:ring-[#4318FF]/20 transition-all font-medium"
                   />
                 </div>
@@ -154,7 +266,10 @@ const Login = () => {
                     type={hiddenPassword ? "text" : "password"}
                     placeholder="Kata sandi"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      if (errorMessage) setErrorMessage("");
+                    }}
                     className="h-14 pl-12 pr-12 rounded-2xl bg-[#F4F7FE] border-none placeholder:text-[#718096] focus:ring-2 focus:ring-[#4318FF]/20 transition-all font-medium"
                   />
                   <button

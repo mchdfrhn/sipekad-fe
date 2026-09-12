@@ -64,10 +64,8 @@ const Register = () => {
 
     if (result && result.status === "error") {
       showToast(result.message, "error");
-    } else if (result && result.status === "pending") {
-      showToast(result.message, "success");
-    } else if (result && result.status === "success") {
-      showToast("Registrasi berhasil! Silakan login.", "success");
+    } else if (result && (result.status === "success" || result.status === "pending")) {
+      showToast(result.message || "Pendaftaran berhasil! Mengalihkan ke login...", "success");
     }
   };
 

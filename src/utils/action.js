@@ -15,8 +15,16 @@ export const registerFlow = async (data, navigate, setLoading) => {
   const result = await register(data);
   setLoading(false);
   if (result.status === "success") {
-    // Jangan redirect ke login — akun masih pending approval admin
-    return { status: "pending", message: "Pendaftaran berhasil! Akun Anda sedang menunggu persetujuan admin. Kami akan menghubungi Anda setelah akun diaktifkan." };
+    navigate("/login", {
+      state: {
+        registered: true,
+        message: "Pendaftaran berhasil! Akun Anda sedang menunggu persetujuan admin sebelum dapat digunakan untuk login.",
+      },
+    });
+    return {
+      status: "success",
+      message: "Pendaftaran berhasil! Mengalihkan ke login...",
+    };
   }
 
   return { 
@@ -250,7 +258,11 @@ export const loginFlow = async (data, updateUserData, navigate, setLoading) => {
   }
 
   setLoading(false);
-  return { status: "error", message: result.message || "Email atau password salah" };
+  return {
+    status: "error",
+    code: result.code,
+    message: result.message || "Email atau password salah",
+  };
 };
 
 export const resetPasswordAction = async (userId) => {

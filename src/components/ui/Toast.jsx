@@ -1,5 +1,5 @@
 import { AnimatePresence, motion as Motion } from "motion/react";
-import { CheckCircle, AlertCircle, X, Info } from "lucide-react";
+import { CheckCircle, AlertCircle, AlertTriangle, X, Info } from "lucide-react";
 import { useEffect } from "react";
 
 const Toast = ({ message, type = "success", onClose, duration = 3000 }) => {
@@ -20,6 +20,12 @@ const Toast = ({ message, type = "success", onClose, duration = 3000 }) => {
       bg: "bg-red-50",
       border: "border-red-100",
       progress: "bg-red-500",
+    },
+    warning: {
+      icon: <AlertTriangle className="h-5 w-5 text-amber-500" />,
+      bg: "bg-amber-50",
+      border: "border-amber-200",
+      progress: "bg-amber-500",
     },
     info: {
       icon: <Info className="h-5 w-5 text-blue-500" />,

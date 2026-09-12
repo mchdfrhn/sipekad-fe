@@ -7,9 +7,12 @@ const ToastContext = createContext(null);
 export const ToastProvider = ({ children }) => {
   const [toasts, setToasts] = useState([]);
 
-  const showToast = useCallback((message, type = "success") => {
+  const showToast = useCallback((message, type = "success", duration = 3500) => {
     const id = Math.random().toString(36).substr(2, 9);
-    setToasts((prev) => { const trimmed = prev.length >= 3 ? prev.slice(1) : prev; return [...trimmed, { id, message, type }]; });
+    setToasts((prev) => {
+      const trimmed = prev.length >= 3 ? prev.slice(1) : prev;
+      return [...trimmed, { id, message, type, duration }];
+    });
   }, []);
 
   const removeToast = useCallback((id) => {
@@ -26,6 +29,7 @@ export const ToastProvider = ({ children }) => {
               <Toast
                 message={toast.message}
                 type={toast.type}
+                duration={toast.duration}
                 onClose={() => removeToast(toast.id)}
               />
             </div>

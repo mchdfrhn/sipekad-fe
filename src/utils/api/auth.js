@@ -11,6 +11,7 @@ const login = async ({ username, password }) => {
   } catch (err) {
     return {
       status: "error",
+      code: err.response?.data?.code,
       message: err.response?.data?.message || "Gagal login",
     };
   }
