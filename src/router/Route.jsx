@@ -8,65 +8,83 @@ import PublicRoute from "../components/Auth/PublicRoute";
 import ProtectedRoute from "../components/Auth/ProtectedRoute";
 import LayoutDashboard from "../components/Dashboard/LayoutDashboard";
 import LayoutAdmin from "../components/admin/LayoutAdmin";
+import DashboardRequest from "../components/Dashboard/DashboardRequest";
+import Request from "../components/Request/Request";
+
+// Lazy with retry helper to auto-recover from stale chunks or transient network drops
+const lazyWithRetry = (componentImport) =>
+  lazy(async () => {
+    try {
+      return await componentImport();
+    } catch (error) {
+      const retryKey = `sipekad_chunk_retry_${window.location.pathname}`;
+      const alreadyRetried = sessionStorage.getItem(retryKey);
+      if (!alreadyRetried) {
+        sessionStorage.setItem(retryKey, "true");
+        window.location.reload();
+        return new Promise(() => {});
+      }
+      sessionStorage.removeItem(retryKey);
+      throw error;
+    }
+  });
 
 // Lazy — Auth
-const Login = lazy(() => import("../components/Auth/Login"));
-const Register = lazy(() => import("../components/Auth/Register"));
-const ForgotPassword = lazy(() => import("../components/Auth/ForgotPassword"));
-const ResetPassword = lazy(() => import("../components/Auth/ResetPassword"));
+const Login = lazyWithRetry(() => import("../components/Auth/Login"));
+const Register = lazyWithRetry(() => import("../components/Auth/Register"));
+const ForgotPassword = lazyWithRetry(() => import("../components/Auth/ForgotPassword"));
+const ResetPassword = lazyWithRetry(() => import("../components/Auth/ResetPassword"));
 
 // Lazy — Dashboard
-const DashboardHome = lazy(() => import("../components/Dashboard/DashboardHome"));
-const DashboardRequest = lazy(() => import("../components/Dashboard/DashboardRequest"));
-const DashboardUser = lazy(() => import("../components/Dashboard/DashboardUser"));
-const Settings = lazy(() => import("../pages/Settings"));
+const DashboardHome = lazyWithRetry(() => import("../components/Dashboard/DashboardHome"));
+const DashboardUser = lazyWithRetry(() => import("../components/Dashboard/DashboardUser"));
+const Settings = lazyWithRetry(() => import("../pages/Settings"));
 
 // Lazy — Admin
-const User = lazy(() => import("../components/admin/user/User"));
-const PendingUsers = lazy(() => import("../components/admin/user/PendingUsers"));
-const RequestLayout = lazy(() => import("../components/admin/RequestLayout"));
-const MainAdmin = lazy(() => import("../components/admin/MainAdmin"));
-const LayoutUser = lazy(() => import("../components/admin/LayoutUser"));
-const UserDetail = lazy(() => import("../components/admin/user/UserDetail"));
-const RequestAdmin = lazy(() => import("../components/admin/request/Requests"));
-const RequestDetail = lazy(() => import("../components/admin/request/RequestDetail"));
-const Backup = lazy(() => import("../pages/admin/Backup"));
-const WhatsAppManager = lazy(() => import("../pages/admin/WhatsAppManager"));
+const User = lazyWithRetry(() => import("../components/admin/user/User"));
+const PendingUsers = lazyWithRetry(() => import("../components/admin/user/PendingUsers"));
+const RequestLayout = lazyWithRetry(() => import("../components/admin/RequestLayout"));
+const MainAdmin = lazyWithRetry(() => import("../components/admin/MainAdmin"));
+const LayoutUser = lazyWithRetry(() => import("../components/admin/LayoutUser"));
+const UserDetail = lazyWithRetry(() => import("../components/admin/user/UserDetail"));
+const RequestAdmin = lazyWithRetry(() => import("../components/admin/request/Requests"));
+const RequestDetail = lazyWithRetry(() => import("../components/admin/request/RequestDetail"));
+const Backup = lazyWithRetry(() => import("../pages/admin/Backup"));
+const WhatsAppManager = lazyWithRetry(() => import("../pages/admin/WhatsAppManager"));
 
 // Lazy — Request
-const Request = lazy(() => import("../components/Request/Request"));
-const SuratKeterangan = lazy(() => import("../components/Request/SuratKeterangan"));
-const SuratPengajuan = lazy(() => import("../components/Request/SuratPengajuan"));
-const SuratPenjugasan = lazy(() => import("../components/Request/SuratPenjugasan"));
-const SuratSempro = lazy(() => import("../components/Request/SuratSempro"));
-const Skripsi = lazy(() => import("../components/Request/Skripsi"));
-const TranskripNilai = lazy(() => import("../components/Request/TranskripNilai"));
-const Yudisium = lazy(() => import("../components/Request/Yudisium"));
-const SeminarKp = lazy(() => import("../components/Request/SeminarKp"));
+const SuratKeterangan = lazyWithRetry(() => import("../components/Request/SuratKeterangan"));
+const SuratPengajuan = lazyWithRetry(() => import("../components/Request/SuratPengajuan"));
+const SuratPenjugasan = lazyWithRetry(() => import("../components/Request/SuratPenjugasan"));
+const SuratSempro = lazyWithRetry(() => import("../components/Request/SuratSempro"));
+const Skripsi = lazyWithRetry(() => import("../components/Request/Skripsi"));
+const TranskripNilai = lazyWithRetry(() => import("../components/Request/TranskripNilai"));
+const Yudisium = lazyWithRetry(() => import("../components/Request/Yudisium"));
+const SeminarKp = lazyWithRetry(() => import("../components/Request/SeminarKp"));
 
 // Lazy — Request Detail
-const RequestDetailUser = lazy(() => import("../components/requestUser/RequestDetailUser"));
+const RequestDetailUser = lazyWithRetry(() => import("../components/requestUser/RequestDetailUser"));
 
 // Lazy — Surat Keterangan
-const ListKeterangan = lazy(() => import("../components/suratKeterangan/ListKeterangan"));
-const KeteranganLulus = lazy(() => import("../components/suratKeterangan/KeteranganLulus"));
-const MahasiswaAktif = lazy(() => import("../components/suratKeterangan/MahasiswaAktif"));
-const KeteranganCuti = lazy(() => import("../components/suratKeterangan/KeteranganCuti"));
-const PengunduranDiri = lazy(() => import("../components/suratKeterangan/PengunduranDiri"));
+const ListKeterangan = lazyWithRetry(() => import("../components/suratKeterangan/ListKeterangan"));
+const KeteranganLulus = lazyWithRetry(() => import("../components/suratKeterangan/KeteranganLulus"));
+const MahasiswaAktif = lazyWithRetry(() => import("../components/suratKeterangan/MahasiswaAktif"));
+const KeteranganCuti = lazyWithRetry(() => import("../components/suratKeterangan/KeteranganCuti"));
+const PengunduranDiri = lazyWithRetry(() => import("../components/suratKeterangan/PengunduranDiri"));
 
 // Lazy — Surat Pengajuan
-const ListPengajuan = lazy(() => import("../components/suratPengajuan/ListPengajuan"));
-const JudulSkripsi = lazy(() => import("../components/suratPengajuan/JudulSkripsi"));
-const KerjaPraktik = lazy(() => import("../components/suratPengajuan/KerjaPraktik"));
-const PengantarKerjaPraktik = lazy(() => import("../components/suratPengajuan/PengantarKerjaPraktik"));
+const ListPengajuan = lazyWithRetry(() => import("../components/suratPengajuan/ListPengajuan"));
+const JudulSkripsi = lazyWithRetry(() => import("../components/suratPengajuan/JudulSkripsi"));
+const KerjaPraktik = lazyWithRetry(() => import("../components/suratPengajuan/KerjaPraktik"));
+const PengantarKerjaPraktik = lazyWithRetry(() => import("../components/suratPengajuan/PengantarKerjaPraktik"));
 
 // Lazy — Penugasan
-const ListPenugasan = lazy(() => import("../components/Penugasan/ListPenugasan"));
-const DosenKerjaPraktik = lazy(() => import("../components/Penugasan/DosenKerjaPraktik"));
-const DosenSkripsi = lazy(() => import("../components/Penugasan/DosenSkripsi"));
+const ListPenugasan = lazyWithRetry(() => import("../components/Penugasan/ListPenugasan"));
+const DosenKerjaPraktik = lazyWithRetry(() => import("../components/Penugasan/DosenKerjaPraktik"));
+const DosenSkripsi = lazyWithRetry(() => import("../components/Penugasan/DosenSkripsi"));
 
 // Lazy — User
-const UserBio = lazy(() => import("../components/User/UserBio"));
+const UserBio = lazyWithRetry(() => import("../components/User/UserBio"));
 
 const PageLoader = () => (
   <div className="flex items-center justify-center py-20">
@@ -141,11 +159,11 @@ const Router = createBrowserRouter([
               },
               {
                 path: "request",
-                element: w(DashboardRequest),
+                element: <DashboardRequest />,
                 children: [
                   {
                     index: true,
-                    element: w(Request),
+                    element: <Request />,
                   },
                   {
                     path: "suratketerangan",
