@@ -113,7 +113,7 @@ const RequestDetail = () => {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-    } catch (error) {
+    } catch {
       window.open(url, "_blank");
     }
   };
@@ -237,10 +237,64 @@ const RequestDetail = () => {
                 <Label className="text-gray-400 uppercase text-xs font-bold tracking-wider">
                   Jenis Surat
                 </Label>
-                <p className="text-base font-bold text-[#2B3674]">
-                  {requestDetail?.type}
-                </p>
+                <div className="flex items-center gap-3 flex-wrap">
+                  <p className="text-base font-bold text-[#2B3674]">
+                    {requestDetail?.type}
+                  </p>
+                  {requestDetail?.type?.toLowerCase() === "pengunduran diri" && (
+                    <span
+                      className={`inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full ${
+                        requestDetail?.needs_statement_letter
+                          ? "bg-blue-100 text-blue-700 border border-blue-200"
+                          : "bg-gray-100 text-gray-600 border border-gray-200"
+                      }`}
+                    >
+                      <span
+                        className={`h-2 w-2 rounded-full ${
+                          requestDetail?.needs_statement_letter
+                            ? "bg-blue-600"
+                            : "bg-gray-400"
+                        }`}
+                      />
+                      {requestDetail?.needs_statement_letter
+                        ? "Perlu Surat Keterangan Balasan"
+                        : "Tanpa Surat Balasan"}
+                    </span>
+                  )}
+                </div>
               </div>
+
+              {requestDetail?.type?.toLowerCase() === "pengunduran diri" && (
+                <div
+                  className={`p-4 rounded-2xl border flex items-start gap-3.5 ${
+                    requestDetail?.needs_statement_letter
+                      ? "bg-blue-50/70 border-blue-200 text-blue-900"
+                      : "bg-gray-50 border-gray-200 text-gray-700"
+                  }`}
+                >
+                  <div
+                    className={`p-2 rounded-xl shrink-0 ${
+                      requestDetail?.needs_statement_letter
+                        ? "bg-blue-600 text-white"
+                        : "bg-gray-200 text-gray-600"
+                    }`}
+                  >
+                    <FileText className="h-5 w-5" />
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-sm font-bold">
+                      {requestDetail?.needs_statement_letter
+                        ? "Mahasiswa Memerlukan Surat Keterangan Balasan Resmi"
+                        : "Mahasiswa Tidak Memerlukan Surat Keterangan Balasan"}
+                    </p>
+                    <p className="text-xs leading-relaxed opacity-90">
+                      {requestDetail?.needs_statement_letter
+                        ? "Mahasiswa meminta surat keterangan pengunduran diri bertanda tangan resmi. Mohon siapkan dan unggah berkas surat balasan saat menyelesaikan pengajuan ini."
+                        : "Mahasiswa hanya mengajukan pengunduran diri tanpa meminta berkas surat balasan resmi. Anda dapat langsung menyelesaikan pengajuan dengan pesan konfirmasi."}
+                    </p>
+                  </div>
+                </div>
+              )}
 
               <div className="bg-blue-50/50 p-5 rounded-2xl border border-blue-100">
                 <h4 className="flex items-center gap-2 font-bold text-[#2B3674] mb-3 text-sm uppercase tracking-wide">
@@ -300,6 +354,8 @@ const RequestDetail = () => {
         <div className="space-y-6">
           <ActionPanel
             status={requestDetail?.status}
+            requestType={requestDetail?.type}
+            needsStatementLetter={requestDetail?.needs_statement_letter}
             message={message}
             setMessage={setMessage}
             file={file}
@@ -525,6 +581,8 @@ const RequestDetail = () => {
 
 const ActionPanel = ({
   status,
+  requestType,
+  needsStatementLetter,
   message,
   setMessage,
   file,
@@ -727,9 +785,21 @@ const ActionPanel = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="proc-file" className="font-bold text-[#2B3674]">
-                Lampiran (Opsional)
-              </Label>
+              <div className="flex items-center justify-between flex-wrap gap-1">
+                <Label htmlFor="proc-file" className="font-bold text-[#2B3674]">
+                  Lampiran (Opsional)
+                </Label>
+                {requestType?.toLowerCase() === "pengunduran diri" && needsStatementLetter && (
+                  <span className="text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
+                    Dianjurkan unggah berkas surat keterangan
+                  </span>
+                )}
+                {requestType?.toLowerCase() === "pengunduran diri" && !needsStatementLetter && (
+                  <span className="text-[10px] font-medium text-gray-500">
+                    Tidak memerlukan berkas balasan
+                  </span>
+                )}
+              </div>
               <div className="relative">
                 <input
                   type="file"
@@ -739,7 +809,13 @@ const ActionPanel = ({
                 />
                 <label
                   htmlFor="proc-file"
-                  className="flex items-center gap-2 w-full p-2 border border-dashed border-gray-300 rounded-lg text-sm text-gray-500 cursor-pointer hover:bg-gray-50 hover:border-[#4318FF] transition-all"
+                  className={`flex items-center gap-2 w-full p-2.5 border rounded-lg text-sm cursor-pointer transition-all ${
+                    file
+                      ? "border-green-500 bg-green-50/40 text-green-700"
+                      : requestType?.toLowerCase() === "pengunduran diri" && needsStatementLetter
+                        ? "border-blue-400 bg-blue-50/30 text-[#2B3674] hover:bg-blue-50"
+                        : "border-gray-300 border-dashed text-gray-500 hover:bg-gray-50 hover:border-[#4318FF]"
+                  }`}
                 >
                   <Paperclip className="h-4 w-4" />
                   {file ? file.name : "Klik untuk upload file"}

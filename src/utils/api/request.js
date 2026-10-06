@@ -2,14 +2,19 @@ import BASE_URL from ".";
 import Axios from "axios";
 import { getResponseById } from "./response.js";
 
-const postrequest = async (token, { type, message }) => {
+const postrequest = async (token, { type, message, needs_statement_letter }) => {
   try {
+    const payload = {
+      type,
+      message,
+    };
+    if (typeof needs_statement_letter === "boolean") {
+      payload.needs_statement_letter = needs_statement_letter;
+    }
+
     const response = await Axios.post(
       `${BASE_URL}/request`,
-      {
-        type,
-        message,
-      },
+      payload,
       {
         headers: {
           "Content-Type": "application/json",

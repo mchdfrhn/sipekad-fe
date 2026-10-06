@@ -46,7 +46,8 @@ const RequestDetailUser = () => {
     setIsLoading(true);
     try {
       await getRequestDetail(id, setData, setResponse);
-    } catch (error) {
+    } catch {
+      // Ignore request detail fetch failure
     } finally {
       setIsLoading(false);
     }
@@ -179,6 +180,37 @@ const RequestDetailUser = () => {
                     {data?.type || "-"}
                   </p>
                 </div>
+
+                {data?.type?.toLowerCase() === "pengunduran diri" && (
+                  <div className="space-y-1 md:col-span-2">
+                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
+                      <FileText className="h-3 w-3" /> Surat Keterangan Balasan
+                    </p>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span
+                        className={`inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full ${
+                          data?.needs_statement_letter
+                            ? "bg-blue-100 text-blue-700 border border-blue-200"
+                            : "bg-gray-100 text-gray-600 border border-gray-200"
+                        }`}
+                      >
+                        <span
+                          className={`h-2 w-2 rounded-full ${
+                            data?.needs_statement_letter ? "bg-blue-600" : "bg-gray-400"
+                          }`}
+                        />
+                        {data?.needs_statement_letter
+                          ? "Perlu Surat Keterangan Balasan"
+                          : "Tanpa Surat Balasan"}
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        {data?.needs_statement_letter
+                          ? "(Menunggu admin melampirkan berkas surat keterangan resmi)"
+                          : "(Pengajuan pengunduran diri tanpa permintaan surat balasan)"}
+                      </span>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {data?.status === "revision_required" && (

@@ -43,12 +43,21 @@ export const requestPengajuan = async (
   displayModal,
   setLoading,
   setErr,
+  options = {},
 ) => {
   const token = localStorage.getItem("tokenKey");
   try {
+    const needs_statement_letter =
+      typeof options === "object" && options !== null
+        ? options.needs_statement_letter
+        : typeof options === "boolean"
+          ? options
+          : undefined;
+
     const response = await postrequest(token, {
       type,
       message,
+      ...(typeof needs_statement_letter === "boolean" ? { needs_statement_letter } : {}),
     });
     if (response.status === "success") {
       if (file) {

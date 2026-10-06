@@ -346,9 +346,31 @@ export const TablePengajuan = ({
                   )}
 
                   <td className="px-4 md:px-6 py-2.5">
-                    <span className="text-xs md:text-sm font-bold text-[#2B3674]">
-                      {value.type}
-                    </span>
+                    <div className="flex flex-col gap-1 items-start">
+                      <span className="text-xs md:text-sm font-bold text-[#2B3674]">
+                        {value.type}
+                      </span>
+                      {value.type?.toLowerCase() === "pengunduran diri" && (
+                        <span
+                          className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                            value.needs_statement_letter
+                              ? "bg-blue-50 text-blue-700 border border-blue-200"
+                              : "bg-gray-100 text-gray-600 border border-gray-200"
+                          }`}
+                        >
+                          <span
+                            className={`h-1.5 w-1.5 rounded-full ${
+                              value.needs_statement_letter
+                                ? "bg-blue-600"
+                                : "bg-gray-400"
+                            }`}
+                          />
+                          {value.needs_statement_letter
+                            ? "Perlu Surat Balasan"
+                            : "Tanpa Surat Balasan"}
+                        </span>
+                      )}
+                    </div>
                   </td>
 
                   <td className="hidden md:table-cell px-6 py-2.5 max-w-[300px]">

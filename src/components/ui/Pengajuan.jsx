@@ -19,6 +19,7 @@ const Pengajuan = ({
   setFile,
   file,
   isLoading,
+  additionalFields,
 }) => {
   const [showPreview, setShowPreview] = useState(false);
   const [maxMessage, setMaxMessage] = useState(0);
@@ -104,6 +105,8 @@ const Pengajuan = ({
                   className="w-full min-h-[160px] px-4 py-3 bg-gray-50 border border-transparent rounded-2xl focus:bg-white focus:ring-2 focus:ring-[#4318FF] transition-all outline-none text-sm font-medium resize-none"
                 />
               </div>
+
+              {additionalFields}
 
               {!isDisplay && (
                 <div className="space-y-2">
