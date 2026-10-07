@@ -37,7 +37,7 @@ const EmailManager = () => {
     smtp_secure: false,
     smtp_user: "",
     smtp_pass: "",
-    email_from: "STTPU SIPEKAD Notification <sipekad@sttpu.ac.id>",
+    email_from: "SIPEKAD Notification <sipekad@sttpu.ac.id>",
     is_active: true,
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -65,7 +65,7 @@ const EmailManager = () => {
             smtp_port: data.config.port || 587,
             smtp_secure: Boolean(data.config.secure),
             smtp_user: data.config.user || "",
-            email_from: data.config.from || "STTPU SIPEKAD Notification <sipekad@sttpu.ac.id>",
+            email_from: data.config.from || "SIPEKAD Notification <sipekad@sttpu.ac.id>",
             is_active: data.is_active !== false,
           }));
         }
@@ -452,7 +452,7 @@ const EmailManager = () => {
                 </Label>
                 <Input
                   id="email_from"
-                  placeholder="STTPU SIPEKAD Notification <sipekad@sttpu.ac.id>"
+                  placeholder="SIPEKAD Notification <sipekad@sttpu.ac.id>"
                   value={configForm.email_from}
                   onChange={(e) => setConfigForm({ ...configForm, email_from: e.target.value })}
                   className="rounded-xl border-gray-200 focus:border-[#4318FF] text-xs bg-gray-50/50 h-9"
