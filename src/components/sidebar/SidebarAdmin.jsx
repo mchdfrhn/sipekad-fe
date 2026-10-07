@@ -1,21 +1,53 @@
-import { LayoutDashboard, User, Send, Info, Database, MessageSquare, Shield } from "lucide-react";
+import { 
+  LayoutDashboard, 
+  User, 
+  Send, 
+  Info, 
+  Database, 
+  MessageSquare, 
+  Shield, 
+  Bell, 
+  Mail, 
+  ChevronDown 
+} from "lucide-react";
 import { Link, useLocation } from "react-router";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
-import { motion as Motion } from "motion/react";
+import { motion as Motion, AnimatePresence } from "motion/react";
+import { useState, useEffect } from "react";
 
 const links = [
   { path: "/admin", name: "Dashboard", icon: LayoutDashboard, exact: true },
   { path: "/admin/pengajuan", name: "Pengajuan", icon: Send },
   { path: "/admin/user", name: "Manajemen Pengguna", icon: User },
   { path: "/admin/backup", name: "Backup Sistem", icon: Database, noFill: true },
-  { path: "/admin/whatsapp", name: "WhatsApp Bot", icon: MessageSquare },
+  {
+    name: "Notifikasi",
+    icon: Bell,
+    children: [
+      { path: "/admin/whatsapp", name: "Whatsapp", icon: MessageSquare },
+      { path: "/admin/email", name: "Email", icon: Mail },
+    ],
+  },
 ];
 
 const WA_TEXT = encodeURIComponent("Saya mau melaporkan ada bug pada aplikasi SIPEKAD, berikut list bug nya...");
 
 const SidebarAdmin = ({ className, onClose }) => {
   const { pathname } = useLocation();
+  const [openSubmenus, setOpenSubmenus] = useState(() => ({
+    Notifikasi: pathname.startsWith("/admin/whatsapp") || pathname.startsWith("/admin/email"),
+  }));
+
+  useEffect(() => {
+    if (pathname.startsWith("/admin/whatsapp") || pathname.startsWith("/admin/email")) {
+      setOpenSubmenus((prev) => ({ ...prev, Notifikasi: true }));
+    }
+  }, [pathname]);
+
+  const toggleSubmenu = (name) => {
+    setOpenSubmenus((prev) => ({ ...prev, [name]: !prev[name] }));
+  };
 
   return (
     <div
@@ -60,6 +92,102 @@ const SidebarAdmin = ({ className, onClose }) => {
       {/* Nav */}
       <nav className="flex-1 px-3 py-2 space-y-1 overflow-y-auto">
         {links.map((link) => {
+          if (link.children) {
+            const isGroupActive = link.children.some(
+              (child) => pathname === child.path || pathname.startsWith(child.path + "/")
+            );
+            const isOpen = !!openSubmenus[link.name];
+            const Icon = link.icon;
+
+            return (
+              <div key={link.name} className="space-y-1">
+                <Motion.div
+                  className="relative"
+                  whileHover={{ x: 3 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <button
+                    type="button"
+                    onClick={() => toggleSubmenu(link.name)}
+                    className={cn(
+                      "w-full relative flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold transition-colors duration-200 cursor-pointer text-left",
+                      isGroupActive
+                        ? "text-[#4318FF] font-bold bg-indigo-50/50"
+                        : "text-[#718096] hover:text-[#4318FF] hover:bg-[#F8F9FF]"
+                    )}
+                  >
+                    <div className="flex items-center gap-3">
+                      <Icon
+                        size={20}
+                        className="flex-shrink-0 transition-colors duration-200"
+                      />
+                      <span className="tracking-wide">{link.name}</span>
+                    </div>
+                    <ChevronDown
+                      size={16}
+                      className={cn(
+                        "text-[#718096] transition-transform duration-200",
+                        isOpen && "rotate-180 text-[#4318FF]"
+                      )}
+                    />
+                  </button>
+                </Motion.div>
+
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <Motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.2, ease: "easeInOut" }}
+                      className="overflow-hidden pl-3 space-y-1 pt-0.5"
+                    >
+                      {link.children.map((child) => {
+                        const isChildActive =
+                          pathname === child.path ||
+                          pathname.startsWith(child.path + "/");
+                        const ChildIcon = child.icon;
+
+                        return (
+                          <Motion.div
+                            key={child.path}
+                            whileHover={{ x: 3 }}
+                            whileTap={{ scale: 0.98 }}
+                          >
+                            <Link
+                              to={child.path}
+                              onClick={onClose}
+                              className={cn(
+                                "relative flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200",
+                                isChildActive
+                                  ? "text-[#4318FF] bg-[#4318FF]/10 font-bold"
+                                  : "text-[#718096] hover:text-[#4318FF] hover:bg-[#F8F9FF]"
+                              )}
+                            >
+                              <ChildIcon
+                                size={17}
+                                className={cn(
+                                  "flex-shrink-0 transition-colors duration-200",
+                                  isChildActive
+                                    ? "text-[#4318FF]"
+                                    : "text-[#718096]"
+                                )}
+                              />
+                              <span className="tracking-wide">{child.name}</span>
+                              {isChildActive && (
+                                <span className="ml-auto w-1.5 h-1.5 rounded-full bg-[#4318FF]" />
+                              )}
+                            </Link>
+                          </Motion.div>
+                        );
+                      })}
+                    </Motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            );
+          }
+
           const isActive = link.exact
             ? pathname === link.path
             : pathname.startsWith(link.path);

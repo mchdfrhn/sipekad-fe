@@ -51,6 +51,7 @@ const RequestAdmin = lazyWithRetry(() => import("../components/admin/request/Req
 const RequestDetail = lazyWithRetry(() => import("../components/admin/request/RequestDetail"));
 const Backup = lazyWithRetry(() => import("../pages/admin/Backup"));
 const WhatsAppManager = lazyWithRetry(() => import("../pages/admin/WhatsAppManager"));
+const EmailManager = lazyWithRetry(() => import("../pages/admin/EmailManager"));
 
 // Lazy — Request
 const SuratKeterangan = lazyWithRetry(() => import("../components/Request/SuratKeterangan"));
@@ -306,6 +307,10 @@ const Router = createBrowserRouter([
               {
                 path: "whatsapp",
                 element: w(WhatsAppManager),
+              },
+              {
+                path: "email",
+                element: w(EmailManager),
               },
             ],
           },

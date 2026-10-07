@@ -124,17 +124,20 @@ const WhatsAppManager = () => {
     }
   };
 
-  // Interval hanya buat saat mount — tidak re-create saat status berubah
-  // Cek status.status di dalam callback agar tidak stale
+  const statusRef = React.useRef(status.status);
+  useEffect(() => {
+    statusRef.current = status.status;
+  }, [status.status]);
+
   useEffect(() => {
     fetchStatus();
     fetchLogs();
 
     const interval = setInterval(() => {
-      if (status.status !== "connected") {
+      if (statusRef.current !== "connected") {
         fetchStatus();
       }
-    }, 10000);
+    }, 3000);
 
     return () => clearInterval(interval);
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -210,9 +213,9 @@ const WhatsAppManager = () => {
           <CardFooter className="bg-gray-50/50 border-t border-gray-100 py-3 block">
             <Button 
               variant="ghost" 
-              className="w-full text-rose-500 hover:text-rose-600 hover:bg-rose-50 text-xs font-bold rounded-xl"
+              className="w-full text-rose-500 hover:text-rose-600 hover:bg-rose-50 text-xs font-bold rounded-xl disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:text-gray-400"
               onClick={() => handleAction('disconnect')}
-              disabled={loading.action}
+              disabled={loading.action || status.status !== 'connected'}
             >
               <LogOut className="mr-2 h-3 w-3" />
               Putuskan Sesi / Putuskan
@@ -249,7 +252,7 @@ const WhatsAppManager = () => {
               <div className="text-center space-y-3 p-6 text-gray-400">
                 <QrCode className="h-12 w-12 mx-auto opacity-20" />
                 <p className="text-sm">Kode QR tidak tersedia saat ini.</p>
-                <p className="text-xs">Klik "Putuskan Sesi" jika ingin scan ulang.</p>
+                <p className="text-xs">Klik "Sambungkan Ulang" jika ingin memuat QR baru.</p>
               </div>
             )}
           </CardContent>
