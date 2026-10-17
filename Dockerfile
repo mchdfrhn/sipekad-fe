@@ -23,7 +23,7 @@ FROM nginx:stable-alpine
 # Copy the build output to Nginx's html folder
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Copy the Nginx template for dynamic port support (Zeabur uses $PORT)
+# Copy the Nginx template for dynamic port support (Railway injects $PORT)
 # Official nginx image will run envsubst on files in /etc/nginx/templates/*.template
 COPY nginx.conf.template /etc/nginx/templates/default.conf.template
 
