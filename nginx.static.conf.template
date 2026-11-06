@@ -1,0 +1,24 @@
+# Static-only server for the VPS image. /api is routed by Caddy straight to the backend,
+# so this file has no proxy and no Railway resolver. Selected with --build-arg NGINX_CONF.
+server {
+    listen ${PORT};
+    server_name _;
+
+    root /usr/share/nginx/html;
+    index index.html;
+
+    gzip on;
+    gzip_types text/css application/javascript application/json image/svg+xml;
+
+    location / {
+        try_files $uri /index.html;
+        # No caching for index.html so a deploy never serves stale chunk names
+        add_header Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0";
+    }
+
+    location /assets/ {
+        try_files $uri =404;
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+}
