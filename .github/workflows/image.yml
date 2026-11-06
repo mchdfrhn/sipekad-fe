@@ -56,7 +56,7 @@ jobs:
           cache-to: type=gha,mode=max
 
   deploy:
-    if: ${{ vars.VPS_DEPLOY == true }}
+    if: ${{ vars.VPS_DEPLOY == 'true' }}
     needs: build
     runs-on: ubuntu-24.04
     timeout-minutes: 30
