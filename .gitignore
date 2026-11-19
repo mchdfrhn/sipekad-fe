@@ -32,4 +32,4 @@ api-test.js
 *.ntvs*
 *.njsproj
 *.sln
-*.sw?
+*.sw?.playwright-cli/
