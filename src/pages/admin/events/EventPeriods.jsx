@@ -16,6 +16,7 @@ import {
   toJakartaInput,
   fromJakartaInput,
 } from "@/utils/eventConstants";
+import PageHeader from "@/components/ui/PageHeader";
 
 const inputCls =
   "w-full px-3 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#4318FF]";
@@ -176,12 +177,12 @@ const EventPeriods = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-bold text-[#2B3674]">Jadwal Seminar & Sidang</h1>
-          <p className="text-sm text-gray-500">Buka gelombang pendaftaran dan pantau kelengkapan persyaratan.</p>
-        </div>
-        <div className="flex gap-2">
+      <PageHeader
+        icon={CalendarDays}
+        title="Jadwal Seminar & Sidang"
+        description="Buka gelombang pendaftaran dan pantau kelengkapan persyaratan."
+        actions={
+          <div className="flex gap-2">
           <Link
             to={`/admin/acara/persyaratan?tab=${eventType}`}
             className="inline-flex items-center gap-2 h-10 px-4 rounded-xl border border-gray-200 text-sm font-bold text-[#2B3674] hover:bg-gray-50"
@@ -198,7 +199,8 @@ const EventPeriods = () => {
             <Plus className="h-4 w-4 mr-1" /> Buat Gelombang
           </Button>
         </div>
-      </div>
+        }
+      />
 
       <div className="flex flex-wrap gap-2">
         {EVENT_TYPE_KEYS.map((k) => (

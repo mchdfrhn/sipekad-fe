@@ -27,7 +27,7 @@ const links = [
     name: "Notifikasi",
     icon: Bell,
     children: [
-      { path: "/admin/whatsapp", name: "Whatsapp", icon: MessageSquare },
+      { path: "/admin/whatsapp", name: "WhatsApp", icon: MessageSquare },
       { path: "/admin/email", name: "Email", icon: Mail },
     ],
   },

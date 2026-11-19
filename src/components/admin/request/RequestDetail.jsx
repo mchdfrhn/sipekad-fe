@@ -44,6 +44,7 @@ import BASE_URL from "../../../utils/api";
 import { getSignedUrl } from "../../../utils/api/storage";
 import RequirementChecklist from "../../event/RequirementChecklist";
 import EventAdminPanel from "../../event/EventAdminPanel";
+import PageHeader from "@/components/ui/PageHeader";
 
 const RequestDetail = () => {
   const { showToast } = useToast();
@@ -187,16 +188,7 @@ const RequestDetail = () => {
     <div className="space-y-8 pb-10">
       {loading && <LoadingOverlay />}
 
-      <div className="mb-6">
-        <div className="flex items-center gap-2 mb-4">
-          <Link to="/admin/pengajuan" className="flex items-center gap-1.5 text-sm font-semibold text-[#718096] hover:text-[#4318FF] transition-colors">
-            <ArrowLeft className="h-4 w-4" />
-            Kembali
-          </Link>
-        </div>
-        <h1 className="text-2xl font-bold text-[#2B3674]">Detail Pengajuan</h1>
-        <p className="text-sm text-[#718096] mt-0.5">Tinjau dan kelola pengajuan surat ini</p>
-      </div>
+      <PageHeader backTo="/admin/pengajuan" icon={FileText} title="Detail Pengajuan" description="Tinjau dan kelola pengajuan surat ini" />
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         <div className="xl:col-span-2 space-y-6">

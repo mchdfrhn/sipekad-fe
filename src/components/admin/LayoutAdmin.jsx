@@ -195,7 +195,7 @@ const LayoutAdmin = () => {
       {/* Main Content Area */}
       <div
         id="main-content-area"
-        className="flex flex-col flex-1 h-full overflow-y-auto no-scrollbar relative"
+        className="group/layout flex flex-col flex-1 h-full overflow-y-auto no-scrollbar relative"
       >
         {/* Sticky Header */}
         <header
@@ -234,7 +234,7 @@ const LayoutAdmin = () => {
                 ))}
               </BreadcrumbList>
             </Breadcrumb>
-            <h1 className="hidden md:block text-2xl font-bold text-[#2B3674] capitalize mt-1">
+            <h1 className="hidden md:block group-has-[[data-page-header]]/layout:!hidden text-2xl font-bold text-[#2B3674] capitalize mt-1">
               {breadcrumbs[breadcrumbs.length - 1]?.label === "Admin"
                 ? "Dashboard"
                 : breadcrumbs[breadcrumbs.length - 1]?.label || "Dashboard"}

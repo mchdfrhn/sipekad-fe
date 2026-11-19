@@ -8,6 +8,7 @@ import {
   Filter,
   Lock,
   Clock,
+  Users,
 } from "lucide-react";
 import { motion as Motion } from "motion/react";
 import { useEffect, useState } from "react";
@@ -21,7 +22,6 @@ import EmptyState from '../../ui/EmptyState';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { createPortal } from "react-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,6 +32,7 @@ import { STUDENT_PRODI } from "@/utils/constant";
 import { useToast } from "@/utils/hooks/useToast";
 import { generatePaginationPages } from "@/utils/helpers";
 import { getPendingUsers } from "../../../utils/api/user";
+import PageHeader from "@/components/ui/PageHeader";
 
 const User = () => {
   const { showToast } = useToast();
@@ -42,7 +43,6 @@ const User = () => {
   const [alertDelete, setAlertDelete] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const limit = 15;
-  const [domReady, setDomReady] = useState(false);
   const [filterProdi, setFilterProdi] = useState("default");
   const [searchParams] = useSearchParams();
   const searchTerm = searchParams.get("q") || "";
@@ -113,7 +113,6 @@ const User = () => {
     };
 
     getUsers();
-    setDomReady(true);
 
     // fetch pending count for badge
     getPendingUsers().then((r) => {
@@ -190,20 +189,6 @@ const User = () => {
         </>
       )}
 
-      {/* Portal Button to Header */}
-      {domReady &&
-        document.getElementById("header-actions") &&
-        createPortal(
-          <Motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setShowForm(!showForm)}
-            className="flex items-center gap-2 bg-[#4318FF] hover:bg-[#3311CC] text-white rounded-full px-5 py-2.5 text-sm font-bold shadow-[var(--shadow-brand-sm)] hover:shadow-[var(--shadow-brand-md)] transition-all duration-300 whitespace-nowrap"
-          >
-            <Plus className="h-4 w-4" /> Tambah User
-          </Motion.button>,
-          document.getElementById("header-actions"),
-        )}
 
       <Motion.div
         initial={{ opacity: 0, y: 10 }}
@@ -211,6 +196,22 @@ const User = () => {
         transition={{ duration: 0.5 }}
         className="flex flex-col h-full gap-4"
       >
+        <PageHeader
+          icon={Users}
+          title="Manajemen Pengguna"
+          description="Kelola akun mahasiswa dan admin"
+          className="mb-0"
+          actions={
+            <Motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setShowForm(!showForm)}
+              className="flex items-center gap-2 bg-[#4318FF] hover:bg-[#3311CC] text-white rounded-full px-5 py-2.5 text-sm font-bold shadow-[var(--shadow-brand-sm)] hover:shadow-[var(--shadow-brand-md)] transition-all duration-300 whitespace-nowrap"
+            >
+              <Plus className="h-4 w-4" /> Tambah User
+            </Motion.button>
+          }
+        />
         {/* Tab navigasi */}
         <div className="flex gap-2 border-b border-gray-100 pb-0">
           <Link

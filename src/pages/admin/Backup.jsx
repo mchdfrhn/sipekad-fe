@@ -38,6 +38,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import CustomSelect from "../../components/ui/CustomSelect";
 import ConfirmDialog from "../../components/ui/ConfirmDialog";
+import PageHeader from "@/components/ui/PageHeader";
 
 const Backup = () => {
   const { showToast } = useToast();
@@ -188,29 +189,19 @@ const Backup = () => {
   return (
     <>
     <div className="space-y-8 pb-10">
-      <div className="mb-8">
-        <div className="flex items-center gap-3 mb-1">
-          <div className="h-10 w-10 rounded-2xl bg-orange-50 flex items-center justify-center">
-            <Database className="h-5 w-5 text-orange-500" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-[#2B3674]">Backup Database</h1>
-            <p className="text-sm text-[#718096]">Kelola backup dan pemulihan data sistem</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex items-center justify-end">
-        <Button
-          variant="outline"
-          onClick={fetchData}
-          disabled={isLoading}
-          className="rounded-xl border-gray-100 text-[#2B3674] font-bold"
-        >
-          <RefreshCw className={cn("w-4 h-4 mr-2", isLoading && "animate-spin")} />
-          Refresh Data
-        </Button>
-      </div>
+      <PageHeader icon={Database} tone="orange" title="Backup Database" description="Kelola backup dan pemulihan data sistem"
+        actions={
+          <Button
+            variant="outline"
+            onClick={fetchData}
+            disabled={isLoading}
+            className="rounded-xl border-gray-100 text-[#2B3674] font-bold"
+          >
+            <RefreshCw className={cn("w-4 h-4 mr-2", isLoading && "animate-spin")} />
+            Refresh Data
+          </Button>
+        }
+      />
 
       {/* Row 1: Stats Cards */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">

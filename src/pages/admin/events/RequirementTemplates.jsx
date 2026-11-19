@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router";
-import { ArrowLeft, ArrowUp, ArrowDown, Plus, Pencil, Loader2, EyeOff, Eye } from "lucide-react";
+import { useSearchParams } from "react-router";
+import { ListChecks, ArrowUp, ArrowDown, Plus, Pencil, Loader2, EyeOff, Eye } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useToast } from "@/utils/hooks/useToast";
 import { getTemplates, createTemplate, updateTemplate, reorderTemplates } from "@/utils/api/event";
 import { EVENT_TYPES, EVENT_TYPE_KEYS, CATEGORY_LABELS, CATEGORY_ORDER } from "@/utils/eventConstants";
+import PageHeader from "@/components/ui/PageHeader";
 
 const inputCls =
   "w-full px-3 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#4318FF]";
@@ -123,15 +124,14 @@ const RequirementTemplates = () => {
 
   return (
     <div className="space-y-6">
-      <Link to={`/admin/acara?tab=${eventType}`} className="inline-flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-[#4318FF]">
-        <ArrowLeft className="h-4 w-4" /> Kembali ke jadwal
-      </Link>
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-bold text-[#2B3674]">Kelola Persyaratan</h1>
-          <p className="text-sm text-gray-500">Perubahan berlaku untuk pendaftar baru; pendaftar lama tetap memakai daftar saat mereka mendaftar.</p>
-        </div>
-        <Button
+      <PageHeader
+        backTo={`/admin/acara?tab=${eventType}`}
+        backLabel="Kembali ke jadwal"
+        icon={ListChecks}
+        title="Kelola Persyaratan"
+        description="Perubahan berlaku untuk pendaftar baru; pendaftar lama tetap memakai daftar saat mereka mendaftar."
+        actions={
+          <Button
           onClick={() => {
             setEditing(null);
             setDialogOpen(true);
@@ -140,7 +140,8 @@ const RequirementTemplates = () => {
         >
           <Plus className="h-4 w-4 mr-1" /> Tambah Syarat
         </Button>
-      </div>
+        }
+      />
 
       <div className="flex flex-wrap gap-2">
         {EVENT_TYPE_KEYS.map((k) => (

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion as Motion } from "motion/react";
-import { CheckCircle, XCircle } from "lucide-react";
+import { CheckCircle, XCircle, Users } from "lucide-react";
 import { getPendingUsers, approveUserApi, rejectUserApi } from "../../../utils/api/user";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,7 @@ import { LoadingOverlay } from "@/components/ui/Loading";
 import ConfirmDialog from "../../ui/ConfirmDialog";
 import { useToast } from "@/utils/hooks/useToast";
 import { Link } from "react-router";
+import PageHeader from "@/components/ui/PageHeader";
 
 const PendingUsers = () => {
   const { showToast } = useToast();
@@ -67,6 +68,7 @@ const PendingUsers = () => {
         transition={{ duration: 0.5 }}
         className="flex flex-col h-full gap-4"
       >
+        <PageHeader icon={Users} title="Manajemen Pengguna" description="Kelola akun mahasiswa dan admin" className="mb-0" />
         {/* Tab navigasi */}
         <div className="flex gap-2 border-b border-gray-100 pb-0">
           <Link

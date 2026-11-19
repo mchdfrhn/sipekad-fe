@@ -6,8 +6,9 @@ import StatusBarChart from "../chart/PieChart";
 import SimpleBarChart from "../chart/BarChart";
 import StatsCard from "./StatsCard";
 import RightPanel from "./RightPanel"; // Import RightPanel
-import { FileText, CheckCircle, XCircle, Clock, Wrench } from "lucide-react";
+import { FileText, CheckCircle, XCircle, Clock, Wrench, LayoutDashboard } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import PageHeader from "@/components/ui/PageHeader";
 
 const MainAdmin = () => {
   const navigate = useNavigate();
@@ -50,6 +51,8 @@ const MainAdmin = () => {
 
   return (
     <div className="space-y-6">
+      <PageHeader icon={LayoutDashboard} title="Dashboard" description="Ringkasan pengajuan dan aktivitas terbaru" />
+
       {/* Row 1: Stats Cards */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-5">
         {[0, 1, 2, 3, 4].map((index) => {

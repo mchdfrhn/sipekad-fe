@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import PageHeader from "@/components/ui/PageHeader";
 
 const RequestAdmin = () => {
   const [requests, setRequests] = useState([]);
@@ -81,11 +82,7 @@ const RequestAdmin = () => {
 
   return (
     <div className="space-y-4">
-      {/* Page Header */}
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-[#2B3674]">Manajemen Pengajuan</h1>
-        <p className="text-sm text-[#718096] mt-0.5">Kelola seluruh pengajuan surat masuk</p>
-      </div>
+      <PageHeader icon={Send} title="Manajemen Pengajuan" description="Kelola seluruh pengajuan surat masuk" />
 
       <Motion.div
         initial={{ opacity: 0, y: 10 }}

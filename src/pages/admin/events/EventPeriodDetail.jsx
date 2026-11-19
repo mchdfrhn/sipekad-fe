@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
-import { ArrowLeft, Loader2, Users } from "lucide-react";
+import { CalendarDays, Loader2, Users } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getPeriod } from "@/utils/api/event";
 import { EVENT_TYPES, PERIOD_STATE, formatDateTime } from "@/utils/eventConstants";
 import { STATUS_LABEL_USER } from "@/utils/constant";
+import PageHeader from "@/components/ui/PageHeader";
 
 const EventPeriodDetail = () => {
   const { id } = useParams();
@@ -24,23 +25,14 @@ const EventPeriodDetail = () => {
   const st = PERIOD_STATE[period.state];
   return (
     <div className="space-y-6">
-      <Link
-        to={`/admin/acara?tab=${period.event_type}`}
-        className="inline-flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-[#4318FF]"
-      >
-        <ArrowLeft className="h-4 w-4" /> Kembali ke daftar gelombang
-      </Link>
-
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">{EVENT_TYPES[period.event_type].label}</p>
-          <h1 className="text-2xl font-bold text-[#2B3674]">{period.name}</h1>
-          <p className="text-sm text-gray-500">
-            Pendaftaran {formatDateTime(period.registration_start)} – {formatDateTime(period.registration_end)}
-          </p>
-        </div>
-        <span className={`text-xs font-bold px-3 py-1 rounded-full ${st.cls}`}>{st.label}</span>
-      </div>
+      <PageHeader
+        backTo={`/admin/acara?tab=${period.event_type}`}
+        backLabel="Kembali ke daftar gelombang"
+        icon={CalendarDays}
+        title={period.name}
+        description={<>{EVENT_TYPES[period.event_type].label} · Pendaftaran {formatDateTime(period.registration_start)} – {formatDateTime(period.registration_end)}</>}
+        actions={<span className={`text-xs font-bold px-3 py-1 rounded-full ${st.cls}`}>{st.label}</span>}
+      />
 
       <Card className="border-none shadow-xl shadow-shadow-500/10 rounded-[20px] bg-white overflow-hidden">
         <CardHeader className="border-b border-gray-50">

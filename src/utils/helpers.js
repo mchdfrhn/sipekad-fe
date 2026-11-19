@@ -37,8 +37,17 @@ export const formatPathToBreadcrumb = (path) => {
       label = "Pengajuan - Detail";
     }
 
-    // Custom labels for event schedule pages
-    if (segment === "acara") label = "Jadwal Seminar & Sidang";
+    // Match breadcrumb labels to the sidebar menu names
+    const SEGMENT_LABELS = {
+      acara: "Jadwal Seminar & Sidang",
+      persyaratan: "Kelola Persyaratan",
+      user: "Manajemen Pengguna",
+      pending: "Menunggu Persetujuan",
+      backup: "Backup Sistem",
+      whatsapp: "WhatsApp",
+      settings: "Pengaturan",
+    };
+    if (SEGMENT_LABELS[segment]) label = SEGMENT_LABELS[segment];
     if (segment.startsWith("period-")) label = "Pendaftar";
 
     // Custom label for User Detail
