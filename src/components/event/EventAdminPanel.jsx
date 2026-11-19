@@ -161,9 +161,8 @@ const EventAdminPanel = ({ request, onChanged, onReject }) => {
             {!isFinal && (
               <div className="space-y-2">
                 <Button
-                  variant="outline"
                   onClick={() => setRejectOpen((v) => !v)}
-                  className="w-full gap-2 text-red-500 border-red-100 hover:bg-red-50 font-bold rounded-xl"
+                  className="w-full gap-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl"
                 >
                   <XCircle className="h-4 w-4" /> Tolak Pendaftaran
                 </Button>

@@ -695,7 +695,6 @@ const ActionPanel = ({
           {!showRevisionForm && !showRejectForm && (
             <>
               <Button
-                variant="outline"
                 className="w-full justify-start gap-2 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl border-0"
                 disabled={isLoadingAction}
                 onClick={() => setShowRevisionForm(true)}
@@ -704,7 +703,6 @@ const ActionPanel = ({
                 Butuh Revisi
               </Button>
               <Button
-                variant="outline"
                 className="w-full justify-start gap-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl border-0"
                 disabled={isLoadingAction}
                 onClick={() => setShowRejectForm(true)}
@@ -881,7 +879,6 @@ const ActionPanel = ({
             </Button>
 
             <Button
-              variant="outline"
               className="w-full justify-start gap-2 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl border-0"
               disabled={isLoadingAction || !message.trim()}
               onClick={() => onStatusChange("revision_required", message)}
@@ -891,7 +888,6 @@ const ActionPanel = ({
             </Button>
 
             <Button
-              variant="outline"
               className="w-full justify-start gap-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl border-0"
               disabled={isLoadingAction}
               onClick={() => onStatusChange("rejected", message || null)}
@@ -937,7 +933,6 @@ const ActionPanel = ({
             Lanjut Proses
           </Button>
           <Button
-            variant="outline"
             className="w-full justify-start gap-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl border-0"
             disabled={isLoadingAction}
             onClick={() => onStatusChange("rejected")}

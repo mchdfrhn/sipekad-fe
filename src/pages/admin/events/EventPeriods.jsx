@@ -259,14 +259,12 @@ const EventPeriods = () => {
                     const st = PERIOD_STATE[p.state];
                     return (
                       <tr key={p.id} className="border-t border-gray-50 align-top">
-                        <td className="py-3 pr-4 font-bold text-[#2B3674]">
+                        <td className="py-3 pr-4 font-bold text-[#2B3674] min-w-[180px]">
                           <Link to={`/admin/acara/${p.id}`} className="hover:text-[#4318FF]">{p.name}</Link>
                         </td>
                         <td className="py-3 pr-4 text-gray-600">{p.prodi || "Semua prodi"}</td>
                         <td className="py-3 pr-4 text-gray-600 whitespace-nowrap">
-                          {formatDate(p.registration_start)}
-                          <br />
-                          s.d. {formatDate(p.registration_end)}
+                          {formatDate(p.registration_start)} – {formatDate(p.registration_end)}
                         </td>
                         <td className="py-3 pr-4 text-gray-600 whitespace-nowrap">
                           {p.event_start ? `${formatDate(p.event_start)}${p.event_end ? ` – ${formatDate(p.event_end)}` : ""}` : "-"}
