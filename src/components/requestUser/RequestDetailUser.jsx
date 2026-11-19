@@ -28,6 +28,44 @@ import { Textarea } from "@/components/ui/textarea";
 import { LoadingOverlay } from "@/components/ui/Loading";
 import { useToast } from "@/utils/hooks/useToast";
 import { motion as Motion } from "motion/react";
+import RequirementChecklist from "../event/RequirementChecklist";
+import ScheduleCard from "../event/ScheduleCard";
+import { formatDateTime } from "@/utils/eventConstants";
+
+const EventSection = ({ data, onChanged }) => (
+  <div className="space-y-6">
+    {data.event_period && (
+      <div className="p-4 bg-indigo-50/50 rounded-2xl border border-indigo-100 text-sm text-[#2B3674]">
+        <p className="font-bold">{data.event_period.name}</p>
+        <p className="text-xs text-gray-500 mt-1">
+          Pendaftaran ditutup {formatDateTime(data.event_period.registration_end)}
+        </p>
+      </div>
+    )}
+    {data.status === "revision_required" && (
+      <div className="flex items-start gap-3 p-4 bg-orange-50 rounded-2xl border border-orange-100">
+        <AlertCircle className="h-5 w-5 text-orange-500 shrink-0 mt-0.5" />
+        <div>
+          <p className="text-sm font-bold text-orange-700">Ada persyaratan yang perlu diperbaiki</p>
+          <p className="text-xs text-orange-600 mt-0.5">Unggah ulang berkas yang ditandai "Perlu revisi" sesuai catatan admin.</p>
+        </div>
+      </div>
+    )}
+    {data.status === "processing" && !data.schedule && (
+      <div className="flex items-start gap-3 p-4 bg-blue-50 rounded-2xl border border-blue-100">
+        <CheckCircle2 className="h-5 w-5 text-blue-500 shrink-0 mt-0.5" />
+        <p className="text-sm font-bold text-blue-700">Persyaratan lengkap. Menunggu admin menetapkan jadwal.</p>
+      </div>
+    )}
+    <ScheduleCard schedule={data.schedule} />
+    <RequirementChecklist
+      items={data.requirement_items || []}
+      mode="user"
+      requestStatus={data.status}
+      onChanged={onChanged}
+    />
+  </div>
+);
 
 const RequestDetailUser = () => {
   const { showToast } = useToast();
@@ -41,6 +79,7 @@ const RequestDetailUser = () => {
   const [revisionFile, setRevisionFile] = useState(null);
   const [isSubmittingRevision, setIsSubmittingRevision] = useState(false);
   const { id } = useParams();
+  const isEvent = Boolean(data?.event_period_id);
 
   const getRequestDetailForUser = useCallback(async () => {
     setIsLoading(true);
@@ -213,7 +252,11 @@ const RequestDetailUser = () => {
                 )}
               </div>
 
-              {data?.status === "revision_required" && (
+              {isEvent && (
+                <EventSection data={data} onChanged={getRequestDetailForUser} />
+              )}
+
+              {!isEvent && data?.status === "revision_required" && (
                 <div className="space-y-4">
                   <div className="flex items-start gap-3 p-4 bg-orange-50 rounded-2xl border border-orange-100">
                     <AlertCircle className="h-5 w-5 text-orange-500 shrink-0 mt-0.5" />

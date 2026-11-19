@@ -8,7 +8,8 @@ import {
   Shield, 
   Bell, 
   Mail, 
-  ChevronDown 
+  ChevronDown,
+  CalendarDays
 } from "lucide-react";
 import { Link, useLocation } from "react-router";
 import { cn } from "@/lib/utils";
@@ -19,6 +20,7 @@ import { useState, useEffect } from "react";
 const links = [
   { path: "/admin", name: "Dashboard", icon: LayoutDashboard, exact: true },
   { path: "/admin/pengajuan", name: "Pengajuan", icon: Send },
+  { path: "/admin/acara", name: "Jadwal Seminar & Sidang", icon: CalendarDays, noFill: true },
   { path: "/admin/user", name: "Manajemen Pengguna", icon: User },
   { path: "/admin/backup", name: "Backup Sistem", icon: Database, noFill: true },
   {
