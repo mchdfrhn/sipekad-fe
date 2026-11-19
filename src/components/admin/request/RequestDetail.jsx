@@ -42,6 +42,8 @@ import { STATUS_LABEL_ADMIN } from "../../../utils/constant";
 
 import BASE_URL from "../../../utils/api";
 import { getSignedUrl } from "../../../utils/api/storage";
+import RequirementChecklist from "../../event/RequirementChecklist";
+import EventAdminPanel from "../../event/EventAdminPanel";
 
 const RequestDetail = () => {
   const { showToast } = useToast();
@@ -70,6 +72,19 @@ const RequestDetail = () => {
     await getRequestDetail(id, setRequestDetail, setResponses);
     setLoading(false);
   }, [id]);
+
+  // Reload without the full-page overlay (used by the per-requirement checklist).
+  const refreshSilently = useCallback(async () => {
+    await getRequestDetail(id, setRequestDetail, setResponses);
+  }, [id]);
+
+  const isEvent = Boolean(requestDetail?.event_period_id);
+
+  const setConfirmAndRun = (title, description, action) => {
+    setPendingAction(() => action);
+    setConfirmMeta({ title, description });
+    setShowConfirm(true);
+  };
 
   useEffect(() => {
     getDetail();
@@ -349,9 +364,39 @@ const RequestDetail = () => {
               )}
             </CardContent>
           </Card>
+
+          {isEvent && (
+            <Card className="rounded-[20px] border-gray-100/80 shadow-[0_4px_24px_rgba(67,24,255,0.06)]">
+              <CardHeader>
+                <CardTitle className="text-lg font-bold text-[#2B3674] flex items-center gap-2">
+                  <CheckCircle2 className="h-5 w-5 text-[#4318FF]" />
+                  Persyaratan
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <RequirementChecklist
+                  items={requestDetail.requirement_items || []}
+                  mode="admin"
+                  requestStatus={requestDetail.status}
+                  onChanged={refreshSilently}
+                />
+              </CardContent>
+            </Card>
+          )}
         </div>
 
         <div className="space-y-6">
+          {isEvent ? (
+            <EventAdminPanel
+              request={requestDetail}
+              onChanged={refreshSilently}
+              onReject={(reason) =>
+                setConfirmAndRun("Tolak pendaftaran?", "Mahasiswa akan menerima alasan penolakan ini.", () =>
+                  handleStatusChange("rejected", reason),
+                )
+              }
+            />
+          ) : (
           <ActionPanel
             status={requestDetail?.status}
             requestType={requestDetail?.type}
@@ -369,6 +414,7 @@ const RequestDetail = () => {
               setShowConfirm(true);
             }}
           />
+          )}
 
           <Card className="rounded-[20px] border-gray-100/80 shadow-[0_4px_24px_rgba(67,24,255,0.06)]">
             <CardHeader className="pb-2">

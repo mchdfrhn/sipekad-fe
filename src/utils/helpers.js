@@ -37,6 +37,10 @@ export const formatPathToBreadcrumb = (path) => {
       label = "Pengajuan - Detail";
     }
 
+    // Custom labels for event schedule pages
+    if (segment === "acara") label = "Jadwal Seminar & Sidang";
+    if (segment.startsWith("period-")) label = "Pendaftar";
+
     // Custom label for User Detail
     if (segment.startsWith("users-")) {
       label = "User Detail";

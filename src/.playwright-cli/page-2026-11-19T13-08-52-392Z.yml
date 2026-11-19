@@ -1,0 +1,57 @@
+- main [ref=f3e3]:
+  - generic [ref=f3e4]:
+    - generic [ref=f3e6]:
+      - generic [ref=f3e7]:
+        - img "sipekad-logo" [ref=f3e8]
+        - generic [ref=f3e9]:
+          - heading "SIPEKAD" [level=1] [ref=f3e10]
+          - paragraph [ref=f3e11]: Sistem Pengajuan Akademik
+      - navigation [ref=f3e12]:
+        - link "Dashboard" [ref=f3e14] [cursor=pointer]:
+          - /url: /admin
+        - link "Pengajuan" [ref=f3e22] [cursor=pointer]:
+          - /url: /admin/pengajuan
+        - link "Jadwal Seminar & Sidang" [ref=f3e29] [cursor=pointer]:
+          - /url: /admin/acara
+        - link "Manajemen Pengguna" [ref=f3e34] [cursor=pointer]:
+          - /url: /admin/user
+        - link "Backup Sistem" [ref=f3e40] [cursor=pointer]:
+          - /url: /admin/backup
+        - button "Notifikasi" [ref=f3e48] [cursor=pointer]
+      - generic [ref=f3e56]:
+        - generic [ref=f3e61]:
+          - paragraph [ref=f3e62]: Administrator
+          - generic [ref=f3e63]: ADMIN
+        - link "Laporkan Bug" [ref=f3e64] [cursor=pointer]:
+          - /url: https://wa.me/6285771826637?text=Saya%20mau%20melaporkan%20ada%20bug%20pada%20aplikasi%20SIPEKAD%2C%20berikut%20list%20bug%20nya...
+    - generic [ref=f3e69]:
+      - generic [ref=f3e70]:
+        - generic [ref=f3e71]:
+          - navigation "breadcrumb" [ref=f3e72]:
+            - list [ref=f3e73]:
+              - generic [ref=f3e74]:
+                - listitem [ref=f3e75]:
+                  - link "Admin" [ref=f3e76] [cursor=pointer]:
+                    - /url: /admin
+                - listitem [aria-hidden] [ref=f3e77]
+              - generic [ref=f3e80]:
+                - listitem [ref=f3e81]:
+                  - link "Jadwal Seminar & Sidang" [ref=f3e82] [cursor=pointer]:
+                    - /url: /admin/acara
+                - listitem [aria-hidden] [ref=f3e83]
+              - listitem [ref=f3e87]:
+                - link "Pendaftar" [disabled] [ref=f3e88]
+          - heading "Pendaftar" [level=1] [ref=f3e89]
+        - generic [ref=f3e90]:
+          - textbox "Cari..." [ref=f3e95]
+          - button [ref=f3e96] [cursor=pointer]
+          - button [ref=f3e100] [cursor=pointer]
+          - generic [ref=f3e103] [cursor=pointer]:
+            - generic [ref=f3e104]: AU
+            - generic [ref=f3e106]:
+              - paragraph [ref=f3e107]: Admin Uji
+              - paragraph [ref=f3e108]: Admin
+      - main [ref=f3e109]
+      - button "Buka Asisten Buka Asisten" [ref=f3e113] [cursor=pointer]:
+        - generic [ref=f3e114]: Buka Asisten
+        - generic [ref=f3e115]: Buka Asisten
