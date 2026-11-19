@@ -28,44 +28,97 @@ import { LoadingOverlay } from "@/components/ui/Loading";
 import { useToast } from "@/utils/hooks/useToast";
 import { motion as Motion } from "motion/react";
 import PageHeader from "@/components/ui/PageHeader";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
+import { cancelRegistration } from "@/utils/api/event";
 import RequirementChecklist from "../event/RequirementChecklist";
 import ScheduleCard from "../event/ScheduleCard";
 import { formatDate } from "@/utils/eventConstants";
 
-const EventSection = ({ data, onChanged }) => (
-  <div className="space-y-6">
-    {data.event_period && (
-      <div className="p-4 bg-indigo-50/50 rounded-2xl border border-indigo-100 text-sm text-[#2B3674]">
-        <p className="font-bold">{data.event_period.name}</p>
-        <p className="text-xs text-gray-500 mt-1">
-          Pendaftaran ditutup {formatDate(data.event_period.registration_end)}
-        </p>
-      </div>
-    )}
-    {data.status === "revision_required" && (
-      <div className="flex items-start gap-3 p-4 bg-orange-50 rounded-2xl border border-orange-100">
-        <AlertCircle className="h-5 w-5 text-orange-500 shrink-0 mt-0.5" />
-        <div>
-          <p className="text-sm font-bold text-orange-700">Ada persyaratan yang perlu diperbaiki</p>
-          <p className="text-xs text-orange-600 mt-0.5">Unggah ulang berkas yang ditandai "Perlu revisi" sesuai catatan admin.</p>
+const CANCELABLE = ["submitted", "pending", "reviewing", "processing", "revision_required"];
+
+const EventSection = ({ data, onChanged }) => {
+  const { showToast } = useToast();
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [canceling, setCanceling] = useState(false);
+
+  const cancel = async () => {
+    setCanceling(true);
+    const res = await cancelRegistration(data.id);
+    setCanceling(false);
+    if (res.status === "success") {
+      showToast("Pendaftaran dibatalkan", "success");
+      onChanged();
+    } else {
+      showToast(res.message, "error");
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      {data.event_period && (
+        <div className="flex flex-wrap items-center justify-between gap-3 p-4 bg-indigo-50/50 rounded-2xl border border-indigo-100 text-sm text-[#2B3674]">
+          <div>
+            <p className="font-bold">{data.event_period.name}</p>
+            <p className="text-xs text-gray-500 mt-1">
+              Pendaftaran ditutup {formatDate(data.event_period.registration_end)}
+            </p>
+          </div>
+          {CANCELABLE.includes(data.status) && (
+            <Button
+              type="button"
+              size="sm"
+              disabled={canceling}
+              onClick={() => setConfirmOpen(true)}
+              className="rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold"
+            >
+              {canceling ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <XCircle className="h-3.5 w-3.5 mr-1" />}
+              Batalkan Pendaftaran
+            </Button>
+          )}
         </div>
-      </div>
-    )}
-    {data.status === "processing" && !data.schedule && (
-      <div className="flex items-start gap-3 p-4 bg-blue-50 rounded-2xl border border-blue-100">
-        <CheckCircle2 className="h-5 w-5 text-blue-500 shrink-0 mt-0.5" />
-        <p className="text-sm font-bold text-blue-700">Persyaratan lengkap. Menunggu admin menetapkan jadwal.</p>
-      </div>
-    )}
-    <ScheduleCard schedule={data.schedule} />
-    <RequirementChecklist
-      items={data.requirement_items || []}
-      mode="user"
-      requestStatus={data.status}
-      onChanged={onChanged}
-    />
-  </div>
-);
+      )}
+      {data.status === "canceled" && (
+        <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-2xl border border-gray-100">
+          <XCircle className="h-5 w-5 text-gray-400 shrink-0 mt-0.5" />
+          <p className="text-sm font-bold text-gray-600">
+            Pendaftaran ini sudah dibatalkan. Anda dapat mendaftar lagi melalui menu Seminar & Sidang.
+          </p>
+        </div>
+      )}
+      {data.status === "revision_required" && (
+        <div className="flex items-start gap-3 p-4 bg-orange-50 rounded-2xl border border-orange-100">
+          <AlertCircle className="h-5 w-5 text-orange-500 shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-bold text-orange-700">Ada persyaratan yang perlu diperbaiki</p>
+            <p className="text-xs text-orange-600 mt-0.5">Unggah ulang berkas yang ditandai "Perlu revisi" sesuai catatan admin.</p>
+          </div>
+        </div>
+      )}
+      {data.status === "processing" && !data.schedule && (
+        <div className="flex items-start gap-3 p-4 bg-blue-50 rounded-2xl border border-blue-100">
+          <CheckCircle2 className="h-5 w-5 text-blue-500 shrink-0 mt-0.5" />
+          <p className="text-sm font-bold text-blue-700">Persyaratan lengkap. Menunggu admin menetapkan jadwal.</p>
+        </div>
+      )}
+      <ScheduleCard schedule={data.schedule} />
+      <RequirementChecklist
+        items={data.requirement_items || []}
+        mode="user"
+        requestStatus={data.status}
+        onChanged={onChanged}
+      />
+      <ConfirmDialog
+        isOpen={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        onConfirm={cancel}
+        title="Batalkan pendaftaran?"
+        description="Kuota Anda di gelombang ini akan dilepas dan berkas yang sudah diunggah tidak lagi diproses. Anda dapat mendaftar ulang selama pendaftaran masih dibuka."
+        confirmText="Ya, batalkan"
+        cancelText="Tidak"
+      />
+    </div>
+  );
+};
 
 const RequestDetailUser = () => {
   const { showToast } = useToast();

@@ -47,3 +47,5 @@ export const submitReview = (requestId) =>
 export const saveSchedule = (requestId, body) =>
   call("put", `/requests/${requestId}/schedule`, { data: body, fallback: "Gagal menyimpan jadwal" });
 export const getOpenPeriods = () => call("get", "/open");
+export const cancelRegistration = (requestId) =>
+  call("post", `/requests/${requestId}/cancel`, { fallback: "Gagal membatalkan pendaftaran" });

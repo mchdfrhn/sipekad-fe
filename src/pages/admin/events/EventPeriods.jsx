@@ -77,8 +77,19 @@ const PeriodFormDialog = ({ open, onOpenChange, period, eventType, onSaved }) =>
     setForm((f) => ({ ...f, [key]: e.target.type === "checkbox" ? e.target.checked : e.target.value }));
   const setValue = (key) => (value) => setForm((f) => ({ ...f, [key]: value }));
 
+  // Matches the backend: active registrants lock event type and prodi.
+  const prodiLocked = Boolean(period && period.registered_count > 0);
+
   const submit = async (e) => {
     e.preventDefault();
+    if (form.registration_end < form.registration_start) {
+      showToast("Tanggal tutup pendaftaran tidak boleh sebelum tanggal buka", "error");
+      return;
+    }
+    if (form.event_start && form.event_end && form.event_end < form.event_start) {
+      showToast("Tanggal selesai pelaksanaan tidak boleh sebelum tanggal mulai", "error");
+      return;
+    }
     setSaving(true);
     const res = period ? await updatePeriod(period.id, toBody(form)) : await createPeriod(toBody(form));
     setSaving(false);
@@ -101,19 +112,30 @@ const PeriodFormDialog = ({ open, onOpenChange, period, eventType, onSaved }) =>
         <form onSubmit={submit} className="space-y-4">
           <div className="space-y-1">
             <label className={labelCls}>Jenis acara</label>
-            <CustomSelect
-              value={form.event_type}
-              onChange={setValue("event_type")}
-              options={EVENT_TYPE_KEYS.map((k) => ({ value: k, label: EVENT_TYPES[k].label }))}
-            />
+            {prodiLocked ? (
+              <div className={`${inputCls} text-gray-500`}>{EVENT_TYPES[form.event_type]?.label}</div>
+            ) : (
+              <CustomSelect
+                value={form.event_type}
+                onChange={setValue("event_type")}
+                options={EVENT_TYPE_KEYS.map((k) => ({ value: k, label: EVENT_TYPES[k].label }))}
+              />
+            )}
           </div>
           <div className="space-y-1">
             <label className={labelCls}>Program studi</label>
-            <CustomSelect
-              value={form.prodi}
-              onChange={setValue("prodi")}
-              options={[{ value: "", label: "Semua program studi" }, ...PRODI_OPTIONS.map((p) => ({ value: p, label: p }))]}
-            />
+            {prodiLocked ? (
+              <>
+                <div className={`${inputCls} text-gray-500`}>{form.prodi || "Semua program studi"}</div>
+                <p className="text-[11px] text-gray-400">Jenis acara dan program studi tidak dapat diubah karena gelombang ini sudah memiliki pendaftar.</p>
+              </>
+            ) : (
+              <CustomSelect
+                value={form.prodi}
+                onChange={setValue("prodi")}
+                options={[{ value: "", label: "Semua program studi" }, ...PRODI_OPTIONS.map((p) => ({ value: p, label: p }))]}
+              />
+            )}
           </div>
           <div className="space-y-1">
             <label className={labelCls}>Nama gelombang</label>

@@ -143,7 +143,7 @@ const EventRegistrationPage = ({ eventType }) => {
           </Card>
         </Motion.div>
 
-        <Motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="lg:col-span-5">
+        <Motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="lg:col-span-5 order-first lg:order-none lg:sticky lg:top-28">
           <Card className="border-none shadow-xl shadow-shadow-500/10 rounded-[20px] bg-white overflow-hidden">
             <CardHeader className="bg-[#4318FF]/5 pb-6">
               <CardTitle className="text-xl font-bold text-[#2B3674] flex items-center gap-2">

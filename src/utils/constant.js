@@ -271,7 +271,7 @@ export const STATUS_LABEL_USER = {
   processing: 'Diproses',
   revision_required: 'Perlu Revisi',
   rejected: 'Ditolak',
-  canceled: 'Ditolak',
+  canceled: 'Dibatalkan',
   completed: 'Selesai',
 };
 
@@ -282,7 +282,7 @@ export const STATUS_LABEL_ADMIN = {
   processing: 'Pengerjaan',
   revision_required: 'Butuh Revisi',
   rejected: 'Ditolak',
-  canceled: 'Ditolak',
+  canceled: 'Dibatalkan',
   completed: 'Selesai',
 };
 
