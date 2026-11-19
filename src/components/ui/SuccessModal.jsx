@@ -1,5 +1,6 @@
 import { CheckCircle, XCircle } from "lucide-react";
 import { motion as Motion } from "motion/react";
+import { overlayMotion, modalMotion } from "@/lib/motion";
 
 const SuccessModal = ({
   onOkHandler,
@@ -9,15 +10,13 @@ const SuccessModal = ({
   return (
     <>
       {/* backdrop — onClick panggil handler, bukan referensi */}
-      <div
+      <Motion.div
+        {...overlayMotion}
         onClick={onOkHandler}
-        className="fixed inset-0 bg-black/20 w-screen h-screen flex justify-center items-center z-50"
+        className="fixed inset-0 bg-black/40 backdrop-blur-sm w-screen h-screen flex justify-center items-center z-50"
       >
         <Motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.95 }}
-          transition={{ duration: 0.15, ease: "easeOut" }}
+          {...modalMotion}
           onClick={(e) => e.stopPropagation()}
           className="bg-white rounded-[20px] relative flex justify-center flex-col gap-8 px-8 w-80 md:w-[420px] py-10 shadow-xl"
         >
@@ -46,7 +45,7 @@ const SuccessModal = ({
             </button>
           </div>
         </Motion.div>
-      </div>
+      </Motion.div>
     </>
   );
 };

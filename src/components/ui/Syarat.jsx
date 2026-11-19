@@ -1,5 +1,6 @@
 import { X, CheckCircle2, Download, Eye } from "lucide-react";
-import { motion as Motion } from "motion/react";
+import { motion as Motion, AnimatePresence } from "motion/react";
+import { overlayMotion, modalMotion } from "@/lib/motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -76,12 +77,13 @@ const Syarat = ({
         </CardContent>
       </Card>
 
+      <AnimatePresence>
       {showPreview && url && (
         <Motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
+          {...overlayMotion}
           className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm"
         >
+          <Motion.div {...modalMotion} className="w-full max-w-4xl">
           <Card className="w-full max-w-4xl max-h-[90vh] overflow-hidden rounded-[20px] border-none shadow-2xl relative">
             <div className="absolute top-4 right-4 z-10">
               <Button
@@ -103,8 +105,10 @@ const Syarat = ({
               ></iframe>
             </div>
           </Card>
+          </Motion.div>
         </Motion.div>
       )}
+      </AnimatePresence>
     </Motion.div>
   );
 };

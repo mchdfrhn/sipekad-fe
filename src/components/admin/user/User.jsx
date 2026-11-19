@@ -169,25 +169,17 @@ const User = () => {
 
   return (
     <>
-      {showForm && (
-        <>
-          <div
-            onClick={() => setShowForm(!showForm)}
-            className="fixed inset-0 w-screen h-screen bg-black/20 backdrop-blur-sm flex justify-center z-40 items-center"
-          ></div>
-          <AddUserForm
-            showForm={showForm}
-            setShowForm={setShowForm}
-            setPage={setPage}
-            setTotalPage={setTotalPage}
-            setUsers={setUsers}
-            page={page}
-            limit={limit}
-            prodi={filterProdi}
-            search={searchTerm}
-          />
-        </>
-      )}
+      <AddUserForm
+        showForm={showForm}
+        setShowForm={setShowForm}
+        setPage={setPage}
+        setTotalPage={setTotalPage}
+        setUsers={setUsers}
+        page={page}
+        limit={limit}
+        prodi={filterProdi}
+        search={searchTerm}
+      />
 
 
       <Motion.div
