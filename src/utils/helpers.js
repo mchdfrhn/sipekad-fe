@@ -37,6 +37,24 @@ export const formatPathToBreadcrumb = (path) => {
       label = "Pengajuan - Detail";
     }
 
+    // Match breadcrumb labels to the sidebar menu names
+    const SEGMENT_LABELS = {
+      acara: "Jadwal Seminar & Sidang",
+      persyaratan: "Kelola Persyaratan",
+      user: "Manajemen Pengguna",
+      pending: "Menunggu Persetujuan",
+      backup: "Backup Sistem",
+      whatsapp: "WhatsApp",
+      settings: "Pengaturan",
+      request: "Buat Permintaan",
+      "seminar-sidang": "Seminar & Sidang",
+      "seminar-kp": "Seminar KP",
+      "seminar-skripsi": "Seminar Skripsi",
+      "sidang-skripsi": "Sidang Skripsi",
+    };
+    if (SEGMENT_LABELS[segment]) label = SEGMENT_LABELS[segment];
+    if (segment.startsWith("period-")) label = "Pendaftar";
+
     // Custom label for User Detail
     if (segment.startsWith("users-")) {
       label = "User Detail";

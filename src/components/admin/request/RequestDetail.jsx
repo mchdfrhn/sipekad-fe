@@ -42,6 +42,9 @@ import { STATUS_LABEL_ADMIN } from "../../../utils/constant";
 
 import BASE_URL from "../../../utils/api";
 import { getSignedUrl } from "../../../utils/api/storage";
+import RequirementChecklist from "../../event/RequirementChecklist";
+import EventAdminPanel from "../../event/EventAdminPanel";
+import PageHeader from "@/components/ui/PageHeader";
 
 const RequestDetail = () => {
   const { showToast } = useToast();
@@ -70,6 +73,19 @@ const RequestDetail = () => {
     await getRequestDetail(id, setRequestDetail, setResponses);
     setLoading(false);
   }, [id]);
+
+  // Reload without the full-page overlay (used by the per-requirement checklist).
+  const refreshSilently = useCallback(async () => {
+    await getRequestDetail(id, setRequestDetail, setResponses);
+  }, [id]);
+
+  const isEvent = Boolean(requestDetail?.event_period_id);
+
+  const setConfirmAndRun = (title, description, action) => {
+    setPendingAction(() => action);
+    setConfirmMeta({ title, description });
+    setShowConfirm(true);
+  };
 
   useEffect(() => {
     getDetail();
@@ -172,16 +188,7 @@ const RequestDetail = () => {
     <div className="space-y-8 pb-10">
       {loading && <LoadingOverlay />}
 
-      <div className="mb-6">
-        <div className="flex items-center gap-2 mb-4">
-          <Link to="/admin/pengajuan" className="flex items-center gap-1.5 text-sm font-semibold text-[#718096] hover:text-[#4318FF] transition-colors">
-            <ArrowLeft className="h-4 w-4" />
-            Kembali
-          </Link>
-        </div>
-        <h1 className="text-2xl font-bold text-[#2B3674]">Detail Pengajuan</h1>
-        <p className="text-sm text-[#718096] mt-0.5">Tinjau dan kelola pengajuan surat ini</p>
-      </div>
+      <PageHeader backTo="/admin/pengajuan" icon={FileText} title="Detail Pengajuan" description="Tinjau dan kelola pengajuan surat ini" />
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         <div className="xl:col-span-2 space-y-6">
@@ -349,9 +356,39 @@ const RequestDetail = () => {
               )}
             </CardContent>
           </Card>
+
+          {isEvent && (
+            <Card className="rounded-[20px] border-gray-100/80 shadow-[0_4px_24px_rgba(67,24,255,0.06)]">
+              <CardHeader>
+                <CardTitle className="text-lg font-bold text-[#2B3674] flex items-center gap-2">
+                  <CheckCircle2 className="h-5 w-5 text-[#4318FF]" />
+                  Persyaratan
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <RequirementChecklist
+                  items={requestDetail.requirement_items || []}
+                  mode="admin"
+                  requestStatus={requestDetail.status}
+                  onChanged={refreshSilently}
+                />
+              </CardContent>
+            </Card>
+          )}
         </div>
 
         <div className="space-y-6">
+          {isEvent ? (
+            <EventAdminPanel
+              request={requestDetail}
+              onChanged={refreshSilently}
+              onReject={(reason) =>
+                setConfirmAndRun("Tolak pendaftaran?", "Mahasiswa akan menerima alasan penolakan ini.", () =>
+                  handleStatusChange("rejected", reason),
+                )
+              }
+            />
+          ) : (
           <ActionPanel
             status={requestDetail?.status}
             requestType={requestDetail?.type}
@@ -369,6 +406,7 @@ const RequestDetail = () => {
               setShowConfirm(true);
             }}
           />
+          )}
 
           <Card className="rounded-[20px] border-gray-100/80 shadow-[0_4px_24px_rgba(67,24,255,0.06)]">
             <CardHeader className="pb-2">
@@ -657,7 +695,6 @@ const ActionPanel = ({
           {!showRevisionForm && !showRejectForm && (
             <>
               <Button
-                variant="outline"
                 className="w-full justify-start gap-2 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl border-0"
                 disabled={isLoadingAction}
                 onClick={() => setShowRevisionForm(true)}
@@ -666,7 +703,6 @@ const ActionPanel = ({
                 Butuh Revisi
               </Button>
               <Button
-                variant="outline"
                 className="w-full justify-start gap-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl border-0"
                 disabled={isLoadingAction}
                 onClick={() => setShowRejectForm(true)}
@@ -843,7 +879,6 @@ const ActionPanel = ({
             </Button>
 
             <Button
-              variant="outline"
               className="w-full justify-start gap-2 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl border-0"
               disabled={isLoadingAction || !message.trim()}
               onClick={() => onStatusChange("revision_required", message)}
@@ -853,7 +888,6 @@ const ActionPanel = ({
             </Button>
 
             <Button
-              variant="outline"
               className="w-full justify-start gap-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl border-0"
               disabled={isLoadingAction}
               onClick={() => onStatusChange("rejected", message || null)}
@@ -899,7 +933,6 @@ const ActionPanel = ({
             Lanjut Proses
           </Button>
           <Button
-            variant="outline"
             className="w-full justify-start gap-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl border-0"
             disabled={isLoadingAction}
             onClick={() => onStatusChange("rejected")}

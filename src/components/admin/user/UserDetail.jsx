@@ -4,7 +4,6 @@ import { useParams, Link, useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import { TablePengajuan } from "../request/Requests";
 import {
-  ArrowLeft,
   ArrowRight,
   Pen,
   LayoutDashboard,
@@ -24,6 +23,7 @@ import { useToast } from "@/utils/hooks/useToast";
 import ConfirmDialog from "../../ui/ConfirmDialog";
 import { useUser } from "@/utils/hooks/userContext";
 import { impersonateUser } from "@/utils/api/auth";
+import PageHeader from "@/components/ui/PageHeader";
 
 
 const UserDetail = () => {
@@ -111,13 +111,12 @@ const UserDetail = () => {
         userDetail={userDetail}
         showForm={showForm}
       />
-      <div className="flex justify-between items-center mb-6">
-        <Link
-          to={"/admin/user"}
-          className="p-2 hover:bg-gray-100 rounded-full transition-colors flex items-center justify-center text-[#2B3674]"
-        >
-          <ArrowLeft className="h-6 w-6" />
-        </Link>
+      <PageHeader
+        backTo="/admin/user"
+        icon={Users}
+        title="Detail Pengguna"
+        description="Informasi akun dan riwayat pengajuan"
+        actions={
         <div className="flex items-center gap-3">
           <button type="button"
             onClick={() => setAlertReset(true)}
@@ -144,7 +143,8 @@ const UserDetail = () => {
           </button>
 
         </div>
-      </div>
+        }
+      />
 
       <div className="bg-white rounded-[20px] shadow-sm border border-gray-100 overflow-hidden mb-6 p-6">
         <div className="flex flex-col md:flex-row items-center gap-8">

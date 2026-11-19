@@ -33,3 +33,4 @@ api-test.js
 *.njsproj
 *.sln
 *.sw?
+.playwright-cli/

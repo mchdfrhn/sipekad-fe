@@ -23,6 +23,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "../../utils/hooks/useToast";
 import { formatDateRelative } from "../../utils/helpers";
+import PageHeader from "@/components/ui/PageHeader";
 
 const EmailManager = () => {
   const [status, setStatus] = useState({ 
@@ -227,43 +228,29 @@ const EmailManager = () => {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500 font-jakarta">
-      {/* Page Header */}
-      <div className="mb-8">
-        <div className="flex items-center gap-3 mb-1">
-          <div className="h-10 w-10 rounded-2xl bg-indigo-50 flex items-center justify-center">
-            <Mail className="h-5 w-5 text-[#4318FF]" />
+      <PageHeader icon={Mail} title="Manajer Email" description="Kelola koneksi SMTP, konfigurasi, dan kirim pesan email"
+        actions={
+          <div className="flex items-center gap-2">
+            <Button 
+              variant="outline" 
+              onClick={() => { fetchStatus(); fetchLogs(); }} 
+              className="rounded-xl border-gray-200 hover:bg-gray-50"
+              disabled={loading.status}
+            >
+              <RefreshCw className={`mr-2 h-4 w-4 ${loading.status ? 'animate-spin' : ''}`} />
+              Segarkan Status
+            </Button>
+            <Button 
+              onClick={handleVerifyConnection} 
+              className="bg-[#4318FF] hover:bg-[#3311CC] text-white rounded-xl shadow-lg shadow-indigo-100"
+              disabled={loading.action}
+            >
+              {loading.action ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className="mr-2 h-4 w-4" />}
+              Uji Koneksi SMTP
+            </Button>
           </div>
-          <div>
-            <h1 className="text-2xl font-bold text-[#2B3674]">Manajer Email</h1>
-            <p className="text-sm text-[#718096]">Kelola koneksi SMTP, konfigurasi, dan kirim pesan email</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <p className="text-gray-500">Kelola notifikasi email dan pantau status koneksi server SMTP.</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button 
-            variant="outline" 
-            onClick={() => { fetchStatus(); fetchLogs(); }} 
-            className="rounded-xl border-gray-200 hover:bg-gray-50"
-            disabled={loading.status}
-          >
-            <RefreshCw className={`mr-2 h-4 w-4 ${loading.status ? 'animate-spin' : ''}`} />
-            Segarkan Status
-          </Button>
-          <Button 
-            onClick={handleVerifyConnection} 
-            className="bg-[#4318FF] hover:bg-[#3311CC] text-white rounded-xl shadow-lg shadow-indigo-100"
-            disabled={loading.action}
-          >
-            {loading.action ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className="mr-2 h-4 w-4" />}
-            Uji Koneksi SMTP
-          </Button>
-        </div>
-      </div>
+        }
+      />
 
       {/* Top 3 Cards Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

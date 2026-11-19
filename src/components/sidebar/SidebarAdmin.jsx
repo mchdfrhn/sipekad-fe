@@ -8,24 +8,27 @@ import {
   Shield, 
   Bell, 
   Mail, 
-  ChevronDown 
+  ChevronDown,
+  CalendarDays
 } from "lucide-react";
 import { Link, useLocation } from "react-router";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import { motion as Motion, AnimatePresence } from "motion/react";
 import { useState, useEffect } from "react";
+import { SidebarWatermark } from "@/components/ui/Watermark";
 
 const links = [
   { path: "/admin", name: "Dashboard", icon: LayoutDashboard, exact: true },
   { path: "/admin/pengajuan", name: "Pengajuan", icon: Send },
+  { path: "/admin/acara", name: "Jadwal Seminar & Sidang", icon: CalendarDays, noFill: true },
   { path: "/admin/user", name: "Manajemen Pengguna", icon: User },
   { path: "/admin/backup", name: "Backup Sistem", icon: Database, noFill: true },
   {
     name: "Notifikasi",
     icon: Bell,
     children: [
-      { path: "/admin/whatsapp", name: "Whatsapp", icon: MessageSquare },
+      { path: "/admin/whatsapp", name: "WhatsApp", icon: MessageSquare },
       { path: "/admin/email", name: "Email", icon: Mail },
     ],
   },
@@ -265,6 +268,7 @@ const SidebarAdmin = ({ className, onClose }) => {
           </div>
           <span className="text-sm tracking-wide">Laporkan Bug</span>
         </a>
+        <SidebarWatermark />
       </div>
     </div>
   );

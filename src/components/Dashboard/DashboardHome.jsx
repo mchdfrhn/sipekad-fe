@@ -26,6 +26,7 @@ import {
 import { generatePaginationPages } from "../../utils/helpers";
 import { motion as Motion } from "motion/react";
 import { useUser } from "../../utils/hooks/userContext";
+import OpenEventsBanner from "../event/OpenEventsBanner";
 
 const getGreeting = () => {
   const h = new Date().getHours();
@@ -132,6 +133,8 @@ const DashboardHome = () => {
           </div>
         </div>
       </Motion.div>
+
+      <OpenEventsBanner />
 
       {/* Stats Cards */}
       <Motion.div

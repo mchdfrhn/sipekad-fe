@@ -37,6 +37,7 @@ import {
 } from "@/components/ui/dialog";
 import { Sliders, ZoomIn, Check, X } from "lucide-react";
 import axios from "axios";
+import PageHeader from "@/components/ui/PageHeader";
 
 const Settings = () => {
   const { userData, updateUserData } = useUser();
@@ -307,19 +308,8 @@ const Settings = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
-      <div className="max-w-6xl mx-auto space-y-8 pb-10 pt-4">
-        {/* Page Header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-3 mb-1">
-            <div className="h-10 w-10 rounded-2xl bg-[#4318FF]/10 flex items-center justify-center">
-              <SettingsIcon className="h-5 w-5 text-[#4318FF]" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-[#2B3674] leading-tight">Pengaturan Akun</h1>
-              <p className="text-sm text-[#718096]">Kelola informasi profil dan keamanan akun Anda</p>
-            </div>
-          </div>
-        </div>
+      <div className="max-w-6xl mx-auto space-y-8 pb-10">
+        <PageHeader icon={SettingsIcon} title="Pengaturan Akun" description="Kelola informasi profil dan keamanan akun Anda" />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Profile Information */}

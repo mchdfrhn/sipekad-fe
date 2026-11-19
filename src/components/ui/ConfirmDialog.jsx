@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { AlertCircle, X } from "lucide-react";
 import { Button } from "./button";
 import { useEffect, useRef } from "react";
+import { overlayMotion, modalMotion } from "@/lib/motion";
 
 const ConfirmDialog = ({
   isOpen,
@@ -40,7 +41,6 @@ const ConfirmDialog = ({
     return () => { clearTimeout(t); ref.removeEventListener("keydown", trapTab); };
   }, [isOpen]);
 
-  if (!isOpen) return null;
 
   const variants = {
     danger: {
@@ -64,21 +64,18 @@ const ConfirmDialog = ({
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+      {isOpen && (
+      <div key="confirm-dialog" className="fixed inset-0 z-[100] flex items-center justify-center p-4">
         {/* Backdrop */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black/40 backdrop-blur-xs"
+          {...overlayMotion}
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm"
           onClick={onClose}
         />
 
         {/* Modal */}
         <motion.div
-          initial={{ scale: 0.95, opacity: 0, y: 20 }}
-          animate={{ scale: 1, opacity: 1, y: 0 }}
-          exit={{ scale: 0.95, opacity: 0, y: 20 }}
+          {...modalMotion}
           className="relative w-full max-w-[400px] bg-white rounded-[20px] shadow-2xl overflow-hidden border border-gray-100"
           ref={dialogRef}
           role="dialog"
@@ -129,6 +126,7 @@ const ConfirmDialog = ({
           </div>
         </motion.div>
       </div>
+      )}
     </AnimatePresence>
   );
 };

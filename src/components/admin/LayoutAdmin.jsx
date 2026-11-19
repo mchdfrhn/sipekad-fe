@@ -195,27 +195,30 @@ const LayoutAdmin = () => {
       {/* Main Content Area */}
       <div
         id="main-content-area"
-        className="flex flex-col flex-1 h-full overflow-y-auto no-scrollbar relative"
+        className="group/layout flex flex-col flex-1 h-full overflow-y-auto no-scrollbar relative"
       >
         {/* Sticky Header */}
-        <header
-          className={`sticky top-0 z-30 flex items-center justify-between px-6 py-4 transition-all duration-300 ${
-            scrolled
-              ? "bg-white/80 backdrop-blur-md shadow-sm"
-              : "bg-transparent"
-          }`}
-        >
+        <header className="sticky top-0 z-30 px-6 py-4 bg-[#F4F7FE]/85 backdrop-blur-md">
+          <div
+            className={`flex items-center justify-between gap-4 bg-white rounded-full pl-6 pr-2.5 py-2.5 transition-shadow duration-300 ${
+              scrolled ? "shadow-[0_8px_30px_rgba(67,24,255,0.08)]" : "shadow-sm"
+            }`}
+          >
           <Motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
-            className="flex flex-col justify-center min-w-0 overflow-hidden"
+            className="flex flex-1 flex-col justify-center min-w-0 overflow-hidden"
           >
             <Breadcrumb>
-              <BreadcrumbList>
+              <BreadcrumbList className="flex-nowrap whitespace-nowrap">
                 {breadcrumbs.map((crumb, index) => (
-                  <div key={index} className="flex items-center">
-                    <BreadcrumbItem className={index === breadcrumbs.length - 1 ? "" : "hidden md:flex"}>
+                  // Only the parent and current page fit next to the profile controls; older crumbs show on 2xl.
+                  <div
+                    key={index}
+                    className={`items-center ${index < breadcrumbs.length - 2 ? "hidden 2xl:flex" : "flex"} ${index === breadcrumbs.length - 1 ? "min-w-0" : "shrink-0"}`}
+                  >
+                    <BreadcrumbItem className={index === breadcrumbs.length - 1 ? "min-w-0 truncate" : "hidden md:flex shrink-0"}>
                       {index === breadcrumbs.length - 1 ? (
                         <BreadcrumbPage className="text-sm font-bold text-[#2B3674] capitalize">
                           {crumb.label}
@@ -234,18 +237,13 @@ const LayoutAdmin = () => {
                 ))}
               </BreadcrumbList>
             </Breadcrumb>
-            <h1 className="hidden md:block text-2xl font-bold text-[#2B3674] capitalize mt-1">
-              {breadcrumbs[breadcrumbs.length - 1]?.label === "Admin"
-                ? "Dashboard"
-                : breadcrumbs[breadcrumbs.length - 1]?.label || "Dashboard"}
-            </h1>
           </Motion.div>
 
           <Motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
-            className="flex items-center gap-3 bg-white p-2.5 rounded-full shadow-sm shrink-0"
+            className="flex items-center gap-3 shrink-0"
           >
             {/* Header Actions Portal Target */}
             <div id="header-actions" className="flex items-center gap-2"></div>
@@ -259,7 +257,7 @@ const LayoutAdmin = () => {
                   placeholder="Cari..."
                   value={searchValue}
                   onChange={handleSearchChange}
-                  className="pl-8 bg-transparent border-none outline-none text-sm text-[#2B3674] placeholder-gray-400 w-40 focus:w-60 transition-all font-medium"
+                  className="pl-8 bg-transparent border-none outline-none text-sm text-[#2B3674] placeholder-gray-400 w-28 focus:w-48 transition-all font-medium"
                 />
                 {searchValue && (
                   <button type="button"
@@ -394,7 +392,7 @@ const LayoutAdmin = () => {
                   </AvatarFallback>
                 </Avatar>
                 <div className="hidden md:block text-left">
-                  <p className="text-sm font-bold text-[#2B3674] leading-tight text-nowrap">
+                  <p className="text-sm font-bold text-[#2B3674] leading-tight truncate max-w-[160px]" title={user.full_name}>
                     {user.full_name}
                   </p>
                   <p className="text-[10px] font-medium text-gray-400 uppercase">
@@ -446,6 +444,7 @@ const LayoutAdmin = () => {
               </DropdownMenuContent>
             </DropdownMenu>
           </Motion.div>
+          </div>
         </header>
 
         {/* Scrollable Content */}
@@ -455,6 +454,12 @@ const LayoutAdmin = () => {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="flex-1 p-4 lg:p-6 lg:pt-0 pb-20"
         >
+          {/* Fallback title for pages without their own PageHeader */}
+          <h1 className="hidden md:block group-has-[[data-page-header]]/layout:!hidden text-2xl font-bold text-[#2B3674] capitalize mb-6 px-2">
+              {breadcrumbs[breadcrumbs.length - 1]?.label === "Admin"
+                ? "Dashboard"
+                : breadcrumbs[breadcrumbs.length - 1]?.label || "Dashboard"}
+          </h1>
           <Outlet
             context={{
               notifications,

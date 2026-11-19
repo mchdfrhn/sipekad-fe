@@ -4,9 +4,7 @@ import {
   ClipboardList,
   GraduationCap,
   ScrollText,
-  Presentation,
   UserCheck,
-  Award,
   BookOpen,
   Briefcase,
   Users,
@@ -45,24 +43,6 @@ const kategoriPermintaan = [
     path: "/dashboard/request/yudisium",
     color: "button-gray",
     icon: GraduationCap,
-  },
-  {
-    content: "Pengajuan Sempro",
-    path: "/dashboard/request/pengajuansempro",
-    color: "button-red",
-    icon: Presentation,
-  },
-  {
-    content: "Pengajuan Seminar KP",
-    path: "/dashboard/request/seminarkp",
-    color: "button-teal",
-    icon: UserCheck,
-  },
-  {
-    content: "Pengajuan Sidang Skripsi",
-    path: "/dashboard/request/skripsi",
-    color: "button-violet",
-    icon: Award,
   },
 ];
 
@@ -284,60 +264,6 @@ const yudisium = {
   fileName: "yudisium.pdf",
 };
 
-const sempro = {
-  syarat: [
-    "Silahkan unduh berkas persayaratan untuk pengajuan",
-    "Isi data-data yang dibutuhkan dalam surat tersebut",
-    "Ajukan transkrip nilai jika tidak ada",
-    "Screenshoot rekap pembayaran seminar skripsi melalui SIAKAD",
-    "Masukan penugasan dosen skripsi/tugas akhir",
-    "Masukan sisa persayaratan administrasi daftar seminar tugas akhir",
-    "Upload semua berkas dalam satu file pdf",
-    "Buku sidang skripsi 3 jilid (Bab 1 - 3)",
-    "Pengajuan anda akan ditinjau oleh admin",
-    "Berkas akan dikirim melalui aplikasi ini, karena itu silahkan cek secara berkala",
-  ],
-  title: "Sempro",
-  url: "/sempro/sempro.pdf",
-  fileName: "sempro.pdf",
-};
-
-const seminarKerjaPraktik = {
-  syarat: [
-    "Silahkan unduh berkas persayaratan untuk pengajuan",
-    "Isi data-data yang dibutuhkan dalam surat tersebut",
-    "Ajukan transkrip nilai jika tidak ada",
-    "Screenshoot rekap pembayaran seminar KP melalui SIAKAD",
-    "Masukan penugasan dosen skripsi/tugas akhir",
-    "Masukan sisa persayaratan administrasi daftar seminar tugas akhir",
-    "Upload semua berkas dalam satu file pdf",
-    "Buku laporan KP 2 jilid",
-    "Pengajuan anda akan ditinjau oleh admin",
-    "Berkas akan dikirim melalui aplikasi ini, karena itu silahkan cek secara berkala",
-  ],
-  title: "Seminar Kerja Praktik",
-  url: "/sempro/sempro.pdf",
-  fileName: "Seminar_kerja_praktik.pdf",
-};
-
-const sidangSkripsi = {
-  syarat: [
-    "Silahkan unduh berkas persayaratan untuk pengajuan",
-    "Isi data-data yang dibutuhkan dalam surat tersebut",
-    "Ajukan transkrip nilai jika tidak ada",
-    "Screenshoot rekap pembayaran sidangg skripsi melalui SIAKAD",
-    "Masukan penugasan dosen skripsi/tugas akhir",
-    "Masukan sisa persayaratan administrasi daftar seminar tugas akhir",
-    "Upload semua berkas dalam satu file pdf",
-    "Buku laporan KP 2 jilid",
-    "Pengajuan anda akan ditinjau oleh admin",
-    "Berkas akan dikirim melalui aplikasi ini, karena itu silahkan cek secara berkala",
-  ],
-  title: "Sidang Skripsi",
-  url: "/sempro/sempro.pdf",
-  fileName: "Seminar_kerja_praktik.pdf",
-};
-
 export const STATUS_LABEL_USER = {
   submitted: 'Diajukan',
   pending: 'Diajukan',
@@ -345,7 +271,7 @@ export const STATUS_LABEL_USER = {
   processing: 'Diproses',
   revision_required: 'Perlu Revisi',
   rejected: 'Ditolak',
-  canceled: 'Ditolak',
+  canceled: 'Dibatalkan',
   completed: 'Selesai',
 };
 
@@ -356,7 +282,7 @@ export const STATUS_LABEL_ADMIN = {
   processing: 'Pengerjaan',
   revision_required: 'Butuh Revisi',
   rejected: 'Ditolak',
-  canceled: 'Ditolak',
+  canceled: 'Dibatalkan',
   completed: 'Selesai',
 };
 
@@ -376,7 +302,4 @@ export {
   pengantarKp,
   transkripNilai,
   yudisium,
-  sempro,
-  seminarKerjaPraktik,
-  sidangSkripsi,
 };

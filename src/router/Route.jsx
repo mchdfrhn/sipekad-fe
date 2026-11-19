@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, Navigate } from "react-router";
 import { lazy, Suspense } from "react";
 
 // Static — needed immediately
@@ -40,6 +40,12 @@ const DashboardHome = lazyWithRetry(() => import("../components/Dashboard/Dashbo
 const DashboardUser = lazyWithRetry(() => import("../components/Dashboard/DashboardUser"));
 const Settings = lazyWithRetry(() => import("../pages/Settings"));
 
+const EventHub = lazyWithRetry(() => import("../components/event/EventHub"));
+const EventRegistrationPage = lazyWithRetry(() => import("../components/event/EventRegistrationPage"));
+const EventPeriods = lazyWithRetry(() => import("../pages/admin/events/EventPeriods"));
+const EventPeriodDetail = lazyWithRetry(() => import("../pages/admin/events/EventPeriodDetail"));
+const RequirementTemplates = lazyWithRetry(() => import("../pages/admin/events/RequirementTemplates"));
+
 // Lazy — Admin
 const User = lazyWithRetry(() => import("../components/admin/user/User"));
 const PendingUsers = lazyWithRetry(() => import("../components/admin/user/PendingUsers"));
@@ -57,11 +63,8 @@ const EmailManager = lazyWithRetry(() => import("../pages/admin/EmailManager"));
 const SuratKeterangan = lazyWithRetry(() => import("../components/Request/SuratKeterangan"));
 const SuratPengajuan = lazyWithRetry(() => import("../components/Request/SuratPengajuan"));
 const SuratPenjugasan = lazyWithRetry(() => import("../components/Request/SuratPenjugasan"));
-const SuratSempro = lazyWithRetry(() => import("../components/Request/SuratSempro"));
-const Skripsi = lazyWithRetry(() => import("../components/Request/Skripsi"));
 const TranskripNilai = lazyWithRetry(() => import("../components/Request/TranskripNilai"));
 const Yudisium = lazyWithRetry(() => import("../components/Request/Yudisium"));
-const SeminarKp = lazyWithRetry(() => import("../components/Request/SeminarKp"));
 
 // Lazy — Request Detail
 const RequestDetailUser = lazyWithRetry(() => import("../components/requestUser/RequestDetailUser"));
@@ -96,6 +99,12 @@ const PageLoader = () => (
 const w = (C) => (
   <Suspense fallback={<PageLoader />}>
     <C />
+  </Suspense>
+);
+
+const wEvent = (eventType) => (
+  <Suspense fallback={<PageLoader />}>
+    <EventRegistrationPage key={eventType} eventType={eventType} />
   </Suspense>
 );
 
@@ -139,6 +148,15 @@ const Router = createBrowserRouter([
               {
                 index: true,
                 element: w(DashboardHome),
+              },
+              {
+                path: "seminar-sidang",
+                children: [
+                  { index: true, element: w(EventHub) },
+                  { path: "seminar-kp", element: wEvent("seminar_kp") },
+                  { path: "seminar-skripsi", element: wEvent("seminar_skripsi") },
+                  { path: "sidang-skripsi", element: wEvent("sidang_skripsi") },
+                ],
               },
               {
                 path: ":id",
@@ -241,16 +259,19 @@ const Router = createBrowserRouter([
                     element: w(Yudisium),
                   },
                   {
+                    // moved to the "Seminar & Sidang" menu
                     path: "pengajuansempro",
-                    element: w(SuratSempro),
+                    element: <Navigate to="/dashboard/seminar-sidang/seminar-skripsi" replace />,
                   },
                   {
+                    // moved to the "Seminar & Sidang" menu
                     path: "seminarkp",
-                    element: w(SeminarKp),
+                    element: <Navigate to="/dashboard/seminar-sidang/seminar-kp" replace />,
                   },
                   {
+                    // moved to the "Seminar & Sidang" menu
                     path: "skripsi",
-                    element: w(Skripsi),
+                    element: <Navigate to="/dashboard/seminar-sidang/sidang-skripsi" replace />,
                   },
                 ],
               },
@@ -294,6 +315,14 @@ const Router = createBrowserRouter([
                     path: ":id",
                     element: w(RequestDetail),
                   },
+                ],
+              },
+              {
+                path: "acara",
+                children: [
+                  { index: true, element: w(EventPeriods) },
+                  { path: "persyaratan", element: w(RequirementTemplates) },
+                  { path: ":id", element: w(EventPeriodDetail) },
                 ],
               },
               {
