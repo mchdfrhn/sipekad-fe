@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import { motion as Motion } from "motion/react";
+import { SidebarWatermark } from "@/components/ui/Watermark";
 
 const links = [
   { path: "/dashboard", name: "Dashboard", icon: LayoutDashboard, exact: true },
@@ -122,6 +123,7 @@ const SidebarDashboard = ({ className, onClose }) => {
           </div>
           <span className="text-sm tracking-wide">Laporkan Bug</span>
         </a>
+        <SidebarWatermark />
       </div>
     </div>
   );

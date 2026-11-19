@@ -49,6 +49,7 @@ jobs:
           build-args: |
             VITE_API_BASE_URL=/api
             VITE_WHATSAPP_NUMBER=${{ vars.VITE_WHATSAPP_NUMBER }}
+            VITE_WATERMARK_STYLE=${{ vars.VITE_WATERMARK_STYLE || 'gradient' }}
             NGINX_CONF=nginx.static.conf.template
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

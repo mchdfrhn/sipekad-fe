@@ -16,6 +16,7 @@ import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import { motion as Motion, AnimatePresence } from "motion/react";
 import { useState, useEffect } from "react";
+import { SidebarWatermark } from "@/components/ui/Watermark";
 
 const links = [
   { path: "/admin", name: "Dashboard", icon: LayoutDashboard, exact: true },
@@ -267,6 +268,7 @@ const SidebarAdmin = ({ className, onClose }) => {
           </div>
           <span className="text-sm tracking-wide">Laporkan Bug</span>
         </a>
+        <SidebarWatermark />
       </div>
     </div>
   );
