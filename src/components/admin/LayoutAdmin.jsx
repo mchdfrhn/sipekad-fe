@@ -198,7 +198,7 @@ const LayoutAdmin = () => {
         className="group/layout flex flex-col flex-1 h-full overflow-y-auto no-scrollbar relative"
       >
         {/* Sticky Header */}
-        <header className="sticky top-0 z-30 px-6 py-4">
+        <header className="sticky top-0 z-30 px-6 py-4 bg-[#F4F7FE]/85 backdrop-blur-md">
           <div
             className={`flex items-center justify-between gap-4 bg-white rounded-full pl-6 pr-2.5 py-2.5 transition-shadow duration-300 ${
               scrolled ? "shadow-[0_8px_30px_rgba(67,24,255,0.08)]" : "shadow-sm"
@@ -445,11 +445,6 @@ const LayoutAdmin = () => {
             </DropdownMenu>
           </Motion.div>
           </div>
-          <h1 className="hidden md:block group-has-[[data-page-header]]/layout:!hidden text-2xl font-bold text-[#2B3674] capitalize mt-4 px-2">
-              {breadcrumbs[breadcrumbs.length - 1]?.label === "Admin"
-                ? "Dashboard"
-                : breadcrumbs[breadcrumbs.length - 1]?.label || "Dashboard"}
-          </h1>
         </header>
 
         {/* Scrollable Content */}
@@ -459,6 +454,12 @@ const LayoutAdmin = () => {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="flex-1 p-4 lg:p-6 lg:pt-0 pb-20"
         >
+          {/* Fallback title for pages without their own PageHeader */}
+          <h1 className="hidden md:block group-has-[[data-page-header]]/layout:!hidden text-2xl font-bold text-[#2B3674] capitalize mb-6 px-2">
+              {breadcrumbs[breadcrumbs.length - 1]?.label === "Admin"
+                ? "Dashboard"
+                : breadcrumbs[breadcrumbs.length - 1]?.label || "Dashboard"}
+          </h1>
           <Outlet
             context={{
               notifications,

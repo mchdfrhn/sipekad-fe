@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import { useParams, Link } from "react-router";
+import { useParams } from "react-router";
 import {
-  ArrowLeft,
   X,
   FileText,
   Calendar,
@@ -28,6 +27,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { LoadingOverlay } from "@/components/ui/Loading";
 import { useToast } from "@/utils/hooks/useToast";
 import { motion as Motion } from "motion/react";
+import PageHeader from "@/components/ui/PageHeader";
 import RequirementChecklist from "../event/RequirementChecklist";
 import ScheduleCard from "../event/ScheduleCard";
 import { formatDate } from "@/utils/eventConstants";
@@ -169,18 +169,13 @@ const RequestDetailUser = () => {
     <div className="space-y-6 relative min-h-[400px]">
       {isLoading && <LoadingOverlay />}
 
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <Link
-          to="/dashboard"
-          className="flex items-center gap-2 text-gray-500 hover:text-[#4318FF] transition-colors group"
-        >
-          <div className="p-2 rounded-xl group-hover:bg-indigo-50 transition-colors">
-            <ArrowLeft className="h-5 w-5" />
-          </div>
-          <span className="font-bold text-sm">Kembali ke Dashboard</span>
-        </Link>
-      </div>
+      <PageHeader
+        backTo="/dashboard"
+        backLabel="Kembali ke Dashboard"
+        icon={FileText}
+        title="Detail Pengajuan"
+        description="Pantau status, persyaratan, dan tanggapan admin untuk pengajuan ini."
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Main Content - Pengajuan */}
@@ -190,7 +185,7 @@ const RequestDetailUser = () => {
               <div className="flex items-center justify-between">
                 <CardTitle className="text-xl font-bold text-[#2B3674] flex items-center gap-2">
                   <FileText className="h-5 w-5 text-[#4318FF]" />
-                  Pengajuan - Detail
+                  Informasi Pengajuan
                 </CardTitle>
                 {data && getStatusBadge(data.status)}
               </div>

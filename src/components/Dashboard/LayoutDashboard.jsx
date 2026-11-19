@@ -211,6 +211,7 @@ const LayoutDashboard = () => {
         id="main-content-area"
         className="group/layout flex flex-col flex-1 h-full overflow-y-auto no-scrollbar relative"
       >
+        <div className="sticky top-0 z-30">
         {/* Impersonation Banner */}
         <AnimatePresence>
           {isAdminImpersonating() && (
@@ -218,7 +219,7 @@ const LayoutDashboard = () => {
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              className="bg-emerald-600 text-white px-6 py-2 flex items-center justify-between sticky top-0 z-[40] shadow-md"
+              className="bg-emerald-600 text-white px-6 py-2 flex items-center justify-between shadow-md overflow-hidden"
             >
               <div className="flex items-center gap-2">
                 <ShieldCheck className="h-4 w-4" />
@@ -239,7 +240,7 @@ const LayoutDashboard = () => {
 
         {/* Sticky Header */}
 
-        <header className="sticky top-0 z-30 px-6 py-4">
+        <header className="px-6 py-4 bg-[#F4F7FE]/85 backdrop-blur-md">
           <div
             className={`flex items-center justify-between gap-4 bg-white rounded-full pl-6 pr-2.5 py-2.5 transition-shadow duration-300 ${
               scrolled ? "shadow-[0_8px_30px_rgba(67,24,255,0.08)]" : "shadow-sm"
@@ -491,10 +492,8 @@ const LayoutDashboard = () => {
             </DropdownMenu>
           </Motion.div>
           </div>
-          <h1 className="hidden md:block group-has-[[data-page-header]]/layout:!hidden text-2xl font-bold text-[#2B3674] capitalize mt-4 px-2">
-              {breadcrumbs[breadcrumbs.length - 1]?.label || "Dashboard"}
-          </h1>
         </header>
+        </div>
 
         {/* Scrollable Content */}
         <Motion.main
@@ -503,6 +502,10 @@ const LayoutDashboard = () => {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="flex-1 p-4 lg:p-6 lg:pt-0 pb-20"
         >
+          {/* Fallback title for pages without their own PageHeader */}
+          <h1 className="hidden md:block group-has-[[data-page-header]]/layout:!hidden text-2xl font-bold text-[#2B3674] capitalize mb-6 px-2">
+              {breadcrumbs[breadcrumbs.length - 1]?.label || "Dashboard"}
+          </h1>
           <Outlet
             context={{
               notifications,
