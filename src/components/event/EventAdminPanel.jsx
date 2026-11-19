@@ -7,9 +7,10 @@ import { useToast } from "@/utils/hooks/useToast";
 import { submitReview, saveSchedule } from "@/utils/api/event";
 import { formatDateTime, toJakartaInput, fromJakartaInput } from "@/utils/eventConstants";
 import ScheduleCard from "./ScheduleCard";
+import DatePicker from "@/components/ui/DatePicker";
 
 const inputCls =
-  "w-full px-3 py-2.5 bg-[#F4F7FE] border-0 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#4318FF]/30";
+  "w-full px-4 py-3 bg-[#F4F7FE] text-[#2B3674] rounded-2xl text-sm font-semibold placeholder:text-gray-400 placeholder:font-normal outline-none transition-all duration-200 focus:ring-2 focus:ring-[#4318FF]";
 const labelCls = "text-xs font-bold text-[#2B3674]";
 
 const ScheduleForm = ({ requestId, schedule, onSaved }) => {
@@ -47,8 +48,8 @@ const ScheduleForm = ({ requestId, schedule, onSaved }) => {
   return (
     <form onSubmit={submit} className="space-y-3">
       <div className="space-y-1">
-        <label className={labelCls}>Tanggal & jam (WIB)</label>
-        <input required type="datetime-local" value={form.scheduled_at} onChange={set("scheduled_at")} className={inputCls} />
+        <label className={labelCls}>Tanggal & jam</label>
+        <DatePicker required withTime value={form.scheduled_at} onChange={(value) => setForm((f) => ({ ...f, scheduled_at: value }))} />
       </div>
       <div className="space-y-1">
         <label className={labelCls}>Ruang</label>

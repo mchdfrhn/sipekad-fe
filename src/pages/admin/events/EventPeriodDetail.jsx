@@ -30,7 +30,7 @@ const EventPeriodDetail = () => {
         backLabel="Kembali ke daftar gelombang"
         icon={CalendarDays}
         title={period.name}
-        description={<>{EVENT_TYPES[period.event_type].label} · Pendaftaran {formatDateTime(period.registration_start)} – {formatDateTime(period.registration_end)}</>}
+        description={<>{EVENT_TYPES[period.event_type].label} · {period.prodi || "Semua prodi"} · Pendaftaran {formatDateTime(period.registration_start)} – {formatDateTime(period.registration_end)}</>}
         actions={<span className={`text-xs font-bold px-3 py-1 rounded-full ${st.cls}`}>{st.label}</span>}
       />
 

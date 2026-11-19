@@ -239,13 +239,12 @@ const LayoutDashboard = () => {
 
         {/* Sticky Header */}
 
-        <header
-          className={`sticky top-0 z-30 flex items-center justify-between px-6 py-4 transition-all duration-300 ${
-            scrolled
-              ? "bg-white/80 backdrop-blur-md shadow-sm"
-              : "bg-transparent"
-          }`}
-        >
+        <header className="sticky top-0 z-30 px-6 py-4">
+          <div
+            className={`flex items-center justify-between gap-4 bg-white rounded-full pl-6 pr-2.5 py-2.5 transition-shadow duration-300 ${
+              scrolled ? "shadow-[0_8px_30px_rgba(67,24,255,0.08)]" : "shadow-sm"
+            }`}
+          >
           <Motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -275,16 +274,13 @@ const LayoutDashboard = () => {
                 ))}
               </BreadcrumbList>
             </Breadcrumb>
-            <h1 className="hidden md:block group-has-[[data-page-header]]/layout:!hidden text-2xl font-bold text-[#2B3674] capitalize mt-1">
-              {breadcrumbs[breadcrumbs.length - 1]?.label || "Dashboard"}
-            </h1>
           </Motion.div>
 
           <Motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
-            className="flex items-center gap-3 bg-white p-2.5 rounded-full shadow-sm shrink-0"
+            className="flex items-center gap-3 shrink-0"
           >
             {/* Header Actions Portal Target */}
             <div id="header-actions" className="flex items-center gap-2"></div>
@@ -490,6 +486,10 @@ const LayoutDashboard = () => {
               </DropdownMenuContent>
             </DropdownMenu>
           </Motion.div>
+          </div>
+          <h1 className="hidden md:block group-has-[[data-page-header]]/layout:!hidden text-2xl font-bold text-[#2B3674] capitalize mt-4 px-2">
+              {breadcrumbs[breadcrumbs.length - 1]?.label || "Dashboard"}
+          </h1>
         </header>
 
         {/* Scrollable Content */}

@@ -46,3 +46,4 @@ export const submitReview = (requestId) =>
   call("post", `/requests/${requestId}/submit-review`, { fallback: "Gagal mengirim hasil verifikasi" });
 export const saveSchedule = (requestId, body) =>
   call("put", `/requests/${requestId}/schedule`, { data: body, fallback: "Gagal menyimpan jadwal" });
+export const getOpenPeriods = () => call("get", "/open");

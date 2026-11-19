@@ -8,9 +8,10 @@ import { useToast } from "@/utils/hooks/useToast";
 import { getTemplates, createTemplate, updateTemplate, reorderTemplates } from "@/utils/api/event";
 import { EVENT_TYPES, EVENT_TYPE_KEYS, CATEGORY_LABELS, CATEGORY_ORDER } from "@/utils/eventConstants";
 import PageHeader from "@/components/ui/PageHeader";
+import CustomSelect from "@/components/ui/CustomSelect";
 
 const inputCls =
-  "w-full px-3 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#4318FF]";
+  "w-full px-4 py-3 bg-[#F4F7FE] text-[#2B3674] rounded-2xl text-sm font-semibold placeholder:text-gray-400 placeholder:font-normal outline-none transition-all duration-200 focus:ring-2 focus:ring-[#4318FF]";
 
 const blank = { category: "berkas", title: "", description: "", needs_upload: true, is_required: true };
 
@@ -58,11 +59,11 @@ const TemplateDialog = ({ open, onOpenChange, template, eventType, onSaved }) =>
           <DialogDescription>Perubahan hanya berlaku untuk pendaftar baru.</DialogDescription>
         </DialogHeader>
         <form onSubmit={submit} className="space-y-4">
-          <select value={form.category} onChange={set("category")} className={inputCls}>
-            {CATEGORY_ORDER.map((c) => (
-              <option key={c} value={c}>{CATEGORY_LABELS[c]}</option>
-            ))}
-          </select>
+          <CustomSelect
+            value={form.category}
+            onChange={(value) => setForm((f) => ({ ...f, category: value }))}
+            options={CATEGORY_ORDER.map((c) => ({ value: c, label: CATEGORY_LABELS[c] }))}
+          />
           <input required value={form.title} onChange={set("title")} placeholder="Nama syarat" className={inputCls} />
           <textarea value={form.description} onChange={set("description")} rows={3} placeholder="Keterangan (opsional)" className={`${inputCls} resize-none`} />
           <label className="flex items-center gap-2 text-sm font-bold text-[#2B3674]">

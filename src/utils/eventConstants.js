@@ -4,6 +4,13 @@ export const EVENT_TYPES = {
   sidang_skripsi: { label: "Sidang Skripsi", short: "Sidang Skripsi", requestType: "Sidang Skripsi" },
 };
 
+// Student registration page for each event type.
+export const EVENT_ROUTES = {
+  seminar_kp: "/dashboard/request/seminarkp",
+  seminar_skripsi: "/dashboard/request/pengajuansempro",
+  sidang_skripsi: "/dashboard/request/skripsi",
+};
+
 export const EVENT_TYPE_KEYS = Object.keys(EVENT_TYPES);
 
 export const CATEGORY_LABELS = {
@@ -30,22 +37,34 @@ export const ITEM_STATUS = {
 
 const TZ = "Asia/Jakarta";
 
-export const formatDateTime = (value) =>
-  value
-    ? new Date(value).toLocaleString("id-ID", {
-        timeZone: TZ,
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      }) + " WIB"
-    : "-";
+export const PRODI_OPTIONS = ["Teknik Informatika", "Teknik Lingkungan", "Teknik Sipil"];
 
-export const formatDate = (value) =>
-  value
-    ? new Date(value).toLocaleDateString("id-ID", { timeZone: TZ, day: "numeric", month: "long", year: "numeric" })
-    : "-";
+const parts = (value, withTime) => {
+  const fmt = new Intl.DateTimeFormat("en-GB", {
+    timeZone: TZ,
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    ...(withTime ? { hour: "2-digit", minute: "2-digit", hourCycle: "h23" } : {}),
+  });
+  return Object.fromEntries(fmt.formatToParts(new Date(value)).map((p) => [p.type, p.value]));
+};
+
+// dd/mm/yyyy HH:mm WIB
+export const formatDateTime = (value) => {
+  if (!value) return "-";
+  const p = parts(value, true);
+  return `${p.day}/${p.month}/${p.year} ${p.hour}:${p.minute} WIB`;
+};
+
+// dd/mm/yyyy. Plain "YYYY-MM-DD" strings (DATE columns) are formatted as-is, without timezone shifts.
+export const formatDate = (value) => {
+  if (!value) return "-";
+  const plain = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value));
+  if (plain) return `${plain[3]}/${plain[2]}/${plain[1]}`;
+  const p = parts(value, false);
+  return `${p.day}/${p.month}/${p.year}`;
+};
 
 // Convert ISO → value for <input type="datetime-local"> in Jakarta time.
 export const toJakartaInput = (value) => {

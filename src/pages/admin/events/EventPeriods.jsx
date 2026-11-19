@@ -15,11 +15,14 @@ import {
   formatDateTime,
   toJakartaInput,
   fromJakartaInput,
+  PRODI_OPTIONS,
 } from "@/utils/eventConstants";
+import CustomSelect from "@/components/ui/CustomSelect";
+import DatePicker from "@/components/ui/DatePicker";
 import PageHeader from "@/components/ui/PageHeader";
 
 const inputCls =
-  "w-full px-3 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#4318FF]";
+  "w-full px-4 py-3 bg-[#F4F7FE] text-[#2B3674] rounded-2xl text-sm font-semibold placeholder:text-gray-400 placeholder:font-normal outline-none transition-all duration-200 focus:ring-2 focus:ring-[#4318FF]";
 const labelCls = "text-xs font-bold text-[#2B3674]";
 
 const emptyForm = (eventType) => ({
@@ -31,6 +34,7 @@ const emptyForm = (eventType) => ({
   event_end: "",
   quota: "",
   description: "",
+  prodi: "",
   is_published: false,
 });
 
@@ -43,6 +47,7 @@ const toForm = (p) => ({
   event_end: p.event_end ? String(p.event_end).slice(0, 10) : "",
   quota: p.quota ?? "",
   description: p.description || "",
+  prodi: p.prodi || "",
   is_published: p.is_published,
 });
 
@@ -55,6 +60,7 @@ const toBody = (f) => ({
   event_end: f.event_end || null,
   quota: f.quota === "" ? null : Number(f.quota),
   description: f.description.trim() || null,
+  prodi: f.prodi || null,
   is_published: f.is_published,
 });
 
@@ -69,6 +75,7 @@ const PeriodFormDialog = ({ open, onOpenChange, period, eventType, onSaved }) =>
 
   const set = (key) => (e) =>
     setForm((f) => ({ ...f, [key]: e.target.type === "checkbox" ? e.target.checked : e.target.value }));
+  const setValue = (key) => (value) => setForm((f) => ({ ...f, [key]: value }));
 
   const submit = async (e) => {
     e.preventDefault();
@@ -94,11 +101,19 @@ const PeriodFormDialog = ({ open, onOpenChange, period, eventType, onSaved }) =>
         <form onSubmit={submit} className="space-y-4">
           <div className="space-y-1">
             <label className={labelCls}>Jenis acara</label>
-            <select value={form.event_type} onChange={set("event_type")} className={inputCls}>
-              {EVENT_TYPE_KEYS.map((k) => (
-                <option key={k} value={k}>{EVENT_TYPES[k].label}</option>
-              ))}
-            </select>
+            <CustomSelect
+              value={form.event_type}
+              onChange={setValue("event_type")}
+              options={EVENT_TYPE_KEYS.map((k) => ({ value: k, label: EVENT_TYPES[k].label }))}
+            />
+          </div>
+          <div className="space-y-1">
+            <label className={labelCls}>Program studi</label>
+            <CustomSelect
+              value={form.prodi}
+              onChange={setValue("prodi")}
+              options={[{ value: "", label: "Semua program studi" }, ...PRODI_OPTIONS.map((p) => ({ value: p, label: p }))]}
+            />
           </div>
           <div className="space-y-1">
             <label className={labelCls}>Nama gelombang</label>
@@ -107,19 +122,19 @@ const PeriodFormDialog = ({ open, onOpenChange, period, eventType, onSaved }) =>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1">
               <label className={labelCls}>Pendaftaran dibuka</label>
-              <input required type="datetime-local" value={form.registration_start} onChange={set("registration_start")} className={inputCls} />
+              <DatePicker required withTime value={form.registration_start} onChange={setValue("registration_start")} />
             </div>
             <div className="space-y-1">
               <label className={labelCls}>Pendaftaran ditutup</label>
-              <input required type="datetime-local" value={form.registration_end} onChange={set("registration_end")} className={inputCls} />
+              <DatePicker required withTime value={form.registration_end} onChange={setValue("registration_end")} />
             </div>
             <div className="space-y-1">
               <label className={labelCls}>Perkiraan pelaksanaan mulai</label>
-              <input type="date" value={form.event_start} onChange={set("event_start")} className={inputCls} />
+              <DatePicker clearable value={form.event_start} onChange={setValue("event_start")} />
             </div>
             <div className="space-y-1">
               <label className={labelCls}>Perkiraan pelaksanaan selesai</label>
-              <input type="date" value={form.event_end} onChange={set("event_end")} className={inputCls} />
+              <DatePicker clearable value={form.event_end} onChange={setValue("event_end")} />
             </div>
           </div>
           <div className="space-y-1">
@@ -231,6 +246,7 @@ const EventPeriods = () => {
                 <thead>
                   <tr className="text-left text-xs font-bold text-gray-400 uppercase tracking-wider">
                     <th className="py-3 pr-4">Gelombang</th>
+                    <th className="py-3 pr-4">Program Studi</th>
                     <th className="py-3 pr-4">Pendaftaran</th>
                     <th className="py-3 pr-4">Pelaksanaan</th>
                     <th className="py-3 pr-4">Pendaftar</th>
@@ -246,10 +262,11 @@ const EventPeriods = () => {
                         <td className="py-3 pr-4 font-bold text-[#2B3674]">
                           <Link to={`/admin/acara/${p.id}`} className="hover:text-[#4318FF]">{p.name}</Link>
                         </td>
+                        <td className="py-3 pr-4 text-gray-600">{p.prodi || "Semua prodi"}</td>
                         <td className="py-3 pr-4 text-gray-600 whitespace-nowrap">
                           {formatDateTime(p.registration_start)}
                           <br />
-                          {formatDateTime(p.registration_end)}
+                          s.d. {formatDateTime(p.registration_end)}
                         </td>
                         <td className="py-3 pr-4 text-gray-600 whitespace-nowrap">
                           {p.event_start ? `${formatDate(p.event_start)}${p.event_end ? ` – ${formatDate(p.event_end)}` : ""}` : "-"}

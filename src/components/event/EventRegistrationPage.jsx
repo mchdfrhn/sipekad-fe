@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { motion as Motion } from "motion/react";
-import { CalendarDays, Loader2, Users, ClipboardList, ArrowRight, Info } from "lucide-react";
+import { CalendarDays, Loader2, Users, ClipboardList, ArrowRight, Info, GraduationCap } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import BackLink from "../ui/BackLink";
@@ -24,7 +24,8 @@ const PeriodCard = ({ period, onRegister, isRegistering }) => {
         <p className="flex gap-2">
           <ClipboardList className="h-4 w-4 text-[#4318FF] shrink-0 mt-0.5" />
           <span>
-            Pendaftaran: <b>{formatDateTime(period.registration_start)}</b> s.d. <b>{formatDateTime(period.registration_end)}</b>
+            Pendaftaran: <b>{formatDateTime(period.registration_start)}</b> s.d.{" "}
+            <b>{formatDateTime(period.registration_end)}</b>
           </span>
         </p>
         {(period.event_start || period.event_end) && (
@@ -36,6 +37,12 @@ const PeriodCard = ({ period, onRegister, isRegistering }) => {
             </span>
           </p>
         )}
+        <p className="flex gap-2">
+          <GraduationCap className="h-4 w-4 text-[#4318FF] shrink-0 mt-0.5" />
+          <span>
+            Program studi: <b>{period.prodi || "Semua program studi"}</b>
+          </span>
+        </p>
         {period.quota && (
           <p className="flex gap-2">
             <Users className="h-4 w-4 text-[#4318FF] shrink-0 mt-0.5" />
