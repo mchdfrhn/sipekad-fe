@@ -1,4 +1,4 @@
-import { LayoutDashboard, Send, Info } from "lucide-react";
+import { LayoutDashboard, Send, Info, Presentation } from "lucide-react";
 import { Link, useLocation } from "react-router";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
@@ -7,6 +7,7 @@ import { motion as Motion } from "motion/react";
 const links = [
   { path: "/dashboard", name: "Dashboard", icon: LayoutDashboard, exact: true },
   { path: "/dashboard/request", name: "Buat Permintaan", icon: Send },
+  { path: "/dashboard/seminar-sidang", name: "Seminar & Sidang", icon: Presentation },
 ];
 
 const WA_TEXT = encodeURIComponent("Saya mau melaporkan ada bug pada aplikasi SIPEKAD, berikut list bug nya...");

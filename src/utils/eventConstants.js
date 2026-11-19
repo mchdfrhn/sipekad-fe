@@ -6,9 +6,9 @@ export const EVENT_TYPES = {
 
 // Student registration page for each event type.
 export const EVENT_ROUTES = {
-  seminar_kp: "/dashboard/request/seminarkp",
-  seminar_skripsi: "/dashboard/request/pengajuansempro",
-  sidang_skripsi: "/dashboard/request/skripsi",
+  seminar_kp: "/dashboard/seminar-sidang/seminar-kp",
+  seminar_skripsi: "/dashboard/seminar-sidang/seminar-skripsi",
+  sidang_skripsi: "/dashboard/seminar-sidang/sidang-skripsi",
 };
 
 export const EVENT_TYPE_KEYS = Object.keys(EVENT_TYPES);

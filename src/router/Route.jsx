@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, Navigate } from "react-router";
 import { lazy, Suspense } from "react";
 
 // Static — needed immediately
@@ -40,6 +40,7 @@ const DashboardHome = lazyWithRetry(() => import("../components/Dashboard/Dashbo
 const DashboardUser = lazyWithRetry(() => import("../components/Dashboard/DashboardUser"));
 const Settings = lazyWithRetry(() => import("../pages/Settings"));
 
+const EventHub = lazyWithRetry(() => import("../components/event/EventHub"));
 const EventRegistrationPage = lazyWithRetry(() => import("../components/event/EventRegistrationPage"));
 const EventPeriods = lazyWithRetry(() => import("../pages/admin/events/EventPeriods"));
 const EventPeriodDetail = lazyWithRetry(() => import("../pages/admin/events/EventPeriodDetail"));
@@ -149,6 +150,15 @@ const Router = createBrowserRouter([
                 element: w(DashboardHome),
               },
               {
+                path: "seminar-sidang",
+                children: [
+                  { index: true, element: w(EventHub) },
+                  { path: "seminar-kp", element: wEvent("seminar_kp") },
+                  { path: "seminar-skripsi", element: wEvent("seminar_skripsi") },
+                  { path: "sidang-skripsi", element: wEvent("sidang_skripsi") },
+                ],
+              },
+              {
                 path: ":id",
                 element: w(RequestDetailUser),
               },
@@ -249,16 +259,19 @@ const Router = createBrowserRouter([
                     element: w(Yudisium),
                   },
                   {
+                    // moved to the "Seminar & Sidang" menu
                     path: "pengajuansempro",
-                    element: wEvent("seminar_skripsi"),
+                    element: <Navigate to="/dashboard/seminar-sidang/seminar-skripsi" replace />,
                   },
                   {
+                    // moved to the "Seminar & Sidang" menu
                     path: "seminarkp",
-                    element: wEvent("seminar_kp"),
+                    element: <Navigate to="/dashboard/seminar-sidang/seminar-kp" replace />,
                   },
                   {
+                    // moved to the "Seminar & Sidang" menu
                     path: "skripsi",
-                    element: wEvent("sidang_skripsi"),
+                    element: <Navigate to="/dashboard/seminar-sidang/sidang-skripsi" replace />,
                   },
                 ],
               },

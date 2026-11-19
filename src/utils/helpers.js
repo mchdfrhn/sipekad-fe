@@ -46,6 +46,11 @@ export const formatPathToBreadcrumb = (path) => {
       backup: "Backup Sistem",
       whatsapp: "WhatsApp",
       settings: "Pengaturan",
+      request: "Buat Permintaan",
+      "seminar-sidang": "Seminar & Sidang",
+      "seminar-kp": "Seminar KP",
+      "seminar-skripsi": "Seminar Skripsi",
+      "sidang-skripsi": "Sidang Skripsi",
     };
     if (SEGMENT_LABELS[segment]) label = SEGMENT_LABELS[segment];
     if (segment.startsWith("period-")) label = "Pendaftar";

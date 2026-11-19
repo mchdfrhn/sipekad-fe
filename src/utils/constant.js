@@ -4,9 +4,7 @@ import {
   ClipboardList,
   GraduationCap,
   ScrollText,
-  Presentation,
   UserCheck,
-  Award,
   BookOpen,
   Briefcase,
   Users,
@@ -45,24 +43,6 @@ const kategoriPermintaan = [
     path: "/dashboard/request/yudisium",
     color: "button-gray",
     icon: GraduationCap,
-  },
-  {
-    content: "Pengajuan Sempro",
-    path: "/dashboard/request/pengajuansempro",
-    color: "button-red",
-    icon: Presentation,
-  },
-  {
-    content: "Pengajuan Seminar KP",
-    path: "/dashboard/request/seminarkp",
-    color: "button-teal",
-    icon: UserCheck,
-  },
-  {
-    content: "Pengajuan Sidang Skripsi",
-    path: "/dashboard/request/skripsi",
-    color: "button-violet",
-    icon: Award,
   },
 ];
 

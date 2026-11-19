@@ -208,13 +208,17 @@ const LayoutAdmin = () => {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
-            className="flex flex-col justify-center min-w-0 overflow-hidden"
+            className="flex flex-1 flex-col justify-center min-w-0 overflow-hidden"
           >
             <Breadcrumb>
-              <BreadcrumbList>
+              <BreadcrumbList className="flex-nowrap whitespace-nowrap">
                 {breadcrumbs.map((crumb, index) => (
-                  <div key={index} className="flex items-center">
-                    <BreadcrumbItem className={index === breadcrumbs.length - 1 ? "" : "hidden md:flex"}>
+                  // Only the parent and current page fit next to the profile controls; older crumbs show on 2xl.
+                  <div
+                    key={index}
+                    className={`items-center ${index < breadcrumbs.length - 2 ? "hidden 2xl:flex" : "flex"} ${index === breadcrumbs.length - 1 ? "min-w-0" : "shrink-0"}`}
+                  >
+                    <BreadcrumbItem className={index === breadcrumbs.length - 1 ? "min-w-0 truncate" : "hidden md:flex shrink-0"}>
                       {index === breadcrumbs.length - 1 ? (
                         <BreadcrumbPage className="text-sm font-bold text-[#2B3674] capitalize">
                           {crumb.label}
@@ -253,7 +257,7 @@ const LayoutAdmin = () => {
                   placeholder="Cari..."
                   value={searchValue}
                   onChange={handleSearchChange}
-                  className="pl-8 bg-transparent border-none outline-none text-sm text-[#2B3674] placeholder-gray-400 w-40 focus:w-60 transition-all font-medium"
+                  className="pl-8 bg-transparent border-none outline-none text-sm text-[#2B3674] placeholder-gray-400 w-28 focus:w-48 transition-all font-medium"
                 />
                 {searchValue && (
                   <button type="button"
@@ -388,7 +392,7 @@ const LayoutAdmin = () => {
                   </AvatarFallback>
                 </Avatar>
                 <div className="hidden md:block text-left">
-                  <p className="text-sm font-bold text-[#2B3674] leading-tight text-nowrap">
+                  <p className="text-sm font-bold text-[#2B3674] leading-tight truncate max-w-[160px]" title={user.full_name}>
                     {user.full_name}
                   </p>
                   <p className="text-[10px] font-medium text-gray-400 uppercase">

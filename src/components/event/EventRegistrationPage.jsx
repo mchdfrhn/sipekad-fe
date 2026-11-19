@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { motion as Motion } from "motion/react";
-import { CalendarDays, Loader2, Users, ClipboardList, ArrowRight, Info, GraduationCap } from "lucide-react";
+import { CalendarDays, Loader2, Users, ClipboardList, ArrowRight, Info, GraduationCap, Presentation } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import BackLink from "../ui/BackLink";
+import PageHeader from "@/components/ui/PageHeader";
 import ConfirmDialog from "../ui/ConfirmDialog";
 import { useToast } from "@/utils/hooks/useToast";
 import { getPeriods, getTemplates, registerPeriod } from "@/utils/api/event";
@@ -121,7 +121,13 @@ const EventRegistrationPage = ({ eventType }) => {
 
   return (
     <>
-      <BackLink />
+      <PageHeader
+        backTo="/dashboard/seminar-sidang"
+        backLabel="Seminar & Sidang"
+        icon={Presentation}
+        title={meta.label}
+        description="Baca persyaratan, pilih gelombang yang dibuka, lalu unggah berkas setelah mendaftar."
+      />
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         <Motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="lg:col-span-7">
           <Card className="border-none shadow-xl shadow-shadow-500/10 rounded-[20px] bg-white overflow-hidden">
