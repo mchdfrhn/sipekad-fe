@@ -12,7 +12,6 @@ import {
   EVENT_TYPE_KEYS,
   PERIOD_STATE,
   formatDate,
-  formatDateTime,
   toJakartaInput,
   fromJakartaInput,
   PRODI_OPTIONS,
@@ -41,8 +40,8 @@ const emptyForm = (eventType) => ({
 const toForm = (p) => ({
   event_type: p.event_type,
   name: p.name,
-  registration_start: toJakartaInput(p.registration_start),
-  registration_end: toJakartaInput(p.registration_end),
+  registration_start: toJakartaInput(p.registration_start).slice(0, 10),
+  registration_end: toJakartaInput(p.registration_end).slice(0, 10),
   event_start: p.event_start ? String(p.event_start).slice(0, 10) : "",
   event_end: p.event_end ? String(p.event_end).slice(0, 10) : "",
   quota: p.quota ?? "",
@@ -54,8 +53,9 @@ const toForm = (p) => ({
 const toBody = (f) => ({
   event_type: f.event_type,
   name: f.name.trim(),
-  registration_start: fromJakartaInput(f.registration_start),
-  registration_end: fromJakartaInput(f.registration_end),
+  // Registration runs from 00:00 WIB on the first day to 23:59 WIB on the last day.
+  registration_start: fromJakartaInput(`${f.registration_start}T00:00`),
+  registration_end: new Date(`${f.registration_end}T23:59:59+07:00`).toISOString(),
   event_start: f.event_start || null,
   event_end: f.event_end || null,
   quota: f.quota === "" ? null : Number(f.quota),
@@ -96,7 +96,7 @@ const PeriodFormDialog = ({ open, onOpenChange, period, eventType, onSaved }) =>
       <DialogContent className="max-w-lg rounded-[20px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-[#2B3674]">{period ? "Ubah Gelombang" : "Buat Gelombang"}</DialogTitle>
-          <DialogDescription>Waktu dalam WIB (Asia/Jakarta).</DialogDescription>
+          <DialogDescription>Pendaftaran dibuka mulai 00:00 WIB pada tanggal awal dan ditutup 23:59 WIB pada tanggal akhir.</DialogDescription>
         </DialogHeader>
         <form onSubmit={submit} className="space-y-4">
           <div className="space-y-1">
@@ -122,11 +122,11 @@ const PeriodFormDialog = ({ open, onOpenChange, period, eventType, onSaved }) =>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1">
               <label className={labelCls}>Pendaftaran dibuka</label>
-              <DatePicker required withTime value={form.registration_start} onChange={setValue("registration_start")} />
+              <DatePicker required value={form.registration_start} onChange={setValue("registration_start")} />
             </div>
             <div className="space-y-1">
               <label className={labelCls}>Pendaftaran ditutup</label>
-              <DatePicker required withTime value={form.registration_end} onChange={setValue("registration_end")} />
+              <DatePicker required value={form.registration_end} onChange={setValue("registration_end")} />
             </div>
             <div className="space-y-1">
               <label className={labelCls}>Perkiraan pelaksanaan mulai</label>
@@ -264,9 +264,9 @@ const EventPeriods = () => {
                         </td>
                         <td className="py-3 pr-4 text-gray-600">{p.prodi || "Semua prodi"}</td>
                         <td className="py-3 pr-4 text-gray-600 whitespace-nowrap">
-                          {formatDateTime(p.registration_start)}
+                          {formatDate(p.registration_start)}
                           <br />
-                          s.d. {formatDateTime(p.registration_end)}
+                          s.d. {formatDate(p.registration_end)}
                         </td>
                         <td className="py-3 pr-4 text-gray-600 whitespace-nowrap">
                           {p.event_start ? `${formatDate(p.event_start)}${p.event_end ? ` – ${formatDate(p.event_end)}` : ""}` : "-"}

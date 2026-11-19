@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router";
 import { CalendarDays, Loader2, Users } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getPeriod } from "@/utils/api/event";
-import { EVENT_TYPES, PERIOD_STATE, formatDateTime } from "@/utils/eventConstants";
+import { EVENT_TYPES, PERIOD_STATE, formatDate, formatDateTime } from "@/utils/eventConstants";
 import { STATUS_LABEL_USER } from "@/utils/constant";
 import PageHeader from "@/components/ui/PageHeader";
 
@@ -30,7 +30,7 @@ const EventPeriodDetail = () => {
         backLabel="Kembali ke daftar gelombang"
         icon={CalendarDays}
         title={period.name}
-        description={<>{EVENT_TYPES[period.event_type].label} · {period.prodi || "Semua prodi"} · Pendaftaran {formatDateTime(period.registration_start)} – {formatDateTime(period.registration_end)}</>}
+        description={<>{EVENT_TYPES[period.event_type].label} · {period.prodi || "Semua prodi"} · Pendaftaran {formatDate(period.registration_start)} – {formatDate(period.registration_end)}</>}
         actions={<span className={`text-xs font-bold px-3 py-1 rounded-full ${st.cls}`}>{st.label}</span>}
       />
 

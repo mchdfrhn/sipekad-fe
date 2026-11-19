@@ -3,7 +3,7 @@ import { Link } from "react-router";
 import { motion as Motion } from "motion/react";
 import { Megaphone, ArrowRight, CalendarClock, GraduationCap } from "lucide-react";
 import { getOpenPeriods } from "@/utils/api/event";
-import { EVENT_ROUTES, formatDate, formatDateTime } from "@/utils/eventConstants";
+import { EVENT_ROUTES, formatDate } from "@/utils/eventConstants";
 
 /** Announces seminar/sidang registrations that are currently open. Renders nothing when none are. */
 const OpenEventsBanner = () => {
@@ -47,7 +47,7 @@ const OpenEventsBanner = () => {
                 </p>
                 <p className="flex items-center gap-1.5 text-xs text-[#718096]">
                   <CalendarClock className="h-3.5 w-3.5 shrink-0" />
-                  Ditutup {formatDateTime(p.registration_end)}
+                  Ditutup {formatDate(p.registration_end)}
                   {p.event_start && <> · pelaksanaan mulai {formatDate(p.event_start)}</>}
                 </p>
                 <p className="flex items-center gap-1.5 text-xs text-[#718096]">

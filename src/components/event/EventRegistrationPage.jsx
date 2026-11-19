@@ -8,7 +8,7 @@ import BackLink from "../ui/BackLink";
 import ConfirmDialog from "../ui/ConfirmDialog";
 import { useToast } from "@/utils/hooks/useToast";
 import { getPeriods, getTemplates, registerPeriod } from "@/utils/api/event";
-import { EVENT_TYPES, PERIOD_STATE, formatDate, formatDateTime } from "@/utils/eventConstants";
+import { EVENT_TYPES, PERIOD_STATE, formatDate } from "@/utils/eventConstants";
 import RequirementList from "./RequirementList";
 
 const PeriodCard = ({ period, onRegister, isRegistering }) => {
@@ -24,8 +24,8 @@ const PeriodCard = ({ period, onRegister, isRegistering }) => {
         <p className="flex gap-2">
           <ClipboardList className="h-4 w-4 text-[#4318FF] shrink-0 mt-0.5" />
           <span>
-            Pendaftaran: <b>{formatDateTime(period.registration_start)}</b> s.d.{" "}
-            <b>{formatDateTime(period.registration_end)}</b>
+            Pendaftaran: <b>{formatDate(period.registration_start)}</b> s.d.{" "}
+            <b>{formatDate(period.registration_end)}</b>
           </span>
         </p>
         {(period.event_start || period.event_end) && (

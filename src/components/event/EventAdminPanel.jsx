@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/utils/hooks/useToast";
 import { submitReview, saveSchedule } from "@/utils/api/event";
-import { formatDateTime, toJakartaInput, fromJakartaInput } from "@/utils/eventConstants";
+import { formatDate, toJakartaInput, fromJakartaInput } from "@/utils/eventConstants";
 import ScheduleCard from "./ScheduleCard";
 import DatePicker from "@/components/ui/DatePicker";
 
@@ -113,7 +113,7 @@ const EventAdminPanel = ({ request, onChanged, onReject }) => {
             <Link to={`/admin/acara/${request.event_period.id}`} className="hover:text-[#4318FF] font-semibold">
               {request.event_period.name}
             </Link>{" "}
-            · tutup {formatDateTime(request.event_period.registration_end)}
+            · tutup {formatDate(request.event_period.registration_end)}
           </CardDescription>
         )}
       </CardHeader>

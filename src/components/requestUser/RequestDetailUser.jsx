@@ -30,7 +30,7 @@ import { useToast } from "@/utils/hooks/useToast";
 import { motion as Motion } from "motion/react";
 import RequirementChecklist from "../event/RequirementChecklist";
 import ScheduleCard from "../event/ScheduleCard";
-import { formatDateTime } from "@/utils/eventConstants";
+import { formatDate } from "@/utils/eventConstants";
 
 const EventSection = ({ data, onChanged }) => (
   <div className="space-y-6">
@@ -38,7 +38,7 @@ const EventSection = ({ data, onChanged }) => (
       <div className="p-4 bg-indigo-50/50 rounded-2xl border border-indigo-100 text-sm text-[#2B3674]">
         <p className="font-bold">{data.event_period.name}</p>
         <p className="text-xs text-gray-500 mt-1">
-          Pendaftaran ditutup {formatDateTime(data.event_period.registration_end)}
+          Pendaftaran ditutup {formatDate(data.event_period.registration_end)}
         </p>
       </div>
     )}

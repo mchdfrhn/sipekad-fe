@@ -16,6 +16,7 @@ import {
 import { id as localeId } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 
+const POPOVER_WIDTH = 288;
 const WEEKDAYS = ["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"];
 const HOURS = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, "0"));
 const MINUTES = Array.from({ length: 12 }, (_, i) => String(i * 5).padStart(2, "0"));
@@ -59,10 +60,36 @@ const DatePicker = ({ value, onChange, withTime = false, placeholder, required =
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Keep the calendar visible inside scrollable containers (e.g. dialogs).
+  const [alignRight, setAlignRight] = useState(false);
+
+  // Nearest ancestor that clips or scrolls its content.
+  const scrollParent = (el) => {
+    for (let node = el?.parentElement; node; node = node.parentElement) {
+      if (/(auto|scroll|hidden)/.test(getComputedStyle(node).overflowY)) return node;
+    }
+    return null;
+  };
+
+  const toggle = () => {
+    if (!isOpen && containerRef.current) {
+      // Open toward the left when the popover would overflow its container/viewport on the right.
+      const rect = containerRef.current.getBoundingClientRect();
+      const bound = scrollParent(containerRef.current)?.getBoundingClientRect().right ?? window.innerWidth;
+      setAlignRight(rect.left + POPOVER_WIDTH > bound - 8);
+    }
+    setIsOpen((o) => !o);
+  };
+
+  // Keep the calendar visible inside scrollable containers (e.g. dialogs) — vertical scroll only.
   useEffect(() => {
     if (!isOpen) return;
-    const t = setTimeout(() => popoverRef.current?.scrollIntoView({ block: "nearest", behavior: "smooth" }), 160);
+    const t = setTimeout(() => {
+      const pop = popoverRef.current;
+      const parent = scrollParent(pop);
+      if (!pop || !parent) return;
+      const overflow = pop.getBoundingClientRect().bottom - parent.getBoundingClientRect().bottom + 12;
+      if (overflow > 0) parent.scrollBy({ top: overflow, behavior: "smooth" });
+    }, 160);
     return () => clearTimeout(t);
   }, [isOpen]);
 
@@ -109,7 +136,7 @@ const DatePicker = ({ value, onChange, withTime = false, placeholder, required =
       />
       <button
         type="button"
-        onClick={() => setIsOpen((o) => !o)}
+        onClick={toggle}
         className={cn(
           "flex w-full items-center justify-between gap-2 px-4 py-3 bg-[#F4F7FE] text-[#2B3674] font-semibold text-sm rounded-2xl transition-all duration-200 outline-none focus:ring-2 focus:ring-[#4318FF] cursor-pointer",
           isOpen && "ring-2 ring-[#4318FF]",
@@ -143,7 +170,10 @@ const DatePicker = ({ value, onChange, withTime = false, placeholder, required =
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className="absolute z-120 mt-2 w-72 bg-white border border-gray-100 rounded-2xl shadow-xl p-3"
+            className={cn(
+              "absolute z-120 mt-2 w-72 bg-white border border-gray-100 rounded-2xl shadow-xl p-3",
+              alignRight ? "right-0" : "left-0",
+            )}
           >
             <div className="flex items-center justify-between mb-2">
               <button
