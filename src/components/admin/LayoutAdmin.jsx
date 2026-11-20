@@ -50,9 +50,11 @@ import { useState, useEffect, useRef } from "react";
 import Alert from "../ui/Alert";
 import { AdminChatAssistant } from "../assistant-ui/AdminChatAssistant";
 import { logout } from "../../utils/api/auth";
+import ConfirmDialog from "../ui/ConfirmDialog";
 
 const LayoutAdmin = () => {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const { userData: user } = useUser();
@@ -153,7 +155,9 @@ const LayoutAdmin = () => {
     navigate(`/admin/pengajuan/${notif.id}`);
   };
 
-  const logoutHandler = async () => {
+  const logoutHandler = () => setShowLogoutConfirm(true);
+
+  const confirmLogout = async () => {
     const token = localStorage.getItem("tokenKey");
     localStorage.removeItem("tokenKey");
     localStorage.removeItem("user");
@@ -306,7 +310,8 @@ const LayoutAdmin = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="end"
-                className="w-[350px] rounded-2xl shadow-xl border-none bg-white p-0 overflow-hidden z-[9999]"
+                collisionPadding={12}
+                className="w-[min(350px,calc(100vw-1.5rem))] rounded-2xl shadow-xl border-none bg-white p-0 overflow-hidden z-[9999]"
               >
                 <div className="bg-[#4318FF] px-6 py-4 flex items-center justify-between">
                   <h3 className="text-white font-bold text-lg">Notifikasi</h3>
@@ -316,7 +321,7 @@ const LayoutAdmin = () => {
                     </span>
                   )}
                 </div>
-                <div className="max-h-[400px] overflow-y-auto no-scrollbar py-2">
+                <div className="max-h-[min(400px,calc(100vh-12rem))] overflow-y-auto no-scrollbar py-2">
                   {notifications.length > 0 ? (
                     notifications.map((notif, idx) => (
                       <DropdownMenuItem
@@ -472,6 +477,15 @@ const LayoutAdmin = () => {
         {/* Admin Chat Assistant Widget */}
         <AdminChatAssistant />
       </div>
+      <ConfirmDialog
+        isOpen={showLogoutConfirm}
+        onClose={() => setShowLogoutConfirm(false)}
+        onConfirm={confirmLogout}
+        variant="danger"
+        title="Konfirmasi Keluar"
+        description="Apakah Anda yakin ingin keluar?"
+        confirmText="Keluar"
+      />
     </div>
   );
 };

@@ -45,6 +45,7 @@ import { Button } from "@/components/ui/button";
 import { motion as Motion, AnimatePresence } from "motion/react";
 import { useState, useEffect, useRef } from "react";
 import ConfirmDialog from "../../components/ui/ConfirmDialog";
+import { logout } from "../../utils/api/auth";
 
 const LayoutDashboard = () => {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
@@ -169,9 +170,12 @@ const LayoutDashboard = () => {
   }, []);
 
   const confirmLogout = async () => {
+    const token = localStorage.getItem("tokenKey");
     navigate("/");
     localStorage.removeItem("tokenKey");
     localStorage.removeItem("user");
+    // Blacklist token di server; gagal pun user tetap keluar dari browser
+    if (token) logout(token).catch(() => {});
   };
 
   const logoutHandler = () => setShowLogoutConfirm(true);
@@ -353,7 +357,8 @@ const LayoutDashboard = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="end"
-                className="w-[350px] rounded-2xl shadow-xl border-none bg-white p-0 overflow-hidden font-bold"
+                collisionPadding={12}
+                className="w-[min(350px,calc(100vw-1.5rem))] rounded-2xl shadow-xl border-none bg-white p-0 overflow-hidden font-bold"
               >
                 <div className="bg-[#4318FF] px-6 py-4 flex items-center justify-between">
                   <div>
@@ -365,7 +370,7 @@ const LayoutDashboard = () => {
                     </p>
                   </div>
                 </div>
-                <div className="max-h-[400px] overflow-y-auto p-2 no-scrollbar">
+                <div className="max-h-[min(400px,calc(100vh-12rem))] overflow-y-auto p-2 no-scrollbar">
                   {notifications.length > 0 ? (
                     notifications.map((notif) => (
                       <DropdownMenuItem

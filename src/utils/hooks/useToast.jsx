@@ -22,7 +22,7 @@ export const ToastProvider = ({ children }) => {
   return (
     <ToastContext.Provider value={{ showToast }}>
       {children}
-      <div className="fixed bottom-8 right-8 z-200 flex flex-col-reverse gap-2 pointer-events-none">
+      <div className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 max-w-[calc(100vw-2rem)] z-200 flex flex-col-reverse gap-2 pointer-events-none">
         <AnimatePresence>
           {toasts.map((toast) => (
             <div key={toast.id} className="pointer-events-auto">

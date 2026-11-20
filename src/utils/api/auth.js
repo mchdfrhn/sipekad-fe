@@ -19,7 +19,7 @@ const login = async ({ username, password }) => {
 
 const logout = async (token) => {
   try {
-    const response = await Axios.post(`${BASE_URL}/logout`, null, {
+    const response = await Axios.get(`${BASE_URL}/auth/logout`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,

@@ -18,7 +18,7 @@ const SuccessModal = ({
         <Motion.div
           {...modalMotion}
           onClick={(e) => e.stopPropagation()}
-          className="bg-white rounded-[20px] relative flex justify-center flex-col gap-8 px-8 w-80 md:w-[420px] py-10 shadow-xl"
+          className="bg-white rounded-[20px] relative flex justify-center flex-col gap-8 px-8 w-[min(20rem,calc(100vw-2rem))] md:w-[420px] py-10 shadow-xl"
         >
           <div className="flex justify-center">
             <div className="size-20">

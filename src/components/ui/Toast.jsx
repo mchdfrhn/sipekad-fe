@@ -42,7 +42,7 @@ const Toast = ({ message, type = "success", onClose, duration = 3000 }) => {
       initial={{ opacity: 0, y: 20, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
-      className={`pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-2xl shadow-2xl border ${style.bg} ${style.border} min-w-[300px] overflow-hidden`}
+      className={`pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-2xl shadow-2xl border ${style.bg} ${style.border} min-w-[min(300px,calc(100vw-2rem))] max-w-full overflow-hidden`}
     >
       <div className="shrink-0">{style.icon}</div>
       <div className="flex-1">
