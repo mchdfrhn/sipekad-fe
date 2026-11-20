@@ -10,6 +10,7 @@ import LayoutDashboard from "../components/Dashboard/LayoutDashboard";
 import LayoutAdmin from "../components/admin/LayoutAdmin";
 import DashboardRequest from "../components/Dashboard/DashboardRequest";
 import Request from "../components/Request/Request";
+import RequestAccessGuard from "../components/Request/RequestAccessGuard";
 
 // Lazy with retry helper to auto-recover from stale chunks or transient network drops
 const lazyWithRetry = (componentImport) =>
@@ -58,6 +59,7 @@ const RequestDetail = lazyWithRetry(() => import("../components/admin/request/Re
 const Backup = lazyWithRetry(() => import("../pages/admin/Backup"));
 const WhatsAppManager = lazyWithRetry(() => import("../pages/admin/WhatsAppManager"));
 const EmailManager = lazyWithRetry(() => import("../pages/admin/EmailManager"));
+const RequestAccess = lazyWithRetry(() => import("../pages/admin/RequestAccess"));
 
 // Lazy — Request
 const SuratKeterangan = lazyWithRetry(() => import("../components/Request/SuratKeterangan"));
@@ -100,6 +102,11 @@ const w = (C) => (
   <Suspense fallback={<PageLoader />}>
     <C />
   </Suspense>
+);
+
+// Halaman form pengajuan yang bisa ditutup per program studi
+const g = (type, C) => (
+  <RequestAccessGuard type={type}>{w(C)}</RequestAccessGuard>
 );
 
 const wEvent = (eventType) => (
@@ -194,19 +201,19 @@ const Router = createBrowserRouter([
                       },
                       {
                         path: "cuti",
-                        element: w(KeteranganCuti),
+                        element: g("Keterangan Cuti", KeteranganCuti),
                       },
                       {
                         path: "mahasiswaaktif",
-                        element: w(MahasiswaAktif),
+                        element: g("Mahasiswa Aktif", MahasiswaAktif),
                       },
                       {
                         path: "keteranganlulus",
-                        element: w(KeteranganLulus),
+                        element: g("Keterangan Lulus", KeteranganLulus),
                       },
                       {
                         path: "pengundurandiri",
-                        element: w(PengunduranDiri),
+                        element: g("Pengunduran Diri", PengunduranDiri),
                       },
                     ],
                   },
@@ -220,15 +227,15 @@ const Router = createBrowserRouter([
                       },
                       {
                         path: "kerjapraktik",
-                        element: w(KerjaPraktik),
+                        element: g("Judul Kerja Praktik", KerjaPraktik),
                       },
                       {
                         path: "judulskripsi",
-                        element: w(JudulSkripsi),
+                        element: g("Judul Skripsi", JudulSkripsi),
                       },
                       {
                         path: "pengantar-kerja-praktik",
-                        element: w(PengantarKerjaPraktik),
+                        element: g("Pengantar Kerja Praktik", PengantarKerjaPraktik),
                       },
                     ],
                   },
@@ -242,21 +249,21 @@ const Router = createBrowserRouter([
                       },
                       {
                         path: "dosenkerjapraktik",
-                        element: w(DosenKerjaPraktik),
+                        element: g("Penugasan Dosen Kerja Praktik", DosenKerjaPraktik),
                       },
                       {
                         path: "dosentugasakhir",
-                        element: w(DosenSkripsi),
+                        element: g("Penugasan Dosen Skripsi", DosenSkripsi),
                       },
                     ],
                   },
                   {
                     path: "transkripnilai",
-                    element: w(TranskripNilai),
+                    element: g("Transkrip Nilai", TranskripNilai),
                   },
                   {
                     path: "yudisium",
-                    element: w(Yudisium),
+                    element: g("Yudisium", Yudisium),
                   },
                   {
                     // moved to the "Seminar & Sidang" menu
@@ -340,6 +347,10 @@ const Router = createBrowserRouter([
               {
                 path: "email",
                 element: w(EmailManager),
+              },
+              {
+                path: "akses-pengajuan",
+                element: w(RequestAccess),
               },
             ],
           },

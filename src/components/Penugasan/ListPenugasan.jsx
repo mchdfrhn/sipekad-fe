@@ -1,11 +1,10 @@
-import ListLink from "../ui/ListLink";
+import AccessListLink from "../ui/AccessListLink";
 import { kategoriPenugasan } from "../../utils/constant";
-import HomeLinkButton from "../ui/HomeLinkButton";
 
 const ListPenugasan = () => {
   return (
     <>
-      <ListLink
+      <AccessListLink
         data={kategoriPenugasan}
         title="Silahkan pilih kategori penugasan"
       />

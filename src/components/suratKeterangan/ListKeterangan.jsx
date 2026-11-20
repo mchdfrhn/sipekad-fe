@@ -1,10 +1,10 @@
-import ListLink from "../ui/ListLink";
+import AccessListLink from "../ui/AccessListLink";
 import { kategoriKeterangan } from "../../utils/constant";
 
 const ListKeterangan = () => {
   return (
     <>
-    <ListLink data={kategoriKeterangan} title={'Silahkan pilih jenis keterangan'} />
+    <AccessListLink data={kategoriKeterangan} title={'Silahkan pilih jenis keterangan'} />
     </>
   );
 };
